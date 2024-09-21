@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'dotenv/load'
+require 'pry'
+require 'ruby_hubspot_api'
+require 'openssl'
+
+Hubspot.configure do |config|
+  config.access_token = ENV['HUBSPOT_ACCESS_TOKEN']
+  config.portal_id = ENV['HUBSPOT_PORTAL_ID']
+  config.client_secret = ENV['HUBSPOT_CLIENT_SECRET']
+end
+
+Pry.start
