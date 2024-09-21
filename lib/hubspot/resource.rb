@@ -36,6 +36,14 @@ module Hubspot
         true
       end
 
+      def list(params = {})
+        PagedCollection.new(
+          url: "/crm/v3/objects/#{resource_name}",
+          params: params,
+          resource_class: self
+        )
+      end
+
       # Get the complete list of fields (properties) for the object
       def full_property_list
         all_properties.each_with_object({}) do |property, hash|
