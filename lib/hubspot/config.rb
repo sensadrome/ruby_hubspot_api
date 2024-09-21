@@ -3,7 +3,7 @@
 module Hubspot
   # To hold Hubspot configuration
   class Config
-    attr_accessor :access_token, :portal_id, :client_id, :client_secret
+    attr_accessor :access_token, :portal_id, :client_secret
 
     def initialize
       @access_token = nil
