@@ -69,6 +69,48 @@ module Hubspot
         all_properties.reject { |property| property['hubspotDefined'] }
       end
 
+      # Simplified search interface
+      OPERATOR_MAP = {
+        '_contains' => 'CONTAINS_TOKEN',
+        '_gt' => 'GT',
+        '_lt' => 'LT',
+        '_gte' => 'GTE',
+        '_lte' => 'LTE',
+        '_neq' => 'NEQ',
+        '_in' => 'IN'
+      }.freeze
+
+      # rubocop:disable Metrics/MethodLength
+      def search(query:, properties: [], page_size: 100)
+        search_body = {}
+
+        # Add properties if specified
+        search_body[:properties] = properties unless properties.empty?
+
+        # Handle the query using case-when for RuboCop compliance
+        case query
+        when String
+          search_body[:query] = query
+        when Hash
+          search_body[:filterGroups] = build_filter_groups(query)
+        else
+          raise ArgumentError, 'query must be either a string or a hash'
+        end
+
+        # Add the page size (passed as limit to the API)
+        search_body[:limit] = page_size
+
+        # Perform the search and return a PagedCollection
+        PagedCollection.new(
+          url: "/crm/v3/objects/#{resource_name}/search",
+          params: search_body,
+          resource_class: self,
+          method: :post
+        )
+      end
+
+      # rubocop:enable Metrics/MethodLength
+
       private
 
       # Define the resource name based on the class
@@ -85,6 +127,32 @@ module Hubspot
       def instantiate_from_response(response)
         data = handle_response(response)
         new(data) # Passing full response data to initialize
+      end
+
+      # Convert simple filters to HubSpot's filterGroups format
+      def build_filter_groups(filters)
+        filter_groups = [{ filters: [] }]
+
+        filters.each do |key, value|
+          property_name, operator = extract_property_and_operator(key)
+          filter_groups.first[:filters] << {
+            propertyName: property_name,
+            operator: operator,
+            value: value
+          }
+        end
+
+        filter_groups
+      end
+
+      # Extract property name and operator from the key
+      def extract_property_and_operator(key)
+        OPERATOR_MAP.each do |suffix, hubspot_operator|
+          return [key.to_s.sub(suffix, ''), hubspot_operator] if key.to_s.end_with?(suffix)
+        end
+
+        # Default to 'EQ' operator if no suffix is found
+        [key.to_s, 'EQ']
       end
     end
 
