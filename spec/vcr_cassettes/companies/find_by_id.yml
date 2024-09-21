@@ -1,0 +1,85 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.hubapi.com/crm/v3/objects/companies/15868857067
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <HUBSPOT_ACCESS_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 19 Sep 2024 19:09:36 GMT
+      Content-Type:
+      - application/json;charset=utf-8
+      Content-Length:
+      - '178'
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 8c5bdefdeac6732d-LHR
+      Cf-Cache-Status:
+      - DYNAMIC
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Vary:
+      - origin, Accept-Encoding
+      Access-Control-Allow-Credentials:
+      - 'false'
+      X-Content-Type-Options:
+      - nosniff
+      X-Envoy-Upstream-Service-Time:
+      - '58'
+      X-Evy-Trace-Listener:
+      - listener_https
+      X-Evy-Trace-Route-Configuration:
+      - listener_https/all
+      X-Evy-Trace-Route-Service-Name:
+      - envoyset-translator
+      X-Evy-Trace-Served-By-Pod:
+      - fra04/hubapi-td/envoy-proxy-576d445cf9-rfg9q
+      X-Evy-Trace-Virtual-Host:
+      - all
+      X-Hubspot-Correlation-Id:
+      - d7bcb856-e219-425b-b4db-1133907c906f
+      X-Hubspot-Ratelimit-Daily:
+      - '625000'
+      X-Hubspot-Ratelimit-Daily-Remaining:
+      - '624974'
+      X-Hubspot-Ratelimit-Interval-Milliseconds:
+      - '10000'
+      X-Hubspot-Ratelimit-Max:
+      - '190'
+      X-Hubspot-Ratelimit-Remaining:
+      - '189'
+      X-Hubspot-Ratelimit-Secondly:
+      - '19'
+      X-Hubspot-Ratelimit-Secondly-Remaining:
+      - '18'
+      X-Request-Id:
+      - d7bcb856-e219-425b-b4db-1133907c906f
+      Report-To:
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=71EfdfTMmF3Hy6XKNgylQy%2BqyK%2BL5RmzjcOZ%2FA%2FqY5GnfI7ZLFl6xAreP70ilOh3RhJGuduTxyW%2F5Bn3NVaV28kyNSzaPTk7CPQPTQfcyy%2FozlnZqLd7RflEGn%2Ft3HmWzyiaSnCWmbqPP1gX"}],"group":"cf-nel","max_age":604800}'
+      Nel:
+      - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
+      Server:
+      - cloudflare
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id":"15868857067","properties":{"createdate":"2024-09-19T19:07:51.338Z","domain":"sensadrome.com","hs_lastmodifieddate":"2024-09-19T19:07:53.952Z","hs_object_id":"15868857067","name":"Sensadrome"},"createdAt":"2024-09-19T19:07:51.338Z","updatedAt":"2024-09-19T19:07:53.952Z","archived":false}'
+  recorded_at: Thu, 19 Sep 2024 19:09:36 GMT
+recorded_with: VCR 6.0.0
