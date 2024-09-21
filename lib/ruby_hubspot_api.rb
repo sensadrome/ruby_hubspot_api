@@ -13,3 +13,8 @@ require_relative 'hubspot/api_client'
 
 # load base class then modules
 require_relative 'hubspot/resource'
+require_relative 'hubspot/contact'
+require_relative 'hubspot/company'
+
+# Load other components
+require_relative 'hubspot/paged_collection'
