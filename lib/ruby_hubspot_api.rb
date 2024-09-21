@@ -10,3 +10,6 @@ require_relative 'hubspot/config'
 # define the exception classes, then load the main API client
 require_relative 'hubspot/exceptions'
 require_relative 'hubspot/api_client'
+
+# load base class then modules
+require_relative 'hubspot/resource'
