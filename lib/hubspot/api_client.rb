@@ -15,9 +15,16 @@ module Hubspot
     class << self
       def get(url, options = {})
         ensure_configuration!
+
+        if options[:query] && options[:query][:properties].is_a?(Array)
+          options[:query][:properties] = options[:query][:properties].join(',')
+        end
+
         start_time = Time.now
         response = super(url, options)
-        log_request(:get, url, response, start_time)
+
+        request = HTTParty::Request.new(Net::HTTP::Get, url, options)
+        log_request(:get, request.uri.to_s, response, start_time)
         response
       end
 
