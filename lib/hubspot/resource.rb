@@ -6,6 +6,8 @@ module Hubspot
   # rubocop:disable Metrics/ClassLength
   # Hubspot::Resource class
   class Resource < ApiClient
+    METADATA_FIELDS = %w[createdate hs_object_id lastmodifieddate].freeze
+
     # Allow read/write access to properties and metadata
     attr_accessor :id, :properties, :changes, :metadata
 
@@ -156,19 +158,14 @@ module Hubspot
 
     # rubocop:disable Ling/MissingSuper
     def initialize(data = {})
-      @id = data['id'] ? data['id'].to_i : nil
+      @id = extract_id(data)
+      @properties = {}
+      @metadata = {}
 
-      # data sent as as attributes from the API fetch
       if @id
-        @properties = data['properties'] || {}
-        @metadata = data.reject { |key, _| key == 'properties' } # Store non-properties data in @metadata
-        @changes = {} # Initialize @changes to track modifications
-
-      # or initialising a new object
+        initialize_from_api(data)
       else
-        @properties = {}
-        @changes = data.transform_keys(&:to_s)
-        @metadata = {}
+        initialize_new_object(data)
       end
     end
     # rubocop:enable Ling/MissingSuper
@@ -247,6 +244,39 @@ module Hubspot
     # :nocov:
 
     private
+
+    # Extract ID from data and convert to integer
+    def extract_id(data)
+      data['id'] ? data['id'].to_i : nil
+    end
+
+    # Initialize from API response, separating metadata from properties
+    def initialize_from_api(data)
+      @metadata = extract_metadata(data)
+      properties_data = data['properties'] || {}
+
+      properties_data.each do |key, value|
+        if METADATA_FIELDS.include?(key)
+          @metadata[key] = value
+        else
+          @properties[key] = value
+        end
+      end
+
+      @changes = {}
+    end
+
+    # Initialize a new object (no API response)
+    def initialize_new_object(data)
+      @properties = {}
+      @changes = data.transform_keys(&:to_s)
+      @metadata = {}
+    end
+
+    # Extract metadata from data, excluding properties
+    def extract_metadata(data)
+      data.reject { |key, _| key == 'properties' }
+    end
 
     # Create a new resource
     def create_new
