@@ -16,6 +16,13 @@ module Hubspot
         instantiate_from_response(response)
       end
 
+      def find_by(property, value, properties = nil)
+        params = { idProperty: property }
+        params[:properties] = properties if properties.is_a?(Array)
+        response = get("/crm/v3/objects/#{resource_name}/#{value}", query: params)
+        instantiate_from_response(response)
+      end
+
       # Create a new resource
       def create(params)
         response = post("/crm/v3/objects/#{resource_name}", body: { properties: params }.to_json)
