@@ -124,6 +124,36 @@ RSpec.describe Hubspot::Contact do
       end
     end
 
+    describe '#list.first' do
+      let(:props) { %w[email firstname lastname] }
+
+      context 'without specifying properties', cassette: 'contacts/list_first_no_props' do
+        let(:contact) { Hubspot::Contact.list.first }
+
+        it 'should return a single instance of a Contact' do
+          expect(contact).to be_a(Hubspot::Contact)
+        end
+
+        it 'should return a contact with the default properties' do
+          expect(contact.properties.keys.sort).to eq(props)
+        end
+      end
+
+      context 'when specifying properties', cassette: 'contacts/list_first_with_props' do
+        let(:less_props) { props.take(props.length - 1) }
+
+        let(:contact) { Hubspot::Contact.list(properties: less_props).first }
+
+        it 'should return a single instance of a Contact' do
+          expect(contact).to be_a(Hubspot::Contact)
+        end
+
+        it 'should return a contact with the default properties' do
+          expect(contact.properties.keys.sort).to eq(less_props)
+        end
+      end
+    end
+
     describe '#search' do
       it 'will only accept a string or a hash' do
         expect { Hubspot::Contact.search(query: 1) }.to raise_error(Hubspot::ArgumentError)
