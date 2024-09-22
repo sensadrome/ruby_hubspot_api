@@ -42,21 +42,22 @@ module Hubspot
       results
     end
 
-    # Override Enumerable's first method so as not to have to all each (via all)
+    # Override Enumerable's first method so as not to have to call each (via all)
     def first(limit = 1)
-      results = []
+      resources = []
       remaining = limit
 
       # Modify @params directly to set the limit
       @params[:limit] = [remaining, MAX_LIMIT].min
 
+      # loop through pages in case limit is more than the max limit
       each_page do |page|
-        results.concat(page)
+        resources.concat(page)
         remaining -= page.size
         break if remaining <= 0
       end
 
-      results.first(limit)
+      limit == 1 ? resources.first : resources.first(limit)
     end
 
     def each(&block)

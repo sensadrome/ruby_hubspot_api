@@ -21,9 +21,7 @@ RSpec.describe Hubspot::User do
     let(:user) { Hubspot::User.list.first }
 
     it 'returns one user/owner' do
-      expect(user).to be_a(Array)
-      expect(user).to all(be_a(Hubspot::User))
-      expect(user.length).to be(1)
+      expect(user).to be_a(Hubspot::User)
     end
   end
 end
