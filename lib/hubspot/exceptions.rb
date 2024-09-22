@@ -16,14 +16,17 @@ module Hubspot
 
   class NotFoundError < RequestError; end
   class OauthScopeError < RequestError; end
-  class RateLimitExceeded < RequestError; end
+  class RateLimitExceededError < RequestError; end
+  class NotConfiguredError < StandardError; end
+  class ArgumentError < StandardError; end
 
   class << self
     def error_from_response(response)
       return NotFoundError.new(response) if response.not_found?
+      return RateLimitExceededError.new(response) if response.code == 429
 
       case response.body
-      when /MISSING_SCOPES/
+      when /MISSING_SCOPES/, /You do not have permissions/i
         OauthScopeError.new(response, 'Private app missing required scopes')
       else
         RequestError.new(response)
