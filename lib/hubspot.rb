@@ -5,9 +5,13 @@ require_relative 'hubspot/config'
 # Main Hubspot module
 module Hubspot
   class << self
+    extend Forwardable
+
+    # Delegate logger to config.logger
+    def_delegator :config, :logger
+
     attr_writer :config
 
-    # Ensure we always have a default config, even if configure isn't called
     def config
       @config ||= Config.new
     end

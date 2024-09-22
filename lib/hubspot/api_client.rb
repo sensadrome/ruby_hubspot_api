@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
-require_relative './exceptions'
-
 module Hubspot
-  # For handling communication with the Hubspot API
+  # All interations with the Hubspot API happen here...
   class ApiClient
     include HTTParty
     base_uri 'https://api.hubapi.com'
 
-    # Default headers (Authorization is set by the Hubspot module)
     headers 'Content-Type' => 'application/json'
 
     def handle_response(response)
@@ -16,11 +13,57 @@ module Hubspot
     end
 
     class << self
-      # Process the response and return the parsed data
-      def handle_response(response)
-        raise Hubspot.error_from_response(response) unless response.success?
+      def get(url, options = {})
+        ensure_configuration!
+        start_time = Time.now
+        response = super(url, options)
+        log_request(:get, url, response, start_time)
+        response
+      end
 
-        response.parsed_response
+      def post(url, options = {})
+        ensure_configuration!
+        start_time = Time.now
+        response = super(url, options)
+        log_request(:post, url, response, start_time)
+        response
+      end
+
+      def patch(url, options = {})
+        ensure_configuration!
+        start_time = Time.now
+        response = super(url, options)
+        log_request(:patch, url, response, start_time)
+        response
+      end
+
+      def delete(url, options = {})
+        ensure_configuration!
+        start_time = Time.now
+        response = super(url, options)
+        log_request(:delete, url, response, start_time)
+        response
+      end
+
+      def log_request(http_method, url, response, start_time)
+        d = Time.now - start_time
+        Hubspot.logger.info("#{http_method.to_s.upcase} #{url} took #{d.round(2)}s with status #{response.code}")
+        Hubspot.logger.debug("Response body: #{response.body}") if Hubspot.logger.debug?
+      end
+
+      def handle_response(response)
+        if response.success?
+          response.parsed_response
+        else
+          Hubspot.logger.error("API Error: #{response.code} - #{response.body}")
+          raise Hubspot.error_from_response(response)
+        end
+      end
+
+      private
+
+      def ensure_configuration!
+        raise NotConfiguredError, 'Hubspot API not configured' unless Hubspot.configured?
       end
     end
   end
