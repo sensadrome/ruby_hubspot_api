@@ -1,0 +1,85 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.hubapi.com/crm/v3/objects/users?limit=1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <HUBSPOT_ACCESS_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sun, 22 Sep 2024 01:55:03 GMT
+      Content-Type:
+      - application/json;charset=utf-8
+      Content-Length:
+      - '243'
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 8c6eaba99a35d1f9-LHR
+      Cf-Cache-Status:
+      - DYNAMIC
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Vary:
+      - origin, Accept-Encoding
+      Access-Control-Allow-Credentials:
+      - 'false'
+      X-Content-Type-Options:
+      - nosniff
+      X-Envoy-Upstream-Service-Time:
+      - '63'
+      X-Evy-Trace-Listener:
+      - listener_https
+      X-Evy-Trace-Route-Configuration:
+      - listener_https/all
+      X-Evy-Trace-Route-Service-Name:
+      - envoyset-translator
+      X-Evy-Trace-Served-By-Pod:
+      - fra04/hubapi-td/envoy-proxy-576d445cf9-sdqwk
+      X-Evy-Trace-Virtual-Host:
+      - all
+      X-Hubspot-Correlation-Id:
+      - 71162ad9-0839-4d07-8a96-035fb24348c7
+      X-Hubspot-Ratelimit-Daily:
+      - '625000'
+      X-Hubspot-Ratelimit-Daily-Remaining:
+      - '624998'
+      X-Hubspot-Ratelimit-Interval-Milliseconds:
+      - '10000'
+      X-Hubspot-Ratelimit-Max:
+      - '190'
+      X-Hubspot-Ratelimit-Remaining:
+      - '189'
+      X-Hubspot-Ratelimit-Secondly:
+      - '19'
+      X-Hubspot-Ratelimit-Secondly-Remaining:
+      - '18'
+      X-Request-Id:
+      - 71162ad9-0839-4d07-8a96-035fb24348c7
+      Report-To:
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=fQ%2Fk40BxU2fMn1SKMTfHHs2HF3jEiqPlPkdRTD3QBSPhYF33L9b9oia4dMFfxl5MwLmwrVtT3MG2Dh5r2Q7q0x47NJBYI9eyYW8E43uTMIvg3caSX0ssc1XCwsNad79egmpFeThvrCBspT5l"}],"group":"cf-nel","max_age":604800}'
+      Nel:
+      - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
+      Server:
+      - cloudflare
+    body:
+      encoding: ASCII-8BIT
+      string: '{"results":[{"id":"101293478607","properties":{"hs_createdate":"2024-01-18T15:01:11.404Z","hs_lastmodifieddate":"2024-08-07T16:19:27.845Z","hs_object_id":"101293478607"},"createdAt":"2024-01-18T15:01:11.404Z","updatedAt":"2024-08-07T16:19:27.845Z","archived":false}],"paging":{"next":{"after":"101293478608","link":"https://api.hubapi.com/crm/v3/objects/users?limit=1&after=101293478608"}}}'
+  recorded_at: Sun, 22 Sep 2024 01:55:03 GMT
+recorded_with: VCR 6.0.0

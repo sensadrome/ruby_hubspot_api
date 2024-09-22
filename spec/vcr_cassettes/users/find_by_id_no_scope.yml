@@ -1,0 +1,87 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.hubapi.com/crm/v3/objects/users/1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <HUBSPOT_ACCESS_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 403
+      message: Forbidden
+    headers:
+      Date:
+      - Sat, 21 Sep 2024 17:57:23 GMT
+      Content-Type:
+      - application/json;charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 8c6beff43f3b6346-LHR
+      Cf-Cache-Status:
+      - DYNAMIC
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Vary:
+      - origin, Accept-Encoding
+      Access-Control-Allow-Credentials:
+      - 'false'
+      X-Content-Type-Options:
+      - nosniff
+      X-Envoy-Upstream-Service-Time:
+      - '17'
+      X-Evy-Trace-Listener:
+      - listener_https
+      X-Evy-Trace-Route-Configuration:
+      - listener_https/all
+      X-Evy-Trace-Route-Service-Name:
+      - envoyset-translator
+      X-Evy-Trace-Served-By-Pod:
+      - fra04/hubapi-td/envoy-proxy-576d445cf9-zd86x
+      X-Evy-Trace-Virtual-Host:
+      - all
+      X-Hubspot-Correlation-Id:
+      - df0e65b3-23b6-4057-8f53-7723b9108059
+      X-Hubspot-Ratelimit-Daily:
+      - '625000'
+      X-Hubspot-Ratelimit-Daily-Remaining:
+      - '624997'
+      X-Hubspot-Ratelimit-Interval-Milliseconds:
+      - '10000'
+      X-Hubspot-Ratelimit-Max:
+      - '190'
+      X-Hubspot-Ratelimit-Remaining:
+      - '189'
+      X-Hubspot-Ratelimit-Secondly:
+      - '19'
+      X-Hubspot-Ratelimit-Secondly-Remaining:
+      - '18'
+      X-Request-Id:
+      - df0e65b3-23b6-4057-8f53-7723b9108059
+      Report-To:
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=DENa8ZjQ6aN26FY7WpI9%2Bjaf5qdbimmRLEe9K3UZEqOYqoah5EQbrnje4SS5QGCqu2XyWcgzQF9TNqP0e599Hg2zshXbQVnyY9jHXbwPS6%2BdZWi2EvlJb6iSR%2FDpRfGS7a60abk4gud7JU6P"}],"group":"cf-nel","max_age":604800}'
+      Nel:
+      - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
+      Server:
+      - cloudflare
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"error","message":"This app hasn''t been granted all required
+        scopes to make this call. Read more about required scopes here: https://developers.hubspot.com/scopes.","correlationId":"df0e65b3-23b6-4057-8f53-7723b9108059","errors":[{"message":"One
+        or more of the following scopes are required.","context":{"requiredGranularScopes":["crm.objects.users.read"]}}],"links":{"scopes":"https://developers.hubspot.com/scopes"},"category":"MISSING_SCOPES"}'
+  recorded_at: Sat, 21 Sep 2024 17:57:23 GMT
+recorded_with: VCR 6.0.0
