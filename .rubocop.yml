@@ -1,8 +1,6 @@
 # .rubocop.yml
 
 # Ignore Metrics/BlockLength for the spec directory
-spec/**/*.rb:
-  Metrics/BlockLength:
-    Enabled: false
-  # Metrics/LineLength:
-  #   Enabled: false
+Metrics/BlockLength:
+  Exclude: 
+    - spec/**/*.rb
