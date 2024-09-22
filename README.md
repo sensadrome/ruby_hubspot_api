@@ -106,6 +106,22 @@ end
 all_contacts = contacts.all
 ```
 
+#### Retrieving the first n items
+
+You can use the `first` method to retrieve the first item or a specified number of items:
+
+```ruby
+contacts = Hubspot::Contact.list(page_size: 10)
+
+# Retrieve the first contact
+first_contact = contacts.first
+
+# Retrieve the first 5 contacts
+first_five_contacts = contacts.first(5)
+```
+
+This will automatically set the limits and handle paging for the most efficient API calls while honouring the maximum page count for hubspot resources
+
 #### Searching
 
 You can search for objects by passing query parameters to the `search` method. HubSpot supports several operators such as `eq`, `gte`, `lt`, and `IN` for filtering.
@@ -159,20 +175,6 @@ contacts.each do |contact|
   puts "Name: #{contact.firstname} #{contact.lastname}, Email: #{contact.email}, Mobile: #{contact.mobile}"
 end
 ```
-
-#### Retrieving the first n items
-
-You can use the `first` method to retrieve the first item or a specified number of items:
-
-```ruby
-# Retrieve the first contact
-first_contact = contacts.first
-
-# Retrieve the first 5 contacts
-first_five_contacts = contacts.first(5)
-```
-
-This will automatically set the limits and handle paging for the most efficient API calls
 
 ## Contributing
 
