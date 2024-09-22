@@ -52,28 +52,19 @@ module Hubspot
       end
 
       # Get the complete list of fields (properties) for the object
-      def full_property_list
-        all_properties.each_with_object({}) do |property, hash|
-          hash[property['name']] = property['description'] || property['label']
-        end
-      end
-
-      # Get the list of non-hubspot fields (properties) for the object
-      def custom_property_list
-        custom_properties.each_with_object({}) do |property, hash|
-          hash[property['name']] = property['description'] || property['label']
-        end
-      end
-
-      def all_properties
-        @all_properties ||= begin
+      def properties
+        @properties ||= begin
           response = get("/crm/v3/properties/#{resource_name}")
-          handle_response(response)['results']
+          handle_response(response)['results'].map { |hash| Property.new(hash) }
         end
       end
 
       def custom_properties
-        all_properties.reject { |property| property['hubspotDefined'] }
+        properties.reject { |property| property['hubspotDefined'] }
+      end
+
+      def property(property_name)
+        properties.detect { |prop| prop.name == property_name }
       end
 
       # Simplified search interface
@@ -241,15 +232,19 @@ module Hubspot
       end
 
       # Fallback if the method or attribute is not found
+      # :nocov:
       super
+      # :nocov:
     end
     # rubocop:enable Metrics/MethodLength
 
     # Ensure respond_to_missing? is properly overridden
+    # :nocov:
     def respond_to_missing?(method_name, include_private = false)
       property_name = method_name.to_s.chomp('=')
       @properties.key?(property_name) || @changes.key?(property_name) || super
     end
+    # :nocov:
 
     private
 
