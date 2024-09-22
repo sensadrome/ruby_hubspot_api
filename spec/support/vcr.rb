@@ -17,7 +17,7 @@ VCR.configure do |c|
   c.default_cassette_options = { record: vcr_record_mode }
 
   # Allow real requests only if the environment variable is set
-  if ENV['VCR_ALLOW_REQUESTS'] == 'true'
+  if ENV['VCR_ALLOW_REQUESTS'] == 'true' || vcr_record_mode != :none
     WebMock.allow_net_connect!
   else
     WebMock.disable_net_connect!(allow_localhost: true)
