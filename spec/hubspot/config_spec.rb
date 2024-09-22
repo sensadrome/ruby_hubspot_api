@@ -1,4 +1,4 @@
-# spec/hubspot/config_spec.rb
+# frozen_string_literal: true
 
 require 'spec_helper'
 require 'hubspot'
@@ -33,14 +33,67 @@ RSpec.describe Hubspot do
 
       expect(Hubspot.config.client_secret).to eq('test_client_secret')
     end
-  end
 
-  context 'when no configuration is set' do
-    it 'returns nil for access_token, portal_id, client_id, and client_secret' do
-      expect(Hubspot.config.access_token).to be_nil
-      expect(Hubspot.config.portal_id).to be_nil
-      expect(Hubspot.config.client_id).to be_nil
-      expect(Hubspot.config.client_secret).to be_nil
+    describe 'with the HUBSPOT_LOG_LEVEL env var' do
+      before(:each) { @original_level = ENV['HUBSPOT_LOG_LEVEL'] }
+      after(:each) { ENV['HUBSPOT_LOG_LEVEL'] = @original_level }
+
+      context 'is set' do
+        it 'will set the appropriate log level' do
+          %w[debug info warn error fatal].each do |level|
+            ENV['HUBSPOT_LOG_LEVEL'] = level
+            Hubspot.configure { |config| }
+            expect(Hubspot.config.log_level).to eq(Logger.const_get(level.upcase))
+            Hubspot.config = nil
+          end
+        end
+
+        it 'will default to INFO if an incorrect level name is provided' do
+          ENV['HUBSPOT_LOG_LEVEL'] = 'non-existent-level'
+          Hubspot.configure { |config| }
+          expect(Hubspot.config.log_level).to eq(Logger::INFO)
+          Hubspot.config = nil
+        end
+      end
+
+      context 'is not set' do
+        context 'in a Rails test environment' do
+          before do
+            stub_const('Rails', Class.new) unless defined?(Rails)
+            allow(Rails).to receive_message_chain(:env, :test?).and_return(true)
+          end
+
+          it 'will default to FATAL' do
+            ENV['HUBSPOT_LOG_LEVEL'] = nil
+            Hubspot.configure { |config| }
+            expect(Hubspot.config.log_level).to eq(Logger::FATAL)
+          end
+        end
+
+        context 'in a non Rails environment' do
+          it 'will default to INFO' do
+            ENV['HUBSPOT_LOG_LEVEL'] = nil
+            Hubspot.configure { |config| }
+            expect(Hubspot.config.log_level).to eq(Logger::INFO)
+          end
+        end
+      end
+    end
+
+    context 'when no configuration is set' do
+      describe 'when accessing the config' do
+        it 'returns nil for access_token, portal_id, client_id, and client_secret' do
+          expect(Hubspot.config.access_token).to be_nil
+          expect(Hubspot.config.portal_id).to be_nil
+          expect(Hubspot.config.client_secret).to be_nil
+        end
+      end
+
+      describe 'when trying to access the API' do
+        it 'raises an error' do
+          expect { Hubspot::Contact.list.first }.to raise_error(Hubspot::NotConfiguredError)
+        end
+      end
     end
   end
 end
