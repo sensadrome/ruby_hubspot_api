@@ -42,7 +42,7 @@ module Hubspot
       results
     end
 
-    # Enhanced first(n) method with proper @params modification
+    # Override Enumerable's first method so as not to have to all each (via all)
     def first(limit = 1)
       results = []
       remaining = limit
@@ -68,8 +68,11 @@ module Hubspot
     private
 
     def fetch_page(offset, attempt = 1, params_override = @params)
-      params_with_offset = params_override.merge(after: offset)
-      response = self.class.send(@method, @url, body: params_with_offset.to_json)
+      params_with_offset = params_override.dup
+      params_with_offset.merge!(after: offset) if offset
+
+      # Handle different HTTP methods
+      response = fetch_response_by_method(params_with_offset)
 
       if response.code == RATE_LIMIT_STATUS
         handle_rate_limit(response, offset, attempt, params_override)
@@ -78,8 +81,17 @@ module Hubspot
       end
     end
 
+    def fetch_response_by_method(params = {})
+      case @method
+      when :get
+        self.class.send(@method, @url, query: params)
+      else
+        self.class.send(@method, @url, body: params.to_json)
+      end
+    end
+
     def handle_rate_limit(response, offset, attempt, params_override)
-      raise Hubspot::RateLimitExceeded, response if attempt > MAX_RETRIES
+      raise Hubspot.error_from_response(response) if attempt > MAX_RETRIES
 
       retry_after = response.headers['Retry-After']&.to_i || RETRY_WAIT_TIME
       sleep(retry_after)
