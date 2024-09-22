@@ -1,0 +1,105 @@
+[
+    {
+        "archived": false,
+        "calculated": false,
+        "createdAt": "2024-07-25T10:39:17.506Z",
+        "createdUserId": "66824915",
+        "dataSensitivity": "non_sensitive",
+        "description": "Approximate date contact would like to travel",
+        "displayOrder": -1,
+        "externalOptions": false,
+        "fieldType": "date",
+        "formField": true,
+        "groupName": "contactinformation",
+        "hasUniqueValue": false,
+        "hidden": false,
+        "label": "Approx date of travel",
+        "modificationMetadata": {
+            "archivable": true,
+            "readOnlyDefinition": false,
+            "readOnlyValue": false
+        },
+        "name": "approx_date_of_travel",
+        "options": [],
+        "showCurrencySymbol": false,
+        "type": "date",
+        "updatedAt": "2024-07-25T10:39:17.506Z",
+        "updatedUserId": "66824915"
+    },
+    {
+        "archived": false,
+        "calculated": false,
+        "createdAt": "2024-07-25T12:56:48.505Z",
+        "createdUserId": "66824915",
+        "dataSensitivity": "non_sensitive",
+        "description": "Status of contact at enquiry stage",
+        "displayOrder": -1,
+        "externalOptions": false,
+        "fieldType": "select",
+        "formField": true,
+        "groupName": "contactinformation",
+        "hasUniqueValue": false,
+        "hidden": false,
+        "label": "Enquiry status",
+        "modificationMetadata": {
+            "archivable": true,
+            "readOnlyDefinition": false,
+            "readOnlyValue": false
+        },
+        "name": "enquiry_status",
+        "options": [
+            {
+                "displayOrder": 0,
+                "hidden": false,
+                "label": "New",
+                "value": "new"
+            },
+            {
+                "displayOrder": 1,
+                "hidden": false,
+                "label": "Ongoing",
+                "value": "ongoing"
+            },
+            {
+                "displayOrder": 2,
+                "hidden": false,
+                "label": "Archived",
+                "value": "archived"
+            },
+            {
+                "displayOrder": 4,
+                "hidden": false,
+                "label": "Converted",
+                "value": "converted"
+            }
+        ],
+        "showCurrencySymbol": false,
+        "type": "enumeration",
+        "updatedAt": "2024-07-25T12:56:48.505Z",
+        "updatedUserId": "66824915"
+    },
+    {
+        "archived": false,
+        "calculated": false,
+        "createdAt": "2024-07-16T14:21:25.335Z",
+        "dataSensitivity": "non_sensitive",
+        "description": "Lead Ad Properties",
+        "displayOrder": -1,
+        "externalOptions": false,
+        "fieldType": "text",
+        "formField": true,
+        "groupName": "lead_ads",
+        "hasUniqueValue": false,
+        "hidden": false,
+        "label": "Please enter your job title:",
+        "modificationMetadata": {
+            "archivable": true,
+            "readOnlyDefinition": false,
+            "readOnlyValue": false
+        },
+        "name": "job_title",
+        "options": [],
+        "type": "string",
+        "updatedAt": "2024-07-16T14:21:25.335Z"
+    }
+]

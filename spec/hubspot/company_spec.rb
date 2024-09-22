@@ -4,9 +4,19 @@
 require 'spec_helper'
 require 'hubspot/company'
 
-# rubocop:disable Metrics/BlockLength
 RSpec.describe Hubspot::Company do
   include_examples 'hubspot configuration'
+
+  describe '.properties' do
+    describe 'without the correct scope', cassette: 'companies/properties_no_scope' do
+      it 'will raise an error' do
+        expect { Hubspot::Company.properties }.to raise_error(Hubspot::OauthScopeError)
+      end
+    end
+
+    context 'with the correct scope' do
+    end
+  end
 
   # Needs a valid company id for testing if you want to rerecord
   let(:company_id) { ENV.fetch('HUBSPOT_TEST_COMPANY_ID', 1).to_i }
@@ -82,4 +92,3 @@ RSpec.describe Hubspot::Company do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

@@ -1,0 +1,86 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.hubapi.com/crm/v3/objects/contacts/emailmaria@hubspot.com?idProperty=email
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <HUBSPOT_ACCESS_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sun, 22 Sep 2024 17:00:45 GMT
+      Content-Type:
+      - application/json;charset=utf-8
+      Content-Length:
+      - '211'
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 8c73da610b958868-LHR
+      Cf-Cache-Status:
+      - DYNAMIC
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Vary:
+      - origin, Accept-Encoding
+      Access-Control-Allow-Credentials:
+      - 'false'
+      X-Content-Type-Options:
+      - nosniff
+      X-Envoy-Upstream-Service-Time:
+      - '71'
+      X-Evy-Trace-Listener:
+      - listener_https
+      X-Evy-Trace-Route-Configuration:
+      - listener_https/all
+      X-Evy-Trace-Route-Service-Name:
+      - envoyset-translator
+      X-Evy-Trace-Served-By-Pod:
+      - fra04/hubapi-td/envoy-proxy-576d445cf9-fq9km
+      X-Evy-Trace-Virtual-Host:
+      - all
+      X-Hubspot-Correlation-Id:
+      - 2edd0a30-903d-4256-8e1c-3528cca471f2
+      X-Hubspot-Ratelimit-Daily:
+      - '625000'
+      X-Hubspot-Ratelimit-Daily-Remaining:
+      - '624997'
+      X-Hubspot-Ratelimit-Interval-Milliseconds:
+      - '10000'
+      X-Hubspot-Ratelimit-Max:
+      - '190'
+      X-Hubspot-Ratelimit-Remaining:
+      - '189'
+      X-Hubspot-Ratelimit-Secondly:
+      - '19'
+      X-Hubspot-Ratelimit-Secondly-Remaining:
+      - '18'
+      X-Request-Id:
+      - 2edd0a30-903d-4256-8e1c-3528cca471f2
+      Report-To:
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=vfD05y8KaCaOStbEZhi61vCTouxsDDMGxEyvb6nMOoRBYHqvhrQlRVua0wCRInHY30EZu14s6069G9GQDBa6%2FNUsCotTkdo63FeDTZvx4H4s%2BK2mlKiYo9ioNvexivKaILmAKZu3pOUN%2ByV1"}],"group":"cf-nel","max_age":604800}'
+      Nel:
+      - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
+      Server:
+      - cloudflare
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id":"1","properties":{"createdate":"2024-01-18T15:01:13.519Z","email":"emailmaria@hubspot.com","firstname":"Maria","hs_object_id":"1","lastmodifieddate":"2024-09-19T15:29:39.856Z","lastname":"Johnson
+        (Sample Contact)"},"createdAt":"2024-01-18T15:01:13.519Z","updatedAt":"2024-09-19T15:29:39.856Z","archived":false}'
+  recorded_at: Sun, 22 Sep 2024 17:00:45 GMT
+recorded_with: VCR 6.0.0

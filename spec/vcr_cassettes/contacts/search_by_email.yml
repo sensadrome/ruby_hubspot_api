@@ -1,0 +1,76 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.hubapi.com/crm/v3/objects/contacts/search
+    body:
+      encoding: UTF-8
+      string: '{"filterGroups":[{"filters":[{"propertyName":"email","operator":"EQ","value":"emailmaria@hubspot.com"}]}],"limit":5}'
+    headers:
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <HUBSPOT_ACCESS_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sun, 22 Sep 2024 21:42:33 GMT
+      Content-Type:
+      - application/json;charset=utf-8
+      Content-Length:
+      - '230'
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 8c757729bf639545-LHR
+      Cf-Cache-Status:
+      - DYNAMIC
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Vary:
+      - origin, Accept-Encoding
+      Access-Control-Allow-Credentials:
+      - 'false'
+      X-Content-Type-Options:
+      - nosniff
+      X-Envoy-Upstream-Service-Time:
+      - '60'
+      X-Evy-Trace-Listener:
+      - listener_https
+      X-Evy-Trace-Route-Configuration:
+      - listener_https/all
+      X-Evy-Trace-Route-Service-Name:
+      - envoyset-translator
+      X-Evy-Trace-Served-By-Pod:
+      - fra04/hubapi-td/envoy-proxy-576d445cf9-nknjb
+      X-Evy-Trace-Virtual-Host:
+      - all
+      X-Hubspot-Correlation-Id:
+      - c340d5d1-0f1d-4d9b-b917-3e0e9aa236ec
+      X-Hubspot-Ratelimit-Daily:
+      - '625000'
+      X-Hubspot-Ratelimit-Daily-Remaining:
+      - '624978'
+      X-Request-Id:
+      - c340d5d1-0f1d-4d9b-b917-3e0e9aa236ec
+      Report-To:
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=L7kWWL4OLuWS5byn8nnLk7BHIL3ILCd8ynUaUuoqSg3slwyO7UwNWWyiaVHq0RDy2XllbUKMc7VUJRmgvmH8MzQizPgSv58UbZv5EPJJNJ9TFOpw4fBbw%2FQhLylq1CroyMM6Op%2BZvAm60LR4"}],"group":"cf-nel","max_age":604800}'
+      Nel:
+      - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
+      Server:
+      - cloudflare
+    body:
+      encoding: ASCII-8BIT
+      string: '{"total":1,"results":[{"id":"1","properties":{"createdate":"2024-01-18T15:01:13.519Z","email":"emailmaria@hubspot.com","firstname":"Maria","hs_object_id":"1","lastmodifieddate":"2024-09-19T15:29:39.856Z","lastname":"Johnson
+        (Sample Contact)"},"createdAt":"2024-01-18T15:01:13.519Z","updatedAt":"2024-09-19T15:29:39.856Z","archived":false}]}'
+  recorded_at: Sun, 22 Sep 2024 21:42:33 GMT
+recorded_with: VCR 6.0.0
