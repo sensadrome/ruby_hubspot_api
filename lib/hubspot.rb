@@ -21,6 +21,10 @@ module Hubspot
       set_client_headers if config.access_token
     end
 
+    def configured?
+      return true unless @config.nil?
+    end
+
     private
 
     # Set Authorization header on Hubspot::ApiClient when access_token is configured
