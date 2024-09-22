@@ -26,7 +26,9 @@ $ gem install ruby_hubspot_api
 
 ## Configuration
 
-To authenticate API requests, you need a HubSpot access token. You can configure the gem by adding this code to your initializer (for Rails) or to your startup configuration (in any other environment):
+To authenticate API requests, you need a HubSpot access token. First you will need to add a [private app in hubspot](https://developers.hubspot.com/docs/api/private-apps) When that is setup you can go to the "Auth" tab of your private app page and grab the access token from there
+
+You can configure the gem by adding this code to your initializer (for Rails) or to your startup configuration (in any other environment):
 
 ```ruby
 Hubspot.configure do |config|
@@ -49,13 +51,13 @@ You can instantiate a new resource (such as a contact) by passing a hash of prop
 Example:
 
 ```ruby
-new_contact = Hubspot::Contact.new(first_name: 'John', last_name: 'Doe', email: 'john.doe@example.com')
+new_contact = Hubspot::Contact.new(firstname: 'John', lastname: 'Doe', email: 'john.doe@example.com')
 
 # Save the contact to HubSpot
 new_contact.save
 
 # After saving, the contact will be assigned an ID by the API
-puts "New contact ID: #{new_contact.id}" if new_contact.id
+puts "New contact ID: #{new_contact.id}"
 ```
 
 #### Updating an Existing Object
@@ -70,7 +72,7 @@ contact.lastname = 'DoeUpdated'
 contact.save # true
 ```
 
-Example using the instance method `update`:
+Example using `update`:
 
 ```ruby
 contact = Hubspot::Contact.find(1)
