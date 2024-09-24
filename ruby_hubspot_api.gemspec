@@ -38,17 +38,18 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   # Define development dependencies
-  spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'dotenv'
-  spec.add_development_dependency 'pry'
-  spec.add_development_dependency 'pry-byebug', '>= 3.9'
-  spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rspec'
-  spec.add_development_dependency 'simplecov'
-  spec.add_development_dependency 'vcr'
-  spec.add_development_dependency 'webmock'
+  spec.add_development_dependency 'rake', '~> 11.0'
+
+  spec.add_dependency 'bundler', '~> 2.3', '< 3.0'
+  spec.add_dependency 'dotenv', '~> 2.8', '< 3.0'
+  spec.add_dependency 'pry', '~> 0.13', '< 1.0'
+  spec.add_dependency 'pry-byebug', '~> 3.9', '< 4.0'
+  spec.add_dependency 'rspec', '~> 3.13', '< 4.0'
+  spec.add_dependency 'simplecov', '~> 0.22', '< 1.0'
+  spec.add_dependency 'vcr', '~> 6.0', '< 7.0'
+  spec.add_dependency 'webmock', '~> 3.23', '< 4.0'
 
   # Define runtime dependencies
-  spec.add_runtime_dependency 'httparty'
+  spec.add_runtime_dependency 'httparty', '~> 0.21', '< 1.0'
 end
 # rubocop:enable Metrics/BlockLength
