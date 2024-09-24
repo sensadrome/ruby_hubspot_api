@@ -4,30 +4,28 @@ lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'hubspot/version'
 
+# rubocop:disable Metrics/BlockLength
 Gem::Specification.new do |spec|
   spec.name          = 'ruby_hubspot_api'
   spec.version       = Hubspot::VERSION
   spec.authors       = ['Simon Brook']
   spec.email         = ['simon@datanauts.co.uk']
 
-  spec.summary       = 'ruby_hubspot_api is an ORM-like wrapper for the Hubspot API'
-  spec.description   = 'ruby_hubspot_api is an ORM-like wrapper for v3 of the Hubspot API'
-  spec.homepage      = 'https://github.com/sensadrome/ruby_hubspot_api'
-  spec.license       = 'MIT'
+  spec.summary = 'ruby_hubspot_api is an ORM-like wrapper for the Hubspot API'
+  spec.description = 'ruby_hubspot_api is an ORM-like wrapper for v3 of the Hubspot API'
+  spec.homepage = 'https://github.com/sensadrome/ruby_hubspot_api'
+  spec.license = 'MIT'
 
   spec.required_ruby_version = '>= 2.5'
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
+  # Prevent pushing this gem to RubyGems.org.
+  # To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
     # spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
 
     spec.metadata['homepage_uri'] = spec.homepage
-    spec.metadata['source_code_uri'] = 'https://github.com/sensadrome/ruby_hubspot_api'
-    # spec.metadata['changelog_uri'] = "TODO: Put your gem's CHANGELOG.md URL here."
-  else
-    raise 'RubyGems 2.0 or newer is required to protect against ' \
-      'public gem pushes.'
+    spec.metadata['changelog_uri'] = "#{spec.homepage}/CHANGELOG.md"
   end
 
   # Specify which files should be added to the gem when it is released.
@@ -53,3 +51,4 @@ Gem::Specification.new do |spec|
   # Define runtime dependencies
   spec.add_runtime_dependency 'httparty'
 end
+# rubocop:enable Metrics/BlockLength
