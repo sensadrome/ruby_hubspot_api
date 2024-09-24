@@ -2,7 +2,15 @@ PATH
   remote: .
   specs:
     ruby_hubspot_api (0.1.0)
-      httparty
+      bundler (>= 2.0)
+      dotenv (>= 2.0)
+      httparty (>= 0.1, < 1.0)
+      pry (>= 0.1)
+      pry-byebug (>= 3.0)
+      rspec (>= 3.0)
+      simplecov (>= 0.22, < 1.0)
+      vcr (>= 6.0)
+      webmock (>= 3.0)
 
 GEM
   remote: https://rubygems.org/
@@ -63,16 +71,8 @@ PLATFORMS
   x86_64-darwin-18
 
 DEPENDENCIES
-  bundler
-  dotenv
-  pry
-  pry-byebug (>= 3.9)
-  rake
-  rspec
+  rake (>= 11.0, < 14.0)
   ruby_hubspot_api!
-  simplecov
-  vcr
-  webmock
 
 BUNDLED WITH
    2.3.26

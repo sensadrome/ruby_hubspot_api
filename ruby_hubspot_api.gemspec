@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
     # spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
 
     spec.metadata['homepage_uri'] = spec.homepage
-    spec.metadata['changelog_uri'] = "#{spec.homepage}/CHANGELOG.md"
+    spec.metadata['changelog_uri'] = "#{spec.homepage}/blob/main/CHANGELOG.md"
   end
 
   # Specify which files should be added to the gem when it is released.
@@ -38,18 +38,18 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   # Define development dependencies
-  spec.add_development_dependency 'rake', '~> 11.0'
+  spec.add_development_dependency 'rake', '>= 11.0', '< 14.0'
 
-  spec.add_dependency 'bundler', '~> 2.3', '< 3.0'
-  spec.add_dependency 'dotenv', '~> 2.8', '< 3.0'
-  spec.add_dependency 'pry', '~> 0.13', '< 1.0'
-  spec.add_dependency 'pry-byebug', '~> 3.9', '< 4.0'
-  spec.add_dependency 'rspec', '~> 3.13', '< 4.0'
-  spec.add_dependency 'simplecov', '~> 0.22', '< 1.0'
-  spec.add_dependency 'vcr', '~> 6.0', '< 7.0'
-  spec.add_dependency 'webmock', '~> 3.23', '< 4.0'
+  spec.add_dependency 'bundler', '>= 2.0'
+  spec.add_dependency 'dotenv', '>= 2.0'
+  spec.add_dependency 'pry', '>= 0.1'
+  spec.add_dependency 'pry-byebug', '>= 3.0'
+  spec.add_dependency 'rspec', '>= 3.0'
+  spec.add_dependency 'simplecov', '>= 0.22', '< 1.0'
+  spec.add_dependency 'vcr', '>= 6.0'
+  spec.add_dependency 'webmock', '>= 3.0'
 
   # Define runtime dependencies
-  spec.add_runtime_dependency 'httparty', '~> 0.21', '< 1.0'
+  spec.add_runtime_dependency 'httparty', '>= 0.1', '< 1.0'
 end
 # rubocop:enable Metrics/BlockLength
