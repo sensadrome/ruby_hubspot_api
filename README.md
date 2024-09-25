@@ -40,6 +40,8 @@ This configuration ensures that your API requests are authenticated using your H
 
 ## Working with Objects
 
+_(N.B when referring to the resources in the api we will refer to them as Objects as per the Hubspot nomenclature)_
+
 This gem allows you to interact with HubSpot objects such as contacts and companies. You can perform operations on individual instances (e.g., creating or updating records) as well as on collections (e.g., listing or searching).
 
 ### Instance Methods
@@ -58,6 +60,27 @@ new_contact.save
 
 # After saving, the contact will be assigned an ID by the API
 puts "New contact ID: #{new_contact.id}"
+```
+
+#### Retreiving an Object
+
+If you know the id of the object you can fetch it from the api using the find method
+
+```ruby
+contact = Hubspot::Contact.find(1)
+puts "Contact: #{contact.firstname} #{contact.lastname}"
+```
+
+You can also retrieve a single object by using the `find_by` method. Simply specify the property and the value you want to search on:
+
+```ruby
+# find by email
+contact = Hubspot::Contact.find_by('email', 'john.doe@example.org')
+puts "Contact: #{contact.firstname} #{contact.lastname}"
+
+#find by internal id (custom field)
+contact = Hubspot::Contact.find_by('member_id', 123)
+puts "Contact: #{contact.firstname} #{contact.lastname}"
 ```
 
 #### Updating an Existing Object
