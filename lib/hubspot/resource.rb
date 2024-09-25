@@ -134,12 +134,10 @@ module Hubspot
         filter_groups = [{ filters: [] }]
 
         filters.each do |key, value|
-          property_name, operator = extract_property_and_operator(key)
-          filter_groups.first[:filters] << {
-            propertyName: property_name,
-            operator: operator,
-            value: value
-          }
+          filter = extract_property_and_operator(key)
+          value_key = value.is_a?(Array) ? :values : :value
+          filter[value_key] = value
+          filter_groups.first[:filters] << filter
         end
 
         filter_groups
@@ -148,11 +146,16 @@ module Hubspot
       # Extract property name and operator from the key
       def extract_property_and_operator(key)
         OPERATOR_MAP.each do |suffix, hubspot_operator|
-          return [key.to_s.sub(suffix, ''), hubspot_operator] if key.to_s.end_with?(suffix)
+          if key.to_s.end_with?(suffix)
+            return {
+              propertyName: key.to_s.sub(suffix, ''),
+              operator: hubspot_operator
+            }
+          end
         end
 
         # Default to 'EQ' operator if no suffix is found
-        [key.to_s, 'EQ']
+        { propertyName: key.to_s, operator: 'EQ' }
       end
     end
 
