@@ -1,4 +1,5 @@
-## v0.1.0
+
+## v0.1.1
 
 - initial setup
 - Setup the configuration block
@@ -41,3 +42,13 @@
 - Test that we only get the properties we ask for or the defaults
 - Flatten the properties array into a comma separated list
 - Improve the intialiser
+- Update the changeling and link in gem spec
+- adds the version numbers to the gemspec
+- Fix dependencies
+- bump version
+
+## v0.1.0
+
+- adds the version numbers to the gemspec
+- Fix dependencies
+- bump version
