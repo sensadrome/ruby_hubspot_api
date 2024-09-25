@@ -137,14 +137,14 @@ contacts.each do |contact|
 end
 
 # Search for companies with number of employees greater than or equal to 100
-companies = Hubspot::Company.search(number_of_employees_gte: 100)
+companies = Hubspot::Company.search(query: { number_of_employees_gte: 100 })
 
 companies.each do |company|
   puts "Found: #{company.name}, Employees: #{company.number_of_employees}"
 end
 
 # Search for contacts with email in a specific list (IN operator)
-contacts = Hubspot::Contact.search(email_in: ['user1@example.com', 'user2@example.com'])
+contacts = Hubspot::Contact.search(query: { email_in: ['user1@example.com', 'user2@example.com'] })
 
 contacts.each do |contact|
   puts "Found: #{contact.email}"
