@@ -211,6 +211,10 @@ module Hubspot
     end
     alias archive delete
 
+    def resource_name
+      self.class.resource_name
+    end
+
     # rubocop:disable Metrics/MethodLength
     # Handle dynamic getter and setter methods with method_missing
     def method_missing(method, *args)
