@@ -161,10 +161,10 @@ module Hubspot
 
     # rubocop:disable Ling/MissingSuper
     def initialize(data = {})
+      data.transform_keys!(&:to_s)
       @id = extract_id(data)
       @properties = {}
       @metadata = {}
-
       if @id
         initialize_from_api(data)
       else
