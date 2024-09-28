@@ -173,6 +173,10 @@ module Hubspot
     end
     # rubocop:enable Ling/MissingSuper
 
+    def changes?
+      !@changes.empty?
+    end
+
     # Instance methods for update (or save)
     def save
       if persisted?
