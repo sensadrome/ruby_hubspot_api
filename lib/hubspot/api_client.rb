@@ -32,7 +32,7 @@ module Hubspot
         ensure_configuration!
         start_time = Time.now
         response = super(url, options)
-        log_request(:post, url, response, start_time)
+        log_request(:post, url, response, start_time, options)
         response
       end
 
@@ -40,7 +40,7 @@ module Hubspot
         ensure_configuration!
         start_time = Time.now
         response = super(url, options)
-        log_request(:patch, url, response, start_time)
+        log_request(:patch, url, response, start_time, options)
         response
       end
 
@@ -52,10 +52,13 @@ module Hubspot
         response
       end
 
-      def log_request(http_method, url, response, start_time)
+      def log_request(http_method, url, response, start_time, extra = nil)
         d = Time.now - start_time
         Hubspot.logger.info("#{http_method.to_s.upcase} #{url} took #{d.round(2)}s with status #{response.code}")
-        Hubspot.logger.debug("Response body: #{response.body}") if Hubspot.logger.debug?
+        return unless Hubspot.logger.debug?
+
+        Hubspot.logger.debug("Request body: #{extra}") if extra
+        Hubspot.logger.debug("Response body: #{response.body}")
       end
 
       def handle_response(response)
