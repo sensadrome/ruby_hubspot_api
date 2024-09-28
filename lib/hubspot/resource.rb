@@ -111,8 +111,6 @@ module Hubspot
 
       # rubocop:enable Metrics/MethodLength
 
-      private
-
       # Define the resource name based on the class
       def resource_name
         name = self.name.split('::').last.downcase
@@ -122,6 +120,8 @@ module Hubspot
           "#{name}s" # Contact -> contacts, Deal -> deals
         end
       end
+
+      private
 
       # Instantiate a single resource object from the response
       def instantiate_from_response(response)
@@ -240,19 +240,15 @@ module Hubspot
       end
 
       # Fallback if the method or attribute is not found
-      # :nocov:
       super
-      # :nocov:
     end
     # rubocop:enable Metrics/MethodLength
 
     # Ensure respond_to_missing? is properly overridden
-    # :nocov:
     def respond_to_missing?(method_name, include_private = false)
       property_name = method_name.to_s.chomp('=')
       @properties.key?(property_name) || @changes.key?(property_name) || super
     end
-    # :nocov:
 
     private
 
