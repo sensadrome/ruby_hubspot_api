@@ -3,6 +3,9 @@
 module Hubspot
   # All interations with the Hubspot API happen here...
   class ApiClient
+    MAX_RETRIES = 3
+    RETRY_WAIT_TIME = 1 # seconds
+
     include HTTParty
     base_uri 'https://api.hubapi.com'
 
@@ -61,16 +64,42 @@ module Hubspot
         Hubspot.logger.debug("Response body: #{response.body}")
       end
 
-      def handle_response(response)
-        if response.success?
+      def handle_response(response, retries = 0)
+        case response.code
+        when 200..299
           response.parsed_response
+        when 429
+          handle_rate_limit(response, retries)
         else
-          Hubspot.logger.error("API Error: #{response.code} - #{response.body}")
-          raise Hubspot.error_from_response(response)
+          log_and_raise_error(response)
         end
       end
 
       private
+
+      def handle_rate_limit(response, retries)
+        if retries < MAX_RETRIES
+          retry_after = response.headers['Retry-After']&.to_i || RETRY_WAIT_TIME
+          Hubspot.logger.warn("Rate limit hit. Retrying in #{retry_after} seconds...")
+          sleep(retry_after)
+          retry_request(response.request, retries + 1)
+        else
+          Hubspot.logger.error('Exceeded maximum retries for rate-limited request.')
+          raise Hubspot.error_from_response(response)
+        end
+      end
+
+      def retry_request(request, retries)
+        # Re-issues the original request using the retry logic
+        http_method = request.http_method::METHOD.downcase # Use the METHOD constant to get the method string
+        response = HTTParty.send(http_method, request.uri, request.options)
+        handle_response(response, retries)
+      end
+
+      def log_and_raise_error(response)
+        Hubspot.logger.error("API Error: #{response.code} - #{response.body}")
+        raise Hubspot.error_from_response(response)
+      end
 
       def ensure_configuration!
         raise NotConfiguredError, 'Hubspot API not configured' unless Hubspot.configured?
