@@ -36,6 +36,67 @@ RSpec.describe Hubspot::Batch do
     end
   end
 
+  describe '#read' do
+    before do
+      allow(Hubspot::PagedBatch).to receive(:post).and_return(response)
+    end
+
+    let(:contact_ids) { [1, 2, 3] }
+    let(:response_data) do
+      {
+        'results' => [
+          { 'id' => '1', 'updatedAt' => Time.now.utc.iso8601(3),
+            'properties' => { 'email' => 'luke@jedi.org', 'firstname' => 'Luke', 'lastname' => 'Skywalker' } },
+          { 'id' => '2', 'updatedAt' => Time.now.utc.iso8601(3),
+            'properties' => { 'email' => 'obiwan@jedi.org', 'firstname' => 'Obi-Wan', 'lastname' => 'Kenobi' } },
+          { 'id' => '3', 'updatedAt' => Time.now.utc.iso8601(3),
+            'properties' => { 'email' => 'quigon@jedi.org', 'firstname' => 'Qui-Gon', 'lastname' => 'Jinn' } }
+        ]
+      }
+    end
+
+    context 'when called directly from the class' do
+      let(:batch) { described_class.read(Hubspot::Contact, contact_ids) }
+      it 'will retrieve a batch of objects' do
+        expect(batch).to be_a(Hubspot::Batch)
+        expect(batch.resources).to all(be_a(Hubspot::Contact))
+      end
+    end
+
+    context 'when called directly from the resource class batch_read method' do
+      let(:batch) { Hubspot::Contact.batch_read(contact_ids) }
+      it 'will retrieve a paged batch of objects' do
+        expect(batch).to be_a(Hubspot::PagedBatch)
+        expect(batch.first).to be_a(Hubspot::Contact)
+      end
+    end
+  end
+
+  describe '#read_all' do
+    before do
+      allow(Hubspot::PagedBatch).to receive(:post).and_return(response)
+    end
+
+    def api_contact(seq)
+      { 'id' => seq + 1, 'properties' => { 'firstname' => "Contact #{seq + 1}" } }
+    end
+
+    let(:response_data) do
+      {
+        'results' => Array.new(15) { |i| api_contact(i) }
+      }
+    end
+
+    let(:contact_ids) { (1..15).to_a }
+
+    let(:batch) { Hubspot::Contact.batch_read_all(contact_ids) }
+
+    it 'should return a Hubspot.batch with the right number of resources' do
+      expect(batch).to be_a(Hubspot::Batch)
+      expect(batch.resources.length).to eq(contact_ids.length)
+    end
+  end
+
   describe '#create' do
     let(:contact1) { Hubspot::Contact.new(email: 'john@example.com', firstname: 'John', lastname: 'Doe') }
     let(:contact2) { Hubspot::Contact.new(email: 'jane@example.com', firstname: 'Jane', lastname: 'Doe') }

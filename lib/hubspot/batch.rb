@@ -235,6 +235,18 @@ module Hubspot
     def update_metadata(resource, updated_at)
       resource.metadata['updatedAt'] = updated_at if updated_at
     end
+
+    class << self
+      def read(object_class, object_ids = [], id_property: 'id')
+        raise ArgumentError, 'Must be a valid Hubspot resource class' unless object_class < Hubspot::Resource
+
+        # fetch all the matching resources with paging handled
+        resources = object_class.batch_read(object_ids, id_property: id_property).all
+
+        # return instance of Hubspot::Batch with the resources set
+        new(resources, id_property: id_property)
+      end
+    end
   end
   # rubocop:enable Metrics/ClassLength
 end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_relative './api_client'
+require_relative './paged_collection'
+require_relative './paged_batch'
 
 module Hubspot
   # rubocop:disable Metrics/ClassLength
@@ -51,6 +53,21 @@ module Hubspot
           params: params,
           resource_class: self
         )
+      end
+
+      def batch_read(object_ids = [], id_property: 'id')
+        params = id_property == 'id' ? {} : { idProperty: id_property }
+
+        PagedBatch.new(
+          url: "/crm/v3/objects/#{resource_name}/batch/read",
+          params: params,
+          object_ids: object_ids,
+          resource_class: self
+        )
+      end
+
+      def batch_read_all(object_ids = [], id_property: 'id')
+        Hubspot::Batch.read(self, object_ids, id_property: id_property)
       end
 
       # Get the complete list of fields (properties) for the object
