@@ -20,4 +20,7 @@ require_relative 'hubspot/company'
 require_relative 'hubspot/user'
 
 # Load other components
+require_relative 'hubspot/batch'
 require_relative 'hubspot/paged_collection'
+
+require_relative 'support/patches'

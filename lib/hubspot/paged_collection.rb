@@ -8,9 +8,6 @@ module Hubspot
   class PagedCollection < ApiClient
     include Enumerable
 
-    RATE_LIMIT_STATUS = 429
-    MAX_RETRIES = 3
-    RETRY_WAIT_TIME = 3
     MAX_LIMIT = 100 # HubSpot max items per page
 
     # rubocop:disable Lint/MissingSuper
@@ -68,18 +65,14 @@ module Hubspot
 
     private
 
-    def fetch_page(offset, attempt = 1, params_override = @params)
-      params_with_offset = params_override.dup
+    def fetch_page(offset)
+      params_with_offset = @params.dup
       params_with_offset.merge!(after: offset) if offset
 
       # Handle different HTTP methods
       response = fetch_response_by_method(params_with_offset)
 
-      if response.code == RATE_LIMIT_STATUS
-        handle_rate_limit(response, offset, attempt, params_override)
-      else
-        handle_response(response)
-      end
+      handle_response(response)
     end
 
     def fetch_response_by_method(params = {})
@@ -89,14 +82,6 @@ module Hubspot
       else
         self.class.send(@method, @url, body: params.to_json)
       end
-    end
-
-    def handle_rate_limit(response, offset, attempt, params_override)
-      raise Hubspot.error_from_response(response) if attempt > MAX_RETRIES
-
-      retry_after = response.headers['Retry-After']&.to_i || RETRY_WAIT_TIME
-      sleep(retry_after)
-      fetch_page(offset, attempt + 1, params_override)
     end
   end
 end

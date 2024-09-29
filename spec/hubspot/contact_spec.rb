@@ -271,4 +271,16 @@ RSpec.describe Hubspot::Contact do
       end
     end
   end
+
+  describe 'when intialised with email property' do
+    let(:contact) { Hubspot::Contact.new(email: 'leya@rebelaliance.org') }
+
+    it 'will respond to .email' do
+      expect(contact).to respond_to(:email)
+    end
+
+    it 'will not respond_to .firstname' do
+      expect { contact.firstname }.to raise_error(NoMethodError)
+    end
+  end
 end

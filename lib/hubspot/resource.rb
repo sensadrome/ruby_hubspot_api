@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_relative './api_client'
+require_relative './paged_collection'
+require_relative './paged_batch'
 
 module Hubspot
   # rubocop:disable Metrics/ClassLength
@@ -51,6 +53,21 @@ module Hubspot
           params: params,
           resource_class: self
         )
+      end
+
+      def batch_read(object_ids = [], id_property: 'id')
+        params = id_property == 'id' ? {} : { idProperty: id_property }
+
+        PagedBatch.new(
+          url: "/crm/v3/objects/#{resource_name}/batch/read",
+          params: params,
+          object_ids: object_ids,
+          resource_class: self
+        )
+      end
+
+      def batch_read_all(object_ids = [], id_property: 'id')
+        Hubspot::Batch.read(self, object_ids, id_property: id_property)
       end
 
       # Get the complete list of fields (properties) for the object
@@ -111,8 +128,6 @@ module Hubspot
 
       # rubocop:enable Metrics/MethodLength
 
-      private
-
       # Define the resource name based on the class
       def resource_name
         name = self.name.split('::').last.downcase
@@ -122,6 +137,8 @@ module Hubspot
           "#{name}s" # Contact -> contacts, Deal -> deals
         end
       end
+
+      private
 
       # Instantiate a single resource object from the response
       def instantiate_from_response(response)
@@ -161,10 +178,10 @@ module Hubspot
 
     # rubocop:disable Ling/MissingSuper
     def initialize(data = {})
+      data.transform_keys!(&:to_s)
       @id = extract_id(data)
       @properties = {}
       @metadata = {}
-
       if @id
         initialize_from_api(data)
       else
@@ -172,6 +189,10 @@ module Hubspot
       end
     end
     # rubocop:enable Ling/MissingSuper
+
+    def changes?
+      !@changes.empty?
+    end
 
     # Instance methods for update (or save)
     def save
@@ -207,6 +228,10 @@ module Hubspot
     end
     alias archive delete
 
+    def resource_name
+      self.class.resource_name
+    end
+
     # rubocop:disable Metrics/MethodLength
     # Handle dynamic getter and setter methods with method_missing
     def method_missing(method, *args)
@@ -232,19 +257,15 @@ module Hubspot
       end
 
       # Fallback if the method or attribute is not found
-      # :nocov:
       super
-      # :nocov:
     end
     # rubocop:enable Metrics/MethodLength
 
     # Ensure respond_to_missing? is properly overridden
-    # :nocov:
     def respond_to_missing?(method_name, include_private = false)
       property_name = method_name.to_s.chomp('=')
       @properties.key?(property_name) || @changes.key?(property_name) || super
     end
-    # :nocov:
 
     private
 

@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
-RSpec.describe Hubspot::PagedCollection do
+RSpec.describe Hubspot::PagedBatch do
   include_examples 'hubspot configuration'
 
-  let(:contacts_list_page) { 'https://api.hubapi.com/crm/v3/objects/contacts' }
-  let(:contacts) { Hubspot::Contact.list }
+  let(:contacts_batch_read_page) { 'https://api.hubapi.com/crm/v3/objects/contacts/batch/read' }
+  let(:contact_ids) { (1...15).to_a }
 
+  let(:contacts) { Hubspot::Contact.batch_read(contact_ids) }
   context 'when hitting the rate limit' do
     before do
       # Stub the request to return a 429 rate-limit response (with immediate retry ;)
-      stub_request(:get, contacts_list_page)
+      stub_request(:post, contacts_batch_read_page)
         .to_return(status: 429, body: 'Rate limit exceeded', headers: { 'Retry-After' => '0' })
 
       # Redefine the MAX_RETRIES constant to 2 for this test
@@ -18,36 +19,35 @@ RSpec.describe Hubspot::PagedCollection do
 
     it 'makes the correct number of retry attempts when receiving a 429 rate limit response' do
       expect { contacts.each_page { |page| page } }.to raise_error(Hubspot::RateLimitExceededError)
-      expect(WebMock).to have_requested(:get, contacts_list_page).times(3)
+      expect(WebMock).to have_requested(:post, contacts_batch_read_page).times(3)
     end
   end
 
   context 'when fetching all 15 contacts' do
     def new_contact(seq)
-      { 'id' => "contact_#{seq + 1}", 'properties' => { 'firstname' => "Contact #{seq + 1}" } }
+      { 'id' => seq + 1, 'properties' => { 'firstname' => "Contact #{seq + 1}" } }
     end
 
     before do
+      stub_const('Hubspot::PagedBatch::MAX_LIMIT', 10)
       # Stub the first page of contacts (10 contacts) with a 'next' paging parameter
-      stub_request(:get, contacts_list_page)
-        .with(query: hash_including({}))
+      stub_request(:post, contacts_batch_read_page)
+        .with(body: /"id":10/)
         .to_return(
           status: 200,
           body: {
-            'results' => Array.new(10) { |i| new_contact(i) },
-            'paging' => { 'next' => { 'after' => '10' } }
+            'results' => Array.new(10) { |i| new_contact(i) }
           }.to_json,
           headers: { 'Content-Type' => 'application/json' }
         )
 
       # Stub the second page of contacts (5 contacts) with no 'next' page
-      stub_request(:get, contacts_list_page)
-        .with(query: hash_including({ 'after' => '10' }))
+      stub_request(:post, contacts_batch_read_page)
+        .with(body: /"id":11/)
         .to_return(
           status: 200,
           body: {
-            'results' => Array.new(5) { |i| new_contact(i + 10) },
-            'paging' => {}
+            'results' => Array.new(5) { |i| new_contact(i + 10) }
           }.to_json,
           headers: { 'Content-Type' => 'application/json' }
         )
@@ -63,8 +63,7 @@ RSpec.describe Hubspot::PagedCollection do
       expect(all_contacts.map { |contact| contact.properties['firstname'] }).to include('Contact 1', 'Contact 15')
 
       # Verify that both page requests were made
-      expect(a_request(:get, contacts_list_page)).to have_been_made.once
-      expect(WebMock).to have_requested(:get, contacts_list_page).with(query: { 'after' => '10' }).once
+      expect(a_request(:post, contacts_batch_read_page)).to have_been_made.twice
     end
 
     it 'can be iterated over and it will fetch 2 pages' do
@@ -74,8 +73,8 @@ RSpec.describe Hubspot::PagedCollection do
       end
 
       # Verify that both page requests were made
-      expect(a_request(:get, contacts_list_page)).to have_been_made.once
-      expect(WebMock).to have_requested(:get, contacts_list_page).with(query: { 'after' => '10' }).once
+      expect(a_request(:post, contacts_batch_read_page)).to have_been_made.twice
+      expect(WebMock).to have_requested(:post, contacts_batch_read_page).with(body: Regexp.new({ id: 10 }.to_json)).once
     end
   end
 end

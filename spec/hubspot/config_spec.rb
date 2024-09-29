@@ -34,6 +34,55 @@ RSpec.describe Hubspot do
       expect(Hubspot.config.client_secret).to eq('test_client_secret')
     end
 
+    it 'sets and retrieves the default request timeout via the Hubspot module' do
+      Hubspot.configure do |config|
+        config.timeout = 10
+      end
+
+      expect(Hubspot.config.timeout).to eq(10)
+      expect(Hubspot::ApiClient.default_options[:timeout]).to eq(10)
+    end
+
+    it 'sets and retrieves the open_timeout via the Hubspot module' do
+      Hubspot.configure do |config|
+        config.open_timeout = 10
+      end
+
+      expect(Hubspot.config.open_timeout).to eq(10)
+      expect(Hubspot::ApiClient.default_options[:open_timeout]).to eq(10)
+    end
+
+    it 'sets and retrieves the read_timeout via the Hubspot module' do
+      Hubspot.configure do |config|
+        config.read_timeout = 10
+      end
+
+      expect(Hubspot.config.read_timeout).to eq(10)
+      expect(Hubspot::ApiClient.default_options[:read_timeout]).to eq(10)
+    end
+
+    context 'when RUBY_VERSION >= 2.6' do
+      it 'sets and retrieves the write_timeout via the Hubspot module', if: RUBY_VERSION >= '2.6' do
+        Hubspot.configure do |config|
+          config.write_timeout = 10
+        end
+
+        expect(Hubspot.config.write_timeout).to eq(10)
+        expect(Hubspot::ApiClient.default_options[:write_timeout]).to eq(10)
+      end
+    end
+
+    context 'when RUBY_VERSION < 2.6' do
+      it 'will not write_timeout via the Hubspot module when provided', if: RUBY_VERSION < '2.6' do
+        Hubspot.configure do |config|
+          config.write_timeout = 10
+        end
+
+        expect(Hubspot.config.write_timeout).to eq(10)
+        expect(Hubspot::ApiClient.default_options[:write_timeout]).to be_nil
+      end
+    end
+
     describe 'with the HUBSPOT_LOG_LEVEL env var' do
       before(:each) { @original_level = ENV['HUBSPOT_LOG_LEVEL'] }
       after(:each) { ENV['HUBSPOT_LOG_LEVEL'] = @original_level }
