@@ -1,5 +1,29 @@
+## v.0.2.0
 
-## v0.1.1
+- Get the development dependencies right!
+- Bump the version again
+- describe find_by method
+- update lock
+- batch  :sparkle: upsert spec
+- Borrowing Object#blank? method cos it actually really helps...
+- batch implemntation
+- logger.debug the post body and response body
+- Adds a changes? Method on resource
+- Adds instance method resource_name on resource
+- Ensure keys are stringified
+- Add all end points to the batch spec
+- Adds create and archive methods to batches
+- Tidy up resource code
+- Cover the previously nocov'd code
+- Add api client logging spec
+- add configurable timeouts to requests
+- Move rate limit handling to the client
+- Simplify mocked responses in batch spec
+- Adds PagedBatch as pager for batch/read request
+- Update the Readme to add Batch operations
+- #5 batch_updating
+
+## v0.1.2
 
 - initial setup
 - Setup the configuration block
@@ -45,6 +69,17 @@
 - Update the changeling and link in gem spec
 - adds the version numbers to the gemspec
 - Fix dependencies
+- bump version
+- Fix the Readme
+- Sure the search param is values where passing an array
+- update changelog and Gemfile.lock
+- bump version
+
+## v0.1.1
+
+- Fix the Readme
+- Sure the search param is values where passing an array
+- update changelog and Gemfile.lock
 - bump version
 
 ## v0.1.0
