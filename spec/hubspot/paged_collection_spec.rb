@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Hubspot::PagedCollection do
+  include_examples 'hubspot configuration'
+
   let(:contacts_list_page) { 'https://api.hubapi.com/crm/v3/objects/contacts' }
   let(:contacts) { Hubspot::Contact.list }
 
@@ -11,7 +13,7 @@ RSpec.describe Hubspot::PagedCollection do
         .to_return(status: 429, body: 'Rate limit exceeded', headers: { 'Retry-After' => '0' })
 
       # Redefine the MAX_RETRIES constant to 2 for this test
-      stub_const('Hubspot::PagedCollection::MAX_RETRIES', 2)
+      stub_const('Hubspot::ApiClient::MAX_RETRIES', 2)
     end
 
     it 'makes the correct number of retry attempts when receiving a 429 rate limit response' do
