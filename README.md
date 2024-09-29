@@ -178,12 +178,12 @@ This will automatically set the limits and handle paging for the most efficient 
 
 By default Hubspot will only send back the [default hubspot properties](https://knowledge.hubspot.com/properties/hubspots-default-contact-properties)
 
-You can pass an array of properties to be return as follows:
+You can pass an array of properties to be returned as follows:
 
 Example:
 
 ```ruby
-# Search for contacts with email containing "hubspot.com" and only return specific properties
+# Get the full list of contacts and only return specific properties
 contacts = Hubspot::Contact.list(
   properties: ['firstname', 'lastname', 'email', 'mobile', 'custom_property_1']
 )
@@ -327,7 +327,9 @@ batch.each_page do |contacts|
 end
 ```
 
-Finally there is another helper method on re
+Finally there is another helper method `batch_read_all` on any Hubspot::Resource class (Hubspot::Contact, Hubspot::Company, Hubspot::User etc) which will read all of the resources and return a HubSpot::Batch (with all of the resources). 
+
+You can then update the resources and call `update` on the batch.... see below
 
 #### Batch Update
 
@@ -348,13 +350,12 @@ batch.update
 
 Example using a batch
 ```ruby
-contact_ids = my_contacts.collect(&:hubspot_id).compact
-batch = Hubspot::contacts.batch_read(contact_ids)
+user_ids = my_selected_users.collect(&:hubspot_id).compact
+batch = Hubspot::User.batch_read(user_ids)
 
-batch.resources.each do |hubspot_contact|
-  my_contact = my_contacts.find { |c| c.hubspot_id == hubspot_contact.id }
-  # some logic or method to set any new/changed properties on hubspot_contact
-  update_hubspot_contact_from_local(hubspot_contact, my_contact)
+batch.resources.each do |hubspot_user|
+  # some logic or method to set any new/changed properties on hubspot_user
+  hubspot_user.sales_total = fetch_sales_total(user.email)
 end
 
 # now we have a batch with changed resources we can update the batch
