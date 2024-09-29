@@ -6,6 +6,17 @@ RSpec.describe Hubspot::Batch do
     instance_double('Company', changes: { name: 'Acme Corp' }, resource_name: 'companies', internal_id: 123)
   end
 
+  let(:response_data) { {} }
+  let(:response_code) { 200 }
+  let(:response) do
+    instance_double(HTTParty::Response, code: response_code, parsed_response: response_data, success?: true)
+  end
+
+  before do
+    # Mock the API response to return newly created contact IDs and updated properties
+    allow(Hubspot::Batch).to receive(:post).and_return(response)
+  end
+
   describe 'validity' do
     let(:resource1) { instance_double('Resource', changes: { name: 'John' }, resource_name: 'contacts') }
     let(:resource2) { instance_double('Resource', changes: { name: 'Jane' }, resource_name: 'contacts') }
@@ -41,12 +52,6 @@ RSpec.describe Hubspot::Batch do
       }
     end
 
-    before do
-      # Mock the API response to return newly created contact IDs and updated properties
-      response = instance_double(HTTParty::Response, code: 200, parsed_response: response_data, success?: true)
-      allow(Hubspot::Batch).to receive(:post).and_return(response)
-    end
-
     it 'creates new contacts and updates their ids and properties' do
       batch.create
 
@@ -77,16 +82,6 @@ RSpec.describe Hubspot::Batch do
       instance_double('Contact', changes: { name: 'John' }, resource_name: 'contacts', email: 'john@example.com')
     end
 
-    let(:response_data) { {} }
-
-    before do
-      # Mock HTTParty::Response to behave like a real response object
-      response = instance_double(HTTParty::Response, code: 200, parsed_response: response_data, success?: true)
-
-      # Mock the post method in ApiClient to return the HTTParty::Response object
-      allow(Hubspot::Batch).to receive(:post).and_return(response)
-    end
-
     describe 'when updating contacts' do
       let(:contact1) { Hubspot::Contact.new(id: 1, properties: { 'name' => 'John' }) }
       let(:contact2) { Hubspot::Contact.new(id: 2, properties: { 'name' => 'Jane' }) }
@@ -101,6 +96,7 @@ RSpec.describe Hubspot::Batch do
           ]
         }
       end
+
       before do
         # Explicitly set the changes on the contacts...
         contact1.changes = { 'name' => 'John Updated' }
@@ -159,10 +155,7 @@ RSpec.describe Hubspot::Batch do
     end
 
     context 'when some resources fail' do
-      before do
-        partial_success_response = instance_double(HTTParty::Response, code: 207, parsed_response: {}, success?: true)
-        allow(Hubspot::Batch).to receive(:post).and_return(partial_success_response)
-      end
+      let(:response_code) { 207 }
 
       it 'returns a partial success' do
         companies = Array.new(5) { company }
@@ -177,14 +170,6 @@ RSpec.describe Hubspot::Batch do
 
   describe '#upsert' do
     let(:companies) { Array.new(5) { company } } # 5 companies
-
-    before do
-      # Mock HTTParty::Response to behave like a response object
-      response = instance_double(HTTParty::Response, code: 200, parsed_response: {}, success?: true)
-
-      # Mock the post method in ApiClient to return the HTTParty::Response object
-      allow(Hubspot::Batch).to receive(:post).and_return(response)
-    end
 
     it 'makes a call to the correct upsert URL' do
       batch = Hubspot::Batch.new(companies, id_property: 'internal_id')
@@ -207,17 +192,11 @@ RSpec.describe Hubspot::Batch do
       end
     end
   end
-  
+
   describe '#archive' do
     let(:contact1) { Hubspot::Contact.new(id: 1, properties: { 'email' => 'john@example.com', 'firstname' => 'John' }) }
     let(:contact2) { Hubspot::Contact.new(id: 2, properties: { 'email' => 'jane@example.com', 'firstname' => 'Jane' }) }
     let(:batch) { described_class.new([contact1, contact2], id_property: 'id') }
-
-    before do
-      # Mock the API response for archive
-      response = instance_double(HTTParty::Response, code: 200, parsed_response: {}, success?: true)
-      allow(Hubspot::Batch).to receive(:post).and_return(response)
-    end
 
     it 'makes a call to the correct archive URL' do
       batch.archive
@@ -237,11 +216,7 @@ RSpec.describe Hubspot::Batch do
     end
 
     context 'when some resources fail to archive' do
-      before do
-        # Simulate a partial success response
-        partial_success_response = instance_double(HTTParty::Response, code: 207, parsed_response: {}, success?: true)
-        allow(Hubspot::Batch).to receive(:post).and_return(partial_success_response)
-      end
+      let(:response_code) { 207 }
 
       it 'returns partial success' do
         batch.archive
