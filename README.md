@@ -1,5 +1,7 @@
 # Ruby HubSpot API Gem
 
+[![codecov](https://codecov.io/gh/sensadrome/ruby_hubspot_api/branch/main/graph/badge.svg)](https://codecov.io/gh/sensadrome/ruby_hubspot_api)
+
 `[TOC]`
 
 This gem was largely inspired by [hubspot-api-ruby](https://github.com/captaincontrat/hubspot-api-ruby) which, in turn, was inspired by the [hubspot-ruby](https://github.com/HubspotCommunity/hubspot-ruby) community gem. I wanted to use version 3 of the api and simplify some parts of the interface
