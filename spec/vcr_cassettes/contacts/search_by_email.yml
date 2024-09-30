@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.hubapi.com/crm/v3/objects/contacts/search
     body:
       encoding: UTF-8
-      string: '{"filterGroups":[{"filters":[{"propertyName":"email","operator":"EQ","value":"emailmaria@hubspot.com"}]}],"limit":5}'
+      string: '{"filterGroups":[{"filters":[{"propertyName":"email","operator":"EQ","value":"<%= test_contact_email %>"}]}],"limit":5}'
     headers:
       Content-Type:
       - application/json
@@ -70,7 +70,6 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"total":1,"results":[{"id":"1","properties":{"createdate":"2024-01-18T15:01:13.519Z","email":"emailmaria@hubspot.com","firstname":"Maria","hs_object_id":"1","lastmodifieddate":"2024-09-19T15:29:39.856Z","lastname":"Johnson
-        (Sample Contact)"},"createdAt":"2024-01-18T15:01:13.519Z","updatedAt":"2024-09-19T15:29:39.856Z","archived":false}]}'
+      string: '{"total":1,"results":[{"id":"1","properties":{"createdate":"2024-01-18T15:01:13.519Z","email":"<%= test_contact_email %>","firstname":"Test","hs_object_id":"1","lastmodifieddate":"2024-09-19T15:29:39.856Z","lastname":"User"},"createdAt":"2024-01-18T15:01:13.519Z","updatedAt":"2024-09-19T15:29:39.856Z","archived":false}]}'
   recorded_at: Sun, 22 Sep 2024 21:42:33 GMT
 recorded_with: VCR 6.0.0

@@ -80,6 +80,6 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"results":[{"id":"1","properties":{"createdate":"2024-01-18T15:01:13.519Z","email":"emailmaria@hubspot.com","firstname":"Maria","hs_object_id":"1","lastmodifieddate":"2024-09-22T22:51:02.172Z"},"createdAt":"2024-01-18T15:01:13.519Z","updatedAt":"2024-09-22T22:51:02.172Z","archived":false}],"paging":{"next":{"after":"2","link":"https://api.hubapi.com/crm/v3/objects/contacts?properties=email%2Cfirstname&limit=1&after=2"}}}'
+      string: '{"results":[{"id":"1","properties":{"createdate":"2024-01-18T15:01:13.519Z","email":"<%= test_contact_email %>","firstname":"Maria","hs_object_id":"1","lastmodifieddate":"2024-09-22T22:51:02.172Z"},"createdAt":"2024-01-18T15:01:13.519Z","updatedAt":"2024-09-22T22:51:02.172Z","archived":false}],"paging":{"next":{"after":"2","link":"https://api.hubapi.com/crm/v3/objects/contacts?properties=email%2Cfirstname&limit=1&after=2"}}}'
   recorded_at: Sun, 22 Sep 2024 23:38:00 GMT
 recorded_with: VCR 6.0.0

@@ -10,7 +10,7 @@ RSpec.describe Hubspot::Contact do
   # Hubspot sample contact id (if still present!)
   let(:contact_id) { ENV.fetch('HUBSPOT_TEST_CONTACT_ID', 1).to_i }
   # Hubspot sample contact email
-  let(:contact_email) { ENV.fetch('HUBSPOT_TEST_CONTACT_EMAIL', 'emailmaria@hubspot.com') }
+  let(:contact_email) { ENV.fetch('HUBSPOT_TEST_CONTACT_EMAIL', 'test@example.org') }
 
   context 'using a private app with an access_token' do
     describe '.properties' do
@@ -72,7 +72,7 @@ RSpec.describe Hubspot::Contact do
       end
     end
 
-    describe '.find_by', cassette: 'contacts/find_by_email' do
+    describe '.find_by', cassette: 'contacts/find_by_email', erb: { test_contact_email: ENV.fetch('HUBSPOT_TEST_CONTACT_EMAIL', 'test@example.org') } do
       it 'retrieves a contact by email' do
         contact = Hubspot::Contact.find_by('email', contact_email)
 
@@ -159,12 +159,17 @@ RSpec.describe Hubspot::Contact do
         expect { Hubspot::Contact.search(query: 1) }.to raise_error(Hubspot::ArgumentError)
       end
 
-      let(:search_domain) { ENV.fetch('HUBSPOT_SEARCH_TEST_DOMAIN', 'hubspot.com') }
+      let(:search_domain) { ENV.fetch('HUBSPOT_SEARCH_TEST_DOMAIN', 'example.org') }
       let(:limit) { ENV.fetch('HUBSPOT_SEARCH_LIMIT', 5).to_i }
       let(:results) { Hubspot::Contact.search(query: search_params).first(limit) }
 
       context 'when searching using search parameters as a hash' do
-        context 'by email contains', cassette: 'contacts/search' do
+        context 'by email contains',
+                cassette: 'contacts/search',
+                erb: { 
+                  test_domain: ENV.fetch('HUBSPOT_SEARCH_TEST_DOMAIN', 'example.org')
+                } do
+
           let(:search_params) { { 'email_contains' => search_domain } }
 
           it 'matches the terms specified' do
@@ -181,8 +186,8 @@ RSpec.describe Hubspot::Contact do
           end
         end
 
-        context 'by email equals', cassette: 'contacts/search_by_email' do
-          let(:test_email) { ENV.fetch('HUBSPOT_TEST_CONTACT_EMAIL', 'test@hubspot.com') }
+        context 'by email equals', cassette: 'contacts/search_by_email', erb: { test_contact_email: ENV.fetch('HUBSPOT_TEST_CONTACT_EMAIL', 'test@example.org')} do
+          let(:test_email) { ENV.fetch('HUBSPOT_TEST_CONTACT_EMAIL', 'test@example.org') }
           let(:search_params) { { 'email' => test_email } }
 
           it 'matches the terms specified' do

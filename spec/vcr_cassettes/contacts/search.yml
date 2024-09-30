@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.hubapi.com/crm/v3/objects/contacts/search
     body:
       encoding: UTF-8
-      string: '{"filterGroups":[{"filters":[{"propertyName":"email","operator":"CONTAINS_TOKEN","value":"hubspot.com"}]}],"limit":5,"after":null}'
+      string: '{"filterGroups":[{"filters":[{"propertyName":"email","operator":"CONTAINS_TOKEN","value":"<%= test_domain %>"}]}],"limit":5,"after":null}'
     headers:
       Content-Type:
       - application/json
@@ -70,8 +70,8 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"total":3,"results":[{"id":"1","properties":{"createdate":"2024-01-18T15:01:13.519Z","email":"emailmaria@hubspot.com","firstname":"Maria","hs_object_id":"1","lastmodifieddate":"2024-09-19T15:29:39.856Z","lastname":"Johnson
-        (Sample Contact)"},"createdAt":"2024-01-18T15:01:13.519Z","updatedAt":"2024-09-19T15:29:39.856Z","archived":false},{"id":"51","properties":{"createdate":"2024-01-18T15:01:13.930Z","email":"bh@hubspot.com","firstname":"Brian","hs_object_id":"51","lastmodifieddate":"2024-01-18T15:01:30.025Z","lastname":"Halligan
-        (Sample Contact)"},"createdAt":"2024-01-18T15:01:13.930Z","updatedAt":"2024-01-18T15:01:30.025Z","archived":false},{"id":"30040593139","properties":{"createdate":"2024-08-15T13:19:15.521Z","email":"cajohnson@hubspot.com","firstname":"Caroline","hs_object_id":"30040593139","lastmodifieddate":"2024-08-15T13:19:30.345Z","lastname":"Test"},"createdAt":"2024-08-15T13:19:15.521Z","updatedAt":"2024-08-15T13:19:30.345Z","archived":false}]}'
+      string: '{"total":3,"results":[{"id":"1","properties":{"createdate":"2024-01-18T15:01:13.519Z","email":"john.doe@<%= test_domain %>","firstname":"John","hs_object_id":"1","lastmodifieddate":"2024-09-19T15:29:39.856Z","lastname":"Doe"},"createdAt":"2024-01-18T15:01:13.519Z","updatedAt":"2024-09-19T15:29:39.856Z","archived":false},
+        {"id":"2","properties":{"createdate":"2024-01-18T15:01:13.930Z","email":"jane.doe@<%= test_domain %>","firstname":"Jane","hs_object_id":"2","lastmodifieddate":"2024-01-18T15:01:30.025Z","lastname":"Doe"},"createdAt":"2024-01-18T15:01:13.930Z","updatedAt":"2024-01-18T15:01:30.025Z","archived":false},
+        {"id":"3","properties":{"createdate":"2024-08-15T13:19:15.521Z","email":"test@<%= test_domain %>","firstname":"Test","hs_object_id":"30040593139","lastmodifieddate":"2024-08-15T13:19:30.345Z","lastname":"Contact"},"createdAt":"2024-08-15T13:19:15.521Z","updatedAt":"2024-08-15T13:19:30.345Z","archived":false}]}'
   recorded_at: Fri, 20 Sep 2024 03:54:09 GMT
 recorded_with: VCR 6.0.0

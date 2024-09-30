@@ -34,4 +34,4 @@ jobs:
         bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
     - name: Run tests
-      run: HUBSPOT_LOG_LEVEL=FATAL bundle exec rake
+      run: HUBSPOT_LOG_LEVEL=FATAL bundle exec rspec

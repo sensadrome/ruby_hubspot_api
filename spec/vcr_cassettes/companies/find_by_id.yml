@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.hubapi.com/crm/v3/objects/companies/15868857067
+    uri: https://api.hubapi.com/crm/v3/objects/companies/<%= company_id %>
     body:
       encoding: US-ASCII
       string: ''
@@ -80,6 +80,6 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"id":"15868857067","properties":{"createdate":"2024-09-19T19:07:51.338Z","domain":"sensadrome.com","hs_lastmodifieddate":"2024-09-19T19:07:53.952Z","hs_object_id":"15868857067","name":"Sensadrome"},"createdAt":"2024-09-19T19:07:51.338Z","updatedAt":"2024-09-19T19:07:53.952Z","archived":false}'
+      string: '{"id":"<%= company_id %>","properties":{"createdate":"2024-09-19T19:07:51.338Z","domain":"sensadrome.com","hs_lastmodifieddate":"2024-09-19T19:07:53.952Z","hs_object_id":"<%= company_id %>","name":"Sensadrome"},"createdAt":"2024-09-19T19:07:51.338Z","updatedAt":"2024-09-19T19:07:53.952Z","archived":false}'
   recorded_at: Thu, 19 Sep 2024 19:09:36 GMT
 recorded_with: VCR 6.0.0

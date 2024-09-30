@@ -30,7 +30,7 @@ RSpec.describe Hubspot::Company do
       end
     end
 
-    describe '.find', cassette: 'companies/find_by_id' do
+    describe '.find', cassette: 'companies/find_by_id', erb: { company_id: ENV.fetch('HUBSPOT_TEST_COMPANY_ID', 1).to_i } do
       it 'retrieves a company by ID' do
         company = Hubspot::Company.find(company_id)
 
@@ -41,7 +41,7 @@ RSpec.describe Hubspot::Company do
       end
     end
 
-    describe '#update and rollback', cassette: 'companies/patch_name' do
+    describe '#update and rollback', cassette: 'companies/patch_name', erb: { company_id: ENV.fetch('HUBSPOT_TEST_COMPANY_ID', 1).to_i } do
       it 'appends " updated" to the name of a company and rolls it back' do
         # Step 1: Retrieve the existing company and store the original name
         company = Hubspot::Company.find(company_id)
@@ -73,7 +73,7 @@ RSpec.describe Hubspot::Company do
       let(:test_company_name) { ENV.fetch('HUBSPOT_TEST_COMPANY_NAME', 'ACME Test Company') }
       let(:company) { Hubspot::Company.new(name: test_company_name) }
 
-      it 'will create a company in hubspot and return the id', cassette: 'companies/create' do
+      it 'will create a company in hubspot and return the id', cassette: 'companies/create', erb: { company_name: ENV.fetch('HUBSPOT_TEST_COMPANY_NAME', 'ACME Test Company') } do
         company.save
         expect(company.id).to be_a(Integer)
 
