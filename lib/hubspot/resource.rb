@@ -86,6 +86,10 @@ module Hubspot
         properties.reject(&:read_only?)
       end
 
+      def read_only_properties
+        properties.select(&:read_only?)
+      end
+
       def property(property_name)
         properties.detect { |prop| prop.name == property_name }
       end
