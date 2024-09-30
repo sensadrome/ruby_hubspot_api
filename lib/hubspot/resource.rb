@@ -82,6 +82,10 @@ module Hubspot
         properties.reject { |property| property['hubspotDefined'] }
       end
 
+      def updatable_properties
+        properties.reject(&:read_only?)
+      end
+
       def property(property_name)
         properties.detect { |prop| prop.name == property_name }
       end

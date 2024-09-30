@@ -11,5 +11,9 @@ module Hubspot
       "#<#{self.class} #{formatted_attrs}>"
     end
     # :nocov:
+
+    def read_only?
+      modificationMetadata['readOnlyValue'] == true
+    end
   end
 end
