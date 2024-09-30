@@ -4,7 +4,7 @@ require 'bundler/setup'
 require 'simplecov'
 require 'simplecov-lcov'
 
-SimpleCov.formatter = SimpleCov::Formatter::LcovFormatter
+SimpleCov.formatter = SimpleCov::Formatter::LcovFormatter if ENV['GITHUB_ACTIONS'] == 'true'
 
 SimpleCov.start do
   add_filter '/spec/'
