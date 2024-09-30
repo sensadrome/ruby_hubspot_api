@@ -56,6 +56,7 @@ GEM
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.13.1)
+    simplecov-lcov (0.8.0)
     simplecov_json_formatter (0.1.4)
     vcr (6.0.0)
     webmock (3.23.1)
@@ -78,6 +79,7 @@ DEPENDENCIES
   rspec (>= 3.0)
   ruby_hubspot_api!
   simplecov
+  simplecov-lcov
   vcr (>= 6.0)
   webmock (>= 3.0)
 
