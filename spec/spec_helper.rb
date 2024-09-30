@@ -2,6 +2,9 @@
 
 require 'bundler/setup'
 require 'simplecov'
+require 'simplecov-lcov'
+
+SimpleCov.formatter = SimpleCov::Formatter::LcovFormatter
 
 SimpleCov.start do
   add_filter '/spec/'
