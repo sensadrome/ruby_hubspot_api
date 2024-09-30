@@ -28,12 +28,14 @@ RSpec.describe Hubspot::Contact do
           expect(properties).to all(be_a(Hubspot::Property))
         end
 
-        describe 'when customer properties are defined' do
+        describe 'when custom properties are defined' do
           let(:contact_properties) { load_json(:contact_properties) }
           let(:custom_contact_properties) { load_json(:custom_contact_properties) }
           let(:all_contact_properties) { contact_properties.concat(custom_contact_properties) }
 
           let(:custom_properties) { Hubspot::Contact.custom_properties }
+          let(:read_only_properties) { Hubspot::Contact.read_only_properties }
+          let(:updatable_properties) { Hubspot::Contact.updatable_properties }
 
           let(:fetch_properties_page) { 'https://api.hubapi.com/crm/v3/objects/properties/contacts' }
 
@@ -52,6 +54,26 @@ RSpec.describe Hubspot::Contact do
             expect(custom_properties).to all(be_a(Hubspot::Property))
 
             expect(custom_properties.length).to be < properties.length
+          end
+
+          it 'can be filtered for read-only properties' do
+            expect(properties).to be_a(Array)
+            expect(properties).to all(be_a(Hubspot::Property))
+
+            expect(read_only_properties).to be_a(Array)
+            expect(read_only_properties).to all(be_a(Hubspot::Property))
+
+            expect(read_only_properties.length).to be < properties.length
+          end
+
+          it 'can be filtered for updatable properties' do
+            expect(properties).to be_a(Array)
+            expect(properties).to all(be_a(Hubspot::Property))
+
+            expect(updatable_properties).to be_a(Array)
+            expect(updatable_properties).to all(be_a(Hubspot::Property))
+
+            expect(updatable_properties.length).to be < properties.length
           end
 
           describe 'a property' do
@@ -166,7 +188,7 @@ RSpec.describe Hubspot::Contact do
       context 'when searching using search parameters as a hash' do
         context 'by email contains',
                 cassette: 'contacts/search',
-                erb: { 
+                erb: {
                   test_domain: ENV.fetch('HUBSPOT_SEARCH_TEST_DOMAIN', 'example.org')
                 } do
 
