@@ -1,5 +1,7 @@
 # Ruby HubSpot API Gem
 
+`[TOC]`
+
 This gem was largely inspired by [hubspot-api-ruby](https://github.com/captaincontrat/hubspot-api-ruby) which, in turn, was inspired by the [hubspot-ruby](https://github.com/HubspotCommunity/hubspot-ruby) community gem. I wanted to use version 3 of the api and simplify some parts of the interface
 
 The Ruby HubSpot API gem is a starting point for building an ORM-like interface to HubSpot's API.
@@ -30,19 +32,54 @@ To authenticate API requests, you need a HubSpot access token. First you will ne
 
 You can configure the gem by adding this code to your initializer (for Rails) or to your startup configuration (in any other environment):
 
+##### Minimum configuration
+
 ```ruby
 Hubspot.configure do |config|
   config.access_token = 'your_access_token'
 end
 ```
 
+##### Full possible configuration
+
+```ruby
+Hubspot.configure do |config|
+  config.access_token = 'your_access_token'
+  config.portal_id = 'your_portal_id'
+  config.client_secret = 'your_client_secret'
+  config.logger = Rails.logger
+  config.log_level = 'info' # debug,info,warn,error,fatal
+  config.timeout = 10 # seconds to timeout all api requests
+  config.open_timeout = 5 # open_timeout seconds
+  config.read_timeout = 5 # read_timeout seconds
+  config.write_timeout = 5 # swrite_timeout econds (ruby >= 2.6)
+end
+```
+
 This configuration ensures that your API requests are authenticated using your HubSpot access token.
 
-## Working with Objects
+## Working with Resources
 
-_(N.B when referring to the resources in the api we will refer to them as Objects as per the Hubspot nomenclature)_
+This gem allows you to interact with Hubspot resources such as contacts and companies. You can perform operations on individual resources (e.g., creating or updating records) as well as on collections (e.g., listing or searching).
 
-This gem allows you to interact with HubSpot objects such as contacts and companies. You can perform operations on individual instances (e.g., creating or updating records) as well as on collections (e.g., listing or searching).
+__please note__
+
+> In the Hubspot API contacts, companies etc are referred to as "Objects" (e.g. CRM > Objects > Contacts) so when we use the word "Object" (with a capital O) we will be referring to an object in Hubspot
+
+> In this gem we use the term Resource so as not to accidentally overload Object! When we use the term "Resource" we should be referring to the ruby ORM base class and when we say "resource" we should be referring to an instance of this class (or a class that inherits it)
+
+### Hubspot::Resource class
+
+This is the base ORM class for all Hubspot CRM objects. You should not operate on this class but with the following classes each of which inherits from Hubspot::Resource
+
+```ruby
+Hubspot::Contact  # crm > contacts
+Hubspot::Company  # crm > companies
+Hubspot::User     # hubspot users (also referred to as 'owners')
+Hubspot::Owner    # alias of Hubspot::User if you prefer to use it
+```
+ 
+however you can [add custom objects of your own](#user-content-custom-resources) based on your own custom defined Objects in Hubspot
 
 ### Creating and Saving an Object
 
@@ -405,6 +442,31 @@ else
 end
 ```
 
+## Custom Resources
+
+If you have defined custom objects you can easily add them by creating a class that inherits from `Hubspot::Resource`
+
+```ruby
+# lib/hubspot/projects.rb
+
+require 'ruby_hubspot_api' # if not required by bundler already...
+
+module Hubspot
+  class Project < Resource
+    
+    # resource_name (part of the url in the api) will default
+    # to a simple plural of the class name - in this case 'projects'
+    # if the url for your custom object is different you can override it
+
+    def resource_name
+      'company_projects'
+    end
+  end
+end
+
+projects = Hubspot::Projects.search(query: { status_in: ['upcoming', 'active', 'overrun'] }).all
+
+```
 
 ## Contributing
 
