@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ruby_hubspot_api (0.1.2.1)
+    ruby_hubspot_api (0.2)
       httparty (>= 0.1, < 1.0)
 
 GEM
@@ -60,7 +60,9 @@ GEM
       hashdiff (>= 0.4.0, < 2.0.0)
 
 PLATFORMS
+  ruby
   x86_64-darwin-18
+  x86_64-linux
 
 DEPENDENCIES
   bundler (>= 2.0)
