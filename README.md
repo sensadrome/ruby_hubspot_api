@@ -1,8 +1,6 @@
 # Ruby HubSpot API Gem
 
-[![codecov](https://codecov.io/gh/sensadrome/ruby_hubspot_api/branch/main/graph/badge.svg)](https://codecov.io/gh/sensadrome/ruby_hubspot_api)
-
-`[TOC]`
+[![codecov](https://codecov.io/gh/sensadrome/ruby_hubspot_api/branch/main/graph/badge.svg)](https://codecov.io/gh/sensadrome/ruby_hubspot_api) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/504ca01245ee4928b6ed0b13801259e7)](https://app.codacy.com/gh/sensadrome/ruby_hubspot_api/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 This gem was largely inspired by [hubspot-api-ruby](https://github.com/captaincontrat/hubspot-api-ruby) which, in turn, was inspired by the [hubspot-ruby](https://github.com/HubspotCommunity/hubspot-ruby) community gem. I wanted to use version 3 of the api and simplify some parts of the interface
 
