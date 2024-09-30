@@ -40,12 +40,13 @@ Gem::Specification.new do |spec|
   # Define development dependencies
   spec.add_development_dependency 'rake', '>= 11.0', '< 14.0'
 
-  spec.add_development_dependency 'bundler', '>= 2.0'
+  spec.add_development_dependency 'bundler', '>= 2.0', '< 2.4.0'
+  spec.add_development_dependency 'codecov'
   spec.add_development_dependency 'dotenv', '>= 2.0'
   spec.add_development_dependency 'pry', '>= 0.1'
   spec.add_development_dependency 'pry-byebug', '>= 3.0'
   spec.add_development_dependency 'rspec', '>= 3.0'
-  spec.add_development_dependency 'simplecov', '>= 0.22', '< 1.0'
+  spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'vcr', '>= 6.0'
   spec.add_development_dependency 'webmock', '>= 3.0'
 
