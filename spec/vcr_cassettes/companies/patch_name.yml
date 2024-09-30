@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.hubapi.com/crm/v3/objects/companies/15868857067
+    uri: https://api.hubapi.com/crm/v3/objects/companies/<%= company_id %>
     body:
       encoding: US-ASCII
       string: ''
@@ -80,11 +80,11 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"id":"15868857067","properties":{"createdate":"2024-09-19T19:07:51.338Z","domain":"sensadrome.com","hs_lastmodifieddate":"2024-09-19T19:07:53.952Z","hs_object_id":"15868857067","name":"Sensadrome"},"createdAt":"2024-09-19T19:07:51.338Z","updatedAt":"2024-09-19T19:07:53.952Z","archived":false}'
+      string: '{"id":"<%= company_id %>","properties":{"createdate":"2024-09-19T19:07:51.338Z","domain":"sensadrome.com","hs_lastmodifieddate":"2024-09-19T19:07:53.952Z","hs_object_id":"<%= company_id %>","name":"Sensadrome"},"createdAt":"2024-09-19T19:07:51.338Z","updatedAt":"2024-09-19T19:07:53.952Z","archived":false}'
   recorded_at: Thu, 19 Sep 2024 19:15:13 GMT
 - request:
     method: patch
-    uri: https://api.hubapi.com/crm/v3/objects/companies/15868857067
+    uri: https://api.hubapi.com/crm/v3/objects/companies/<%= company_id %>
     body:
       encoding: UTF-8
       string: '{"properties":{"name":"Sensadrome updated"}}'
@@ -162,12 +162,12 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"id":"15868857067","properties":{"createdate":"2024-09-19T19:07:51.338Z","hs_all_owner_ids":"688411925","hs_created_by_user_id":"69153139","hs_lastmodifieddate":"2024-09-19T19:15:13.435Z","hs_object_id":"15868857067","hs_object_source":"CRM_UI","hs_object_source_id":"userId:69153139","hs_object_source_label":"CRM_UI","hs_object_source_user_id":"69153139","hs_pipeline":"companies-lifecycle-pipeline","hs_updated_by_user_id":"69153139","hs_user_ids_of_all_owners":"69153139","hubspot_owner_assigneddate":"2024-09-19T19:07:51.338Z","hubspot_owner_id":"688411925","lifecyclestage":"lead","name":"Sensadrome
+      string: '{"id":"<%= company_id %>","properties":{"createdate":"2024-09-19T19:07:51.338Z","hs_all_owner_ids":"688411925","hs_created_by_user_id":"69153139","hs_lastmodifieddate":"2024-09-19T19:15:13.435Z","hs_object_id":"<%= company_id %>","hs_object_source":"CRM_UI","hs_object_source_id":"userId:69153139","hs_object_source_label":"CRM_UI","hs_object_source_user_id":"69153139","hs_pipeline":"companies-lifecycle-pipeline","hs_updated_by_user_id":"69153139","hs_user_ids_of_all_owners":"69153139","hubspot_owner_assigneddate":"2024-09-19T19:07:51.338Z","hubspot_owner_id":"688411925","lifecyclestage":"lead","name":"Sensadrome
         updated"},"createdAt":"2024-09-19T19:07:51.338Z","updatedAt":"2024-09-19T19:15:13.435Z","archived":false}'
   recorded_at: Thu, 19 Sep 2024 19:15:13 GMT
 - request:
     method: get
-    uri: https://api.hubapi.com/crm/v3/objects/companies/15868857067
+    uri: https://api.hubapi.com/crm/v3/objects/companies/<%= company_id %>
     body:
       encoding: US-ASCII
       string: ''
@@ -245,12 +245,12 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"id":"15868857067","properties":{"createdate":"2024-09-19T19:07:51.338Z","domain":"sensadrome.com","hs_lastmodifieddate":"2024-09-19T19:15:13.435Z","hs_object_id":"15868857067","name":"Sensadrome
+      string: '{"id":"<%= company_id %>","properties":{"createdate":"2024-09-19T19:07:51.338Z","domain":"sensadrome.com","hs_lastmodifieddate":"2024-09-19T19:15:13.435Z","hs_object_id":"<%= company_id %>","name":"Sensadrome
         updated"},"createdAt":"2024-09-19T19:07:51.338Z","updatedAt":"2024-09-19T19:15:13.435Z","archived":false}'
   recorded_at: Thu, 19 Sep 2024 19:15:13 GMT
 - request:
     method: patch
-    uri: https://api.hubapi.com/crm/v3/objects/companies/15868857067
+    uri: https://api.hubapi.com/crm/v3/objects/companies/<%= company_id %>
     body:
       encoding: UTF-8
       string: '{"properties":{"name":"Sensadrome"}}'
@@ -328,11 +328,11 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"id":"15868857067","properties":{"createdate":"2024-09-19T19:07:51.338Z","hs_all_owner_ids":"688411925","hs_created_by_user_id":"69153139","hs_lastmodifieddate":"2024-09-19T19:15:13.727Z","hs_object_id":"15868857067","hs_object_source":"CRM_UI","hs_object_source_id":"userId:69153139","hs_object_source_label":"CRM_UI","hs_object_source_user_id":"69153139","hs_pipeline":"companies-lifecycle-pipeline","hs_updated_by_user_id":"69153139","hs_user_ids_of_all_owners":"69153139","hubspot_owner_assigneddate":"2024-09-19T19:07:51.338Z","hubspot_owner_id":"688411925","lifecyclestage":"lead","name":"Sensadrome"},"createdAt":"2024-09-19T19:07:51.338Z","updatedAt":"2024-09-19T19:15:13.727Z","archived":false}'
+      string: '{"id":"<%= company_id %>","properties":{"createdate":"2024-09-19T19:07:51.338Z","hs_all_owner_ids":"688411925","hs_created_by_user_id":"69153139","hs_lastmodifieddate":"2024-09-19T19:15:13.727Z","hs_object_id":"<%= company_id %>","hs_object_source":"CRM_UI","hs_object_source_id":"userId:69153139","hs_object_source_label":"CRM_UI","hs_object_source_user_id":"69153139","hs_pipeline":"companies-lifecycle-pipeline","hs_updated_by_user_id":"69153139","hs_user_ids_of_all_owners":"69153139","hubspot_owner_assigneddate":"2024-09-19T19:07:51.338Z","hubspot_owner_id":"688411925","lifecyclestage":"lead","name":"Sensadrome"},"createdAt":"2024-09-19T19:07:51.338Z","updatedAt":"2024-09-19T19:15:13.727Z","archived":false}'
   recorded_at: Thu, 19 Sep 2024 19:15:13 GMT
 - request:
     method: get
-    uri: https://api.hubapi.com/crm/v3/objects/companies/15868857067
+    uri: https://api.hubapi.com/crm/v3/objects/companies/<%= company_id %>
     body:
       encoding: US-ASCII
       string: ''
@@ -410,6 +410,6 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"id":"15868857067","properties":{"createdate":"2024-09-19T19:07:51.338Z","domain":"sensadrome.com","hs_lastmodifieddate":"2024-09-19T19:15:13.727Z","hs_object_id":"15868857067","name":"Sensadrome"},"createdAt":"2024-09-19T19:07:51.338Z","updatedAt":"2024-09-19T19:15:13.727Z","archived":false}'
+      string: '{"id":"<%= company_id %>","properties":{"createdate":"2024-09-19T19:07:51.338Z","domain":"sensadrome.com","hs_lastmodifieddate":"2024-09-19T19:15:13.727Z","hs_object_id":"<%= company_id %>","name":"Sensadrome"},"createdAt":"2024-09-19T19:07:51.338Z","updatedAt":"2024-09-19T19:15:13.727Z","archived":false}'
   recorded_at: Thu, 19 Sep 2024 19:15:13 GMT
 recorded_with: VCR 6.0.0

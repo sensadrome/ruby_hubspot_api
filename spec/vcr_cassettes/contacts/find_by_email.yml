@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.hubapi.com/crm/v3/objects/contacts/emailmaria@hubspot.com?idProperty=email
+    uri: https://api.hubapi.com/crm/v3/objects/contacts/<%= test_contact_email %>?idProperty=email
     body:
       encoding: US-ASCII
       string: ''
@@ -80,7 +80,7 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"id":"1","properties":{"createdate":"2024-01-18T15:01:13.519Z","email":"emailmaria@hubspot.com","firstname":"Maria","hs_object_id":"1","lastmodifieddate":"2024-09-19T15:29:39.856Z","lastname":"Johnson
+      string: '{"id":"1","properties":{"createdate":"2024-01-18T15:01:13.519Z","email":"<%= test_contact_email %>","firstname":"Maria","hs_object_id":"1","lastmodifieddate":"2024-09-19T15:29:39.856Z","lastname":"Johnson
         (Sample Contact)"},"createdAt":"2024-01-18T15:01:13.519Z","updatedAt":"2024-09-19T15:29:39.856Z","archived":false}'
   recorded_at: Sun, 22 Sep 2024 17:00:45 GMT
 recorded_with: VCR 6.0.0

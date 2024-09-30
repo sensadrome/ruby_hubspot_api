@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.hubapi.com/crm/v3/objects/companies
     body:
       encoding: UTF-8
-      string: '{"properties":{"name":"Numenor Capital"}}'
+      string: '{"properties":{"name":"<%= company_name %>"}}'
     headers:
       Content-Type:
       - application/json
@@ -165,7 +165,6 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"id":"666","properties":{"createdate":"2024-09-19T19:51:05.233Z","domain":null,"hs_lastmodifieddate":"2024-09-19T19:51:05.233Z","hs_object_id":"666","name":"Numenor
-        Capital"},"createdAt":"2024-09-19T19:51:05.233Z","updatedAt":"2024-09-19T19:51:05.233Z","archived":false}'
+      string: '{"id":"666","properties":{"createdate":"2024-09-19T19:51:05.233Z","domain":null,"hs_lastmodifieddate":"2024-09-19T19:51:05.233Z","hs_object_id":"666","name":"<%= company_name %>"},"createdAt":"2024-09-19T19:51:05.233Z","updatedAt":"2024-09-19T19:51:05.233Z","archived":false}'
   recorded_at: Thu, 19 Sep 2024 19:51:05 GMT
 recorded_with: VCR 6.0.0

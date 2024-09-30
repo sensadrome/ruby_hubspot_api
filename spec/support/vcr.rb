@@ -33,8 +33,9 @@ end
 RSpec.configure do |config|
   config.around(:each) do |example|
     if example.metadata[:cassette]
+      erb_values = example.metadata[:erb]
       cassette_name = example.metadata[:cassette]
-      VCR.use_cassette(cassette_name) { example.run }
+      VCR.use_cassette(cassette_name, erb: erb_values) { example.run }
     else
       example.run
     end
