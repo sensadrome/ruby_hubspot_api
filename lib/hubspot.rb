@@ -20,6 +20,7 @@ module Hubspot
       yield(config) if block_given?
       set_client_headers if config.access_token
       set_request_timeouts
+      config.apply_log_level
     end
 
     def configured?

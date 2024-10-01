@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# HubSpot API Client
+# Handles all HTTP interactions with the HubSpot API. It manages GET, POST, PATCH, and DELETE requests.
 module Hubspot
   # All interations with the Hubspot API happen here...
   class ApiClient
