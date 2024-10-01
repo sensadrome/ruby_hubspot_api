@@ -10,21 +10,18 @@ module Hubspot
 
     MAX_LIMIT = 100 # HubSpot max items per page
 
-    # rubocop:disable Lint/MissingSuper
     def initialize(url:, params: {}, resource_class: nil, method: :get)
       @url = url
       @params = params
       @resource_class = resource_class
       @method = method.to_sym
     end
-    # rubocop:enable Lint/MissingSuper
 
     def each_page
       offset = nil
       loop do
         response = fetch_page(offset)
-        results = response['results'] || []
-        mapped_results = @resource_class ? results.map { |result| @resource_class.new(result) } : results
+        mapped_results = process_results(response)
         yield mapped_results unless mapped_results.empty?
         offset = response.dig('paging', 'next', 'after')
         break unless offset
@@ -82,6 +79,13 @@ module Hubspot
       else
         self.class.send(@method, @url, body: params.to_json)
       end
+    end
+
+    def process_results(response)
+      results = response['results'] || []
+      return results unless @resource_class
+
+      results.map { |result| @resource_class.new(result) }
     end
   end
 end

@@ -186,12 +186,7 @@ RSpec.describe Hubspot::Contact do
       let(:results) { Hubspot::Contact.search(query: search_params).first(limit) }
 
       context 'when searching using search parameters as a hash' do
-        context 'by email contains',
-                cassette: 'contacts/search',
-                erb: {
-                  test_domain: ENV.fetch('HUBSPOT_SEARCH_TEST_DOMAIN', 'example.org')
-                } do
-
+        context 'by email contains', cassette: 'contacts/search', erb: { test_domain: ENV.fetch('HUBSPOT_SEARCH_TEST_DOMAIN', 'example.org') } do
           let(:search_params) { { 'email_contains' => search_domain } }
 
           it 'matches the terms specified' do
@@ -208,7 +203,7 @@ RSpec.describe Hubspot::Contact do
           end
         end
 
-        context 'by email equals', cassette: 'contacts/search_by_email', erb: { test_contact_email: ENV.fetch('HUBSPOT_TEST_CONTACT_EMAIL', 'test@example.org')} do
+        context 'by email equals', cassette: 'contacts/search_by_email', erb: { test_contact_email: ENV.fetch('HUBSPOT_TEST_CONTACT_EMAIL', 'test@example.org') } do
           let(:test_email) { ENV.fetch('HUBSPOT_TEST_CONTACT_EMAIL', 'test@example.org') }
           let(:search_params) { { 'email' => test_email } }
 
