@@ -8,13 +8,14 @@ module Hubspot
   # rubocop:disable Metrics/ClassLength
 
   # HubSpot Resource Base Class
-  # This class provides common functionality for interacting with HubSpot API resources such as Contacts, Companies, etc
+  # This class provides common functionality for interacting with
+  # HubSpot API resources such as Contacts, Companies, etc
   #
-  # It supports common operations like finding, creating, updating, and deleting resources, as well as batch operations.
+  # It supports common operations like finding, creating, updating,
+  # and deleting resources, as well as batch operations.
   #
-  # This class is meant to be inherited by specific resources like `Hubspot::Contact`.
-  #
-  # You can access the properties of a resource instance by calling the property name as method
+  # This class is meant to be inherited by specific resources
+  # like `Hubspot::Contact`.
   #
   # Example Usage:
   #   Hubspot::Contact.find(1)
@@ -49,8 +50,12 @@ module Hubspot
       #   contact = Hubspot::Contact.find(1)
       #
       # Returns An instance of the resource.
-      def find(id)
-        response = get("/crm/v3/objects/#{resource_name}/#{id}")
+      def find(id, properties = nil)
+        all_properties = build_property_list(properties)
+        if all_properties.is_a?(Array) && !all_properties.empty?
+          params = { query: { properties: all_properties } }
+        end
+        response = get("/crm/v3/objects/#{resource_name}/#{id}", params || {})
         instantiate_from_response(response)
       end
 
@@ -67,7 +72,10 @@ module Hubspot
       # Returns An instance of the resource.
       def find_by(property, value, properties = nil)
         params = { idProperty: property }
-        params[:properties] = properties if properties.is_a?(Array)
+
+        all_properties = build_property_list(properties)
+        params[:properties] = all_properties unless all_properties.empty?
+
         response = get("/crm/v3/objects/#{resource_name}/#{value}", query: params)
         instantiate_from_response(response)
       end
@@ -93,10 +101,11 @@ module Hubspot
       # Example:
       #   contact.update(1, name: "Jane Doe")
       #
-      # Returns True if the update was successful, false if not
+      # Returns True if the update was successful
       def update(id, params)
-        response = patch("/crm/v3/objects/#{resource_name}/#{id}", body: { properties: params }.to_json)
-        raise Hubspot.error_from_response(response) unless response.success?
+        response = patch("/crm/v3/objects/#{resource_name}/#{id}",
+                         body: { properties: params }.to_json)
+        handle_response(response)
 
         true
       end
@@ -108,10 +117,10 @@ module Hubspot
       # Example:
       #   Hubspot::Contact.archive(1)
       #
-      # Returns True if the deletion was successful, false if not
+      # Returns True if the deletion was successful
       def archive(id)
         response = delete("/crm/v3/objects/#{resource_name}/#{id}")
-        raise Hubspot.error_from_response(response) unless response.success?
+        handle_response(response)
 
         true
       end
@@ -125,6 +134,12 @@ module Hubspot
       #
       # Returns [PagedCollection] A collection of resources.
       def list(params = {})
+        all_properties = build_property_list(params[:properties])
+
+        if all_properties.is_a?(Array) && !all_properties.empty?
+          params[:properties] = all_properties.join(',')
+        end
+
         PagedCollection.new(
           url: "/crm/v3/objects/#{resource_name}",
           params: params,
@@ -142,7 +157,7 @@ module Hubspot
       # Example:
       #   Hubspot::Contact.batch_read([1, 2, 3])
       #
-      # Returns [PagedBatch] A paged batch of resources (call .each_page to cycle through pages from the API)
+      # Returns [PagedBatch] A paged batch of resources
       def batch_read(object_ids = [], id_property: 'id')
         params = id_property == 'id' ? {} : { idProperty: id_property }
 
@@ -161,7 +176,7 @@ module Hubspot
       # id_property - The property to use for identifying resources (default: 'id').
       #
       # Example:
-      #   Hubspot::Contact.batch_read([1, 2, 3])
+      #   Hubspot::Contact.batch_read_all(hubspot_contact_ids)
       #
       # Returns [Hubspot::Batch] A batch of resources that can be operated on further
       def batch_read_all(object_ids = [], id_property: 'id')
@@ -203,9 +218,11 @@ module Hubspot
       #
       # Example:
       #   property = Hubspot::Contact.property('industry_sector')
-      #   values_for_select = property.options.each_with_object({}) { |prop, ps| ps[prop['value']] = prop['label'] }
+      #   values_for_select = property.options.each_with_object({}) do |prop, hash|
+      #     hash[prop['value']] = prop['label']
+      #   end
       #
-      # Returns [Array<Hubspot::Property>] An array of hubspot properties
+      # Returns [Hubspot::Property] A hubspot property
       def property(property_name)
         properties.detect { |prop| prop.name == property_name }
       end
@@ -225,8 +242,10 @@ module Hubspot
 
       # Search for resources using a flexible query format and optional properties.
       #
-      # This method allows searching for resources by passing a query in the form of a string (for full-text search)
-      # or a hash with special suffixes on the keys to define different comparison operators.
+      # This method allows searching for resources by passing a query in the form of a string
+      # (for full-text search) or a hash with special suffixes on the keys to
+      # define different comparison operators.
+      #
       # You can also specify which properties to return and the number of results per page.
       #
       # Available suffixes for query keys (when using a hash):
@@ -244,14 +263,15 @@ module Hubspot
       #   - A String: for full-text search.
       #   - A Hash: where each key represents a property and may have suffixes for the comparison
       #     (e.g., `{ email_contains: 'example.org', age_gt: 30 }`).
-      # properties - An optional array of property names to return in the search results. [Array<String>]
+      # properties - An optional array of property names to return in the search results.
       #   If not specified or empty, HubSpot will return the default set of properties.
-      # page_size - The number of results to return per page (default is 10 for contacts and 100 for everything else).
+      # page_size - The number of results to return per page
+      #   (default is 10 for contacts and 100 for everything else).
       #
       # Example Usage:
       #   # Full-text search for 'example.org':
-      #   contacts = Hubspot::Contact.search(query: "example.org",
-      #                                      properties: ["email", "firstname", "lastname"], page_size: 50)
+      #   props = %w[email firstname lastname]
+      #   contacts = Hubspot::Contact.search(query: "example.org", properties: props, page_size: 50)
       #
       #   # Search for contacts whose email contains 'example.org' and are older than 30:
       #   contacts = Hubspot::Contact.search(
@@ -301,6 +321,12 @@ module Hubspot
         end
       end
 
+      # List of properties that will always be retrieved
+      # should be overridden in specific resource class
+      def required_properties
+        []
+      end
+
       private
 
       # Instantiate a single resource object from the response
@@ -337,9 +363,16 @@ module Hubspot
         # Default to 'EQ' operator if no suffix is found
         { propertyName: key.to_s, operator: 'EQ' }
       end
-    end
 
-    # rubocop:disable Ling/MissingSuper
+      # Internal make a list of properties to request from the API
+      # will be merged with any required_properties defined on the class
+      def build_property_list(properties)
+        properties = [] unless properties.is_a?(Array)
+        raise 'Must be an array' unless required_properties.is_a?(Array)
+
+        properties.concat(required_properties).uniq
+      end
+    end
 
     # Public: Initialize a resouce
     #
@@ -350,13 +383,14 @@ module Hubspot
     #     of the object against your own data
     #
     # Example:
-    #   contact = Hubspot::Contact.new(firstname: 'Luke', lastname: 'Skywalker', email: 'luke@jedi.org')
+    #   attrs = { firstname: 'Luke', lastname: 'Skywalker', email: 'luke@jedi.org' }
+    #   contact = Hubspot::Contact.new(attrs)
     #   contact.persisted? # false
     #   contact.save # creates the record in Hubspot
     #   contact.persisted? # true
     #   puts "Contact saved with hubspot id #{contact.id}"
     #
-    #   existing_contact = Hubspot::Contact.new(id: hubspot_id, properties: contact.to_hubspot_properties)
+    #   existing_contact = Hubspot::Contact.new(id: hubspot_id, properties: contact.to_hubspot)
     def initialize(data = {})
       data.transform_keys!(&:to_s)
       @id = extract_id(data)
@@ -368,8 +402,6 @@ module Hubspot
         initialize_new_object(data)
       end
     end
-
-    # rubocop:enable Ling/MissingSuper
 
     # Determine the state of the object
     #
