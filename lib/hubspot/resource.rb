@@ -437,23 +437,42 @@ module Hubspot
       @id ? true : false
     end
 
-    # Update the resource
+    # Public - Update the resource and persist to the api
     #
-    # params - hash of properties to update in key value pairs
+    # attributes - hash of properties to update in key value pairs
     #
     # Example:
     #   contact = Hubspot::Contact.find(hubspot_contact_id)
     #   contact.update(status: 'gold customer', last_contacted_at: Time.now.utc.iso8601)
     #
     # Returns Boolean
-    def update(params)
+    def update(attributes)
       raise 'Not able to update as not persisted' unless persisted?
 
-      params.each do |key, value|
-        send("#{key}=", value) # This will trigger the @changes tracking via method_missing
-      end
+      update_attributes(attributes)
 
       save
+    end
+
+    # Public - Update resource attributes
+    #
+    # Does not persist to the api but processes each attribute correctly
+    #
+    # Example:
+    #   contact = Hubspot::Contact.find(hubspot_contact_id)
+    #   contact.changes? # false
+    #   contact.update_attributes(education: 'Graduate', university: 'Life')
+    #   contact.education # Graduate
+    #   contact.changes? # true
+    #   contact.changes # { "education" => "Graduate", "university" => "Life" }
+    #
+    # Returns Hash of changes
+    def update_attributes(attributes)
+      raise ArgumentError, 'must be a hash' unless attributes.is_a?(Hash)
+
+      attributes.each do |key, value|
+        send("#{key}=", value) # This will trigger the @changes tracking via method_missing
+      end
     end
 
     # Archive the object in Hubspot
