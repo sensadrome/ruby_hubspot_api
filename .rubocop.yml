@@ -1,6 +1,19 @@
-# .rubocop.yml
+Documentation:
+    Enabled: false
 
-# Ignore Metrics/BlockLength for the spec directory
+Metrics/LineLength:
+  Max: 100
+  Exclude:
+    - spec/**/*.rb
+
+# Metrics/MethodLength:
+#   Max: 20
+
+# Metrics/ClassLength:
+#   Max: 200
+
 Metrics/BlockLength:
-  Exclude: 
+  #   Max: 50
+  # Ignore Metrics/BlockLength for the spec directory
+  Exclude:
     - spec/**/*.rb
