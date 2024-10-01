@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.homepage = 'https://github.com/sensadrome/ruby_hubspot_api'
   spec.license = 'MIT'
 
-  spec.required_ruby_version = '>= 2.5'
+  spec.required_ruby_version = '>= 2.4'
 
   # Prevent pushing this gem to RubyGems.org.
   # To allow pushes either set the 'allowed_push_host'

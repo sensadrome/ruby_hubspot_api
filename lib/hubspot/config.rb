@@ -15,6 +15,11 @@ module Hubspot
       apply_log_level
     end
 
+    # Apply the log level to the logger
+    def apply_log_level
+      @logger.level = @log_level
+    end
+
     private
 
     # Initialize the default logger
@@ -42,11 +47,6 @@ module Hubspot
       end
     end
     # rubocop:enable Metrics/MethodLength
-
-    # Apply the log level to the logger
-    def apply_log_level
-      @logger.level = @log_level
-    end
 
     # Set the default log level based on environment
     def default_log_level
