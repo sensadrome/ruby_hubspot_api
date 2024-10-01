@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.hubapi.com/crm/v3/objects/users?limit=1
+    uri: https://api.hubapi.com/crm/v3/objects/users?limit=1&properties=hs_email,hs_given_name,hs_family_name
     body:
       encoding: US-ASCII
       string: ''
@@ -80,6 +80,6 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"results":[{"id":"101293478607","properties":{"hs_createdate":"2024-01-18T15:01:11.404Z","hs_lastmodifieddate":"2024-08-07T16:19:27.845Z","hs_object_id":"101293478607"},"createdAt":"2024-01-18T15:01:11.404Z","updatedAt":"2024-08-07T16:19:27.845Z","archived":false}],"paging":{"next":{"after":"101293478608","link":"https://api.hubapi.com/crm/v3/objects/users?limit=1&after=101293478608"}}}'
+      string: '{"results":[{"id":"101293478607","properties":{"hs_createdate":"2024-01-18T15:01:11.404Z","hs_lastmodifieddate":"2024-08-07T16:19:27.845Z","hs_object_id":"101293478607","hs_given_name":"Luke","hs_family_name":"Skywalker","hs_email":"luke@jedi.org"},"createdAt":"2024-01-18T15:01:11.404Z","updatedAt":"2024-08-07T16:19:27.845Z","archived":false}],"paging":{"next":{"after":"101293478608","link":"https://api.hubapi.com/crm/v3/objects/users?limit=1&after=101293478608"}}}'
   recorded_at: Sun, 22 Sep 2024 01:55:03 GMT
 recorded_with: VCR 6.0.0

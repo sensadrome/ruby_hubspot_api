@@ -23,5 +23,11 @@ RSpec.describe Hubspot::User do
     it 'returns one user/owner' do
       expect(user).to be_a(Hubspot::User)
     end
+
+    it 'responds to friendly field name' do
+      expect(user.first_name).not_to be_nil
+      expect(user.last_name).not_to be_nil
+      expect(user.email).not_to be_nil
+    end
   end
 end
