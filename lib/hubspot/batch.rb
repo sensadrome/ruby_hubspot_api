@@ -32,7 +32,15 @@ module Hubspot
     DEFAULT_LIMIT = 100
 
     # rubocop:disable Lint/MissingSuper
-    def initialize(resources = [], id_property: 'id')
+    def initialize(resources = [], id_property: 'id', resource_matcher: nil)
+      if resource_matcher
+        unless resource_matcher.is_a?(Proc) && resource_matcher.arity == 2
+          raise ArgumentError, 'resource_matcher must be a proc that accepts exactly 2 arguments'
+        end
+
+        @resource_matcher = resource_matcher
+      end
+
       @resources = []
       @id_property = id_property # Set id_property for the batch (default: 'id')
       @responses = []            # Store multiple BatchResponse objects here
@@ -122,9 +130,12 @@ module Hubspot
         next if resource.changes.empty?
 
         {
-          id: resource.public_send(@id_property),   # Dynamically get the ID based on the batch's id_property
-          idProperty: determine_id_property,        # Use the helper method to decide whether to include idProperty
-          properties: resource.changes              # Gather the changes for the resource
+          # Dynamically get the ID based on the batch's id_property
+          id: resource.public_send(@id_property),
+          # Use the helper method to decide whether to include idProperty
+          idProperty: determine_id_property,
+          # Gather the changes for the resource
+          properties: resource.changes
         }.compact   # Removes nil keys
       end.compact   # Removes nil entries
     end
@@ -146,7 +157,8 @@ module Hubspot
 
     # Perform batch request based on the provided action (upsert, update, create, or archive)
     def batch_request(type, inputs, action)
-      response = self.class.post("/crm/v3/objects/#{type}/batch/#{action}", body: { inputs: inputs }.to_json)
+      response = self.class.post("/crm/v3/objects/#{type}/batch/#{action}",
+                                 body: { inputs: inputs }.to_json)
       BatchResponse.new(response.code, handle_response(response))
     end
 
@@ -157,7 +169,8 @@ module Hubspot
       # check if there are any resources without a value from the id_property
       return unless @resources.any? { |resource| resource.public_send(id_property).blank? }
 
-      raise ArgumentError, "All resources must have a non-blank value for #{@id_property} to perform upsert"
+      raise ArgumentError,
+            "All resources must have a non-blank value for #{@id_property} to perform upsert"
     end
 
     # Return the appropriate batch size limit for the resource type
@@ -167,6 +180,9 @@ module Hubspot
 
     # Process responses from the batch API call
     def process_responses
+      # TODO: issue a warning if the id_property is email and the action is upsert*
+      # people may have more than one email address abd Hubspot views that as one record
+
       @responses.each do |response|
         next unless response['results']
 
@@ -192,36 +208,54 @@ module Hubspot
     end
 
     def find_resource_from_result(result)
-      case @action
-      when 'update', 'upsert'
-        find_resource_from_id(result['id'].to_i)
+      action_method = method_for_action
+      send(action_method, result) if action_method
+    end
 
-      #
-      # when specifying idProperty in the upsert request
-      # the Hubspot API returns the id value (aka the hs_object_id)
-      # instead of the value of the <idProperty> field, so the value of the field
-      # is only stored in results['properties'][@id_property] if it changed!
-      # so this condition is redundant but left here in case Hubspot updates the response
-      #
-      # when 'upsert'
-      #   resource_id = result.dig('properties', @id_property) || result['id']
-      #   find_resource_from_id_property(resource_id)
-      #
-      when 'create'
-        # For create, check if the resource's changes are entirely contained in the result's properties
-        @resources.reject(&:persisted?).find do |resource|
-          resource.changes.any? && resource.changes.all? { |key, value| result['properties'][key.to_s] == value }
-        end
+    def method_for_action
+      {
+        'create' => :find_resource_for_created_result,
+        'update' => :find_resource_from_updated_result,
+        'upsert' => :find_resource_from_upserted_result
+      }[@action]
+    end
+
+    def find_resource_for_created_result(properties)
+      @resources.reject(&:persisted?).find do |resource|
+        next unless resource.changes.any?
+
+        resource.changes.all? { |key, value| properties[key.to_s] == value }
       end
     end
 
-    def find_resource_from_id(resource_id)
-      @resources.find { |r| r.id == resource_id }
+    def find_resource_from_updated_result(result)
+      resource_id = id_property == 'id' ? result['id'].to_i : result.dig('properties', id_property)
+      find_resource_from_id(resource_id)
     end
 
-    # def find_resource_from_id_property(resource_id)
-    #   @resources.find { |r| r.public_send(@id_property) == resource_id }
-    # end
+    def find_resource_from_id(resource_id)
+      return find_resource_from_id_property(resource_id) unless @id_property == 'id'
+
+      @resources.find { |resource| resource.id == resource_id }
+    end
+
+    def find_resource_from_id_property(resource_id)
+      @resources.find do |resource|
+        resource.respond_to?(@id_property) && resource.public_send(@id_property) == resource_id
+      end
+    end
+
+    def find_resource_from_upserted_result(result)
+      # if this was inserted then match on all the fields
+      return find_resource_for_created_result(result['properties']) if result['new']
+
+      # call the custom resource matcher if specified
+      if @resource_matcher
+        @resources.find { |resource| @resource_matcher.call(resource, result) }
+      else
+        find_resource_from_updated_result(result)
+      end
+    end
 
     def update_resource_properties(resource, properties)
       properties.each do |key, value|
@@ -238,7 +272,9 @@ module Hubspot
 
     class << self
       def read(object_class, object_ids = [], id_property: 'id')
-        raise ArgumentError, 'Must be a valid Hubspot resource class' unless object_class < Hubspot::Resource
+        unless object_class < Hubspot::Resource
+          raise ArgumentError, 'Must be a valid Hubspot resource class'
+        end
 
         # fetch all the matching resources with paging handled
         resources = object_class.batch_read(object_ids, id_property: id_property).all
