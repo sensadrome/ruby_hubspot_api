@@ -60,10 +60,14 @@ module Hubspot
 
       def log_request(http_method, url, response, start_time, extra = nil)
         d = Time.now - start_time
-        Hubspot.logger.info("#{http_method.to_s.upcase} #{url} took #{d.round(2)}s with status #{response.code}")
+
+        Hubspot.logger.info(
+          "#{http_method.to_s.upcase} #{url} took #{d.round(2)}s with status #{response.code}"
+        )
+
         return unless Hubspot.logger.debug?
 
-        Hubspot.logger.debug("Request body: #{extra}") if extra
+        Hubspot.logger.debug("Request body: #{extra[:body]}") if extra
         Hubspot.logger.debug("Response body: #{response.body}")
       end
 
@@ -94,7 +98,7 @@ module Hubspot
 
       def retry_request(request, retries)
         # Re-issues the original request using the retry logic
-        http_method = request.http_method::METHOD.downcase # Use the METHOD constant to get the method string
+        http_method = request.http_method::METHOD.downcase
         response = HTTParty.send(http_method, request.uri, request.options)
         handle_response(response, retries)
       end

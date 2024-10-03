@@ -31,6 +31,14 @@ module Hubspot
     CONTACT_LIMIT = 10
     DEFAULT_LIMIT = 100
 
+    def inspect
+      "#<#{self.class.name} " \
+      "@resource_count=#{@resources.size}, " \
+      "@id_property=#{@id_property.inspect}, " \
+      "@resource_type=#{@resources.first&.resource_name}, " \
+      "@responses_count=#{@responses.size}>"
+    end
+
     # rubocop:disable Lint/MissingSuper
     def initialize(resources = [], id_property: 'id', resource_matcher: nil)
       if resource_matcher
