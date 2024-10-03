@@ -31,8 +31,7 @@ module Hubspot
     def each_page
       @object_ids.each_slice(MAX_LIMIT) do |ids|
         response = fetch_page(ids)
-        results = response['results'] || []
-        mapped_results = @resource_class ? results.map { |result| @resource_class.new(result) } : results
+        mapped_results = process_results(response)
         yield mapped_results unless mapped_results.empty?
       end
     end
@@ -60,6 +59,13 @@ module Hubspot
       response = self.class.post(@url, body: params_with_ids.to_json)
 
       handle_response(response)
+    end
+
+    def process_results(response)
+      results = response['results'] || []
+      return results unless @resource_class
+
+      results.map { |result| @resource_class.new(result) }
     end
   end
 end
