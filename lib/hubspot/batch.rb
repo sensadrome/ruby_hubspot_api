@@ -190,7 +190,6 @@ module Hubspot
     def process_responses
       # TODO: issue a warning if the id_property is email and the action is upsert*
       # people may have more than one email address abd Hubspot views that as one record
-
       @responses.each do |response|
         next unless response['results']
 
@@ -228,7 +227,9 @@ module Hubspot
       }[@action]
     end
 
-    def find_resource_for_created_result(properties)
+    def find_resource_for_created_result(result)
+      properties = result['properties']
+
       @resources.reject(&:persisted?).find do |resource|
         next unless resource.changes.any?
 
