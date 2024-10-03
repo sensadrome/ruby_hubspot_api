@@ -53,7 +53,7 @@ module Hubspot
     private
 
     def fetch_page(object_ids)
-      params_with_ids = @params.dup
+      params_with_ids = @params.dup || {}
       params_with_ids[:inputs] = object_ids.map { |id| { id: id } }
 
       response = self.class.post(@url, body: params_with_ids.to_json)

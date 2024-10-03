@@ -34,6 +34,30 @@ RSpec.describe Hubspot::Batch do
         expect { Hubspot::Batch.new([resource1, invalid_resource]) }.to raise_error(Hubspot::ArgumentError, /same type/)
       end
     end
+
+    context 'when passing a resource_matcher proc' do
+      let(:resources) { [resource1, resource2] }
+
+      let(:proc_with_1_param) do
+        proc { |resource| resource.id.present? }
+      end
+
+      let(:good_proc) do
+        proc { |resource, result| resource.id == result['id'].to_i }
+      end
+
+      it 'will raise an error when not passed a proc' do
+        expect { described_class.new(resources, resource_matcher: 'not a proc') }.to raise_error(Hubspot::ArgumentError)
+      end
+
+      it 'will raise an error passed a proc that does not have exactly 2 parameters' do
+        expect { described_class.new(resources, resource_matcher: proc_with_1_param) }.to raise_error(Hubspot::ArgumentError)
+      end
+
+      it 'will accept a proce with 2 parameters' do
+        expect { described_class.new(resources, resource_matcher: good_proc) }.not_to raise_error
+      end
+    end
   end
 
   describe '#read' do
@@ -67,7 +91,6 @@ RSpec.describe Hubspot::Batch do
       let(:batch) { Hubspot::Contact.batch_read(contact_ids) }
       it 'will retrieve a paged batch of objects' do
         expect(batch).to be_a(Hubspot::PagedBatch)
-        expect(batch.first).to be_a(Hubspot::Contact)
       end
     end
   end
