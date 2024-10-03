@@ -55,7 +55,7 @@ module Hubspot
         if all_properties.is_a?(Array) && !all_properties.empty?
           params = { query: { properties: all_properties } }
         end
-        response = get("/crm/v3/objects/#{resource_name}/#{id}", params || {})
+        response = get("#{api_root}/#{resource_name}/#{id}", params || {})
         instantiate_from_response(response)
       end
 
@@ -76,7 +76,7 @@ module Hubspot
         all_properties = build_property_list(properties)
         params[:properties] = all_properties unless all_properties.empty?
 
-        response = get("/crm/v3/objects/#{resource_name}/#{value}", query: params)
+        response = get("#{api_root}/#{resource_name}/#{value}", query: params)
         instantiate_from_response(response)
       end
 
@@ -89,7 +89,7 @@ module Hubspot
       #
       # Returns [Resource] The newly created resource.
       def create(params)
-        response = post("/crm/v3/objects/#{resource_name}", body: { properties: params }.to_json)
+        response = post("#{api_root}/#{resource_name}", body: { properties: params }.to_json)
         instantiate_from_response(response)
       end
 
@@ -103,7 +103,7 @@ module Hubspot
       #
       # Returns True if the update was successful
       def update(id, params)
-        response = patch("/crm/v3/objects/#{resource_name}/#{id}",
+        response = patch("#{api_root}/#{resource_name}/#{id}",
                          body: { properties: params }.to_json)
         handle_response(response)
 
@@ -119,7 +119,7 @@ module Hubspot
       #
       # Returns True if the deletion was successful
       def archive(id)
-        response = delete("/crm/v3/objects/#{resource_name}/#{id}")
+        response = delete("#{api_root}/#{resource_name}/#{id}")
         handle_response(response)
 
         true
@@ -141,7 +141,7 @@ module Hubspot
         end
 
         PagedCollection.new(
-          url: "/crm/v3/objects/#{resource_name}",
+          url: list_page_uri,
           params: params,
           resource_class: self
         )
@@ -158,12 +158,14 @@ module Hubspot
       #   Hubspot::Contact.batch_read([1, 2, 3])
       #
       # Returns [PagedBatch] A paged batch of resources
-      def batch_read(object_ids = [], id_property: 'id')
-        params = id_property == 'id' ? {} : { idProperty: id_property }
+      def batch_read(object_ids = [], properties: [], id_property: 'id')
+        params = {}
+        params[:idProperty] = id_property unless id_property == 'id'
+        params[:properties] = properties unless properties.blank?
 
         PagedBatch.new(
-          url: "/crm/v3/objects/#{resource_name}/batch/read",
-          params: params,
+          url: "#{api_root}/#{resource_name}/batch/read",
+          params: params.empty? ? nil : params,
           object_ids: object_ids,
           resource_class: self
         )
@@ -302,7 +304,7 @@ module Hubspot
 
         # Perform the search and return a PagedCollection
         PagedCollection.new(
-          url: "/crm/v3/objects/#{resource_name}/search",
+          url: "#{api_root}/#{resource_name}/search",
           params: search_body,
           resource_class: self,
           method: :post
@@ -310,6 +312,10 @@ module Hubspot
       end
 
       # rubocop:enable Metrics/MethodLength
+
+      # The root of the api call. Mostly this will be "crm"
+      # but you can override this to account for a different
+      # object hierarchy
 
       # Define the resource name based on the class
       def resource_name
@@ -328,6 +334,14 @@ module Hubspot
       end
 
       private
+
+      def api_root
+        '/crm/v3/objects'
+      end
+
+      def list_page_uri
+        "#{api_root}/#{resource_name}"
+      end
 
       # Instantiate a single resource object from the response
       def instantiate_from_response(response)
@@ -374,6 +388,8 @@ module Hubspot
       end
     end
 
+    # rubocop:disable Lint/MissingSuper
+
     # Public: Initialize a resouce
     #
     # data - [2D Hash, nested Hash] data to initialise the resourse This can be either:
@@ -402,6 +418,7 @@ module Hubspot
         initialize_new_object(data)
       end
     end
+    # rubocop:enable Lint/MissingSuper
 
     # Determine the state of the object
     #
@@ -539,9 +556,17 @@ module Hubspot
 
     # Initialize from API response, separating metadata from properties
     def initialize_from_api(data)
-      @metadata = extract_metadata(data)
-      properties_data = data['properties'] || {}
+      if data['properties']
+        @metadata = data.reject { |key, _v| key == 'properties' }
+        handle_properties(data['properties'])
+      else
+        handle_properties(data)
+      end
 
+      @changes = {}
+    end
+
+    def handle_properties(properties_data)
       properties_data.each do |key, value|
         if METADATA_FIELDS.include?(key)
           @metadata[key] = value
@@ -549,8 +574,6 @@ module Hubspot
           @properties[key] = value
         end
       end
-
-      @changes = {}
     end
 
     # Initialize a new object (no API response)
