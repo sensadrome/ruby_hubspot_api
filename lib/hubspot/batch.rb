@@ -31,6 +31,7 @@ module Hubspot
     CONTACT_LIMIT = 10
     DEFAULT_LIMIT = 100
 
+    # :nocov:
     def inspect
       "#<#{self.class.name} " \
       "@resource_count=#{@resources.size}, " \
@@ -38,16 +39,11 @@ module Hubspot
       "@resource_type=#{@resources.first&.resource_name}, " \
       "@responses_count=#{@responses.size}>"
     end
+    # :nocov:
 
     # rubocop:disable Lint/MissingSuper
     def initialize(resources = [], id_property: 'id', resource_matcher: nil)
-      if resource_matcher
-        unless resource_matcher.is_a?(Proc) && resource_matcher.arity == 2
-          raise ArgumentError, 'resource_matcher must be a proc that accepts exactly 2 arguments'
-        end
-
-        @resource_matcher = resource_matcher
-      end
+      validate_resource_matcher(resource_matcher)
 
       @resources = []
       @id_property = id_property # Set id_property for the batch (default: 'id')
@@ -67,9 +63,21 @@ module Hubspot
     end
 
     # Upsert method that calls save with upsert action
-    def upsert
+    def upsert(resource_matcher: nil)
+      validate_resource_matcher(resource_matcher)
+
       validate_upsert_conditions
       save(action: 'upsert')
+    end
+
+    def validate_resource_matcher(resource_matcher)
+      return if resource_matcher.blank?
+
+      unless resource_matcher.is_a?(Proc) && resource_matcher.arity == 2
+        raise ArgumentError, 'resource_matcher must be a proc that accepts exactly 2 arguments'
+      end
+
+      @resource_matcher = resource_matcher
     end
 
     # Archive method
