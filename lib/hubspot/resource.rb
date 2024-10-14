@@ -563,7 +563,7 @@ module Hubspot
 
     # Extract ID from data and convert to integer
     def extract_id(id)
-      id ? id.to_i : nil
+      id&.to_i
     end
 
     def handle_properties(properties_data)
