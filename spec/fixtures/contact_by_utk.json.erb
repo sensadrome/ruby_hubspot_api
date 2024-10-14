@@ -1,0 +1,62 @@
+<% respond_to?(:contact_id) || contact_id = 1 %>
+<% respond_to?(:contact_email) || contact_email = 'john@example.org' %>
+<% respond_to?(:contact_firstname) || contact_firstname = 'John' %>
+<% respond_to?(:contact_lastname) || contact_lastname = 'Smith' %>
+<% respond_to?(:timestamp) || timestamp = (Time.now.utc.to_f * 1000).to_i %>
+{
+    "vid": "<%= contact_id %>",
+    "canonical-vid": "<%= contact_id %>",
+    "merged-vids":
+    [],
+    "portal-id": 123,
+    "is-contact": true,
+    "properties":
+    {
+        "firstname":
+        {
+            "value": "<%= contact_firstname %>"
+        },
+        "hs_marketable_status":
+        {
+            "value": "true"
+        },
+        "lastmodifieddate":
+        {
+            "value": "<%= timestamp %>"
+        },
+        "email":
+        {
+            "value": "<%= contact_email %>"
+        },
+        "lastname":
+        {
+            "value": "<%= contact_lastname %>"
+        }
+    },
+    "list-memberships":
+    [],
+    "identity-profiles":
+    [
+        {
+            "vid": "<%= contact_id %>",
+            "saved-at-timestamp": "<%= timestamp %>",
+            "deleted-changed-timestamp": 0,
+            "identities":
+            [
+                {
+                    "type": "EMAIL",
+                    "value": "<%= contact_email %>",
+                    "timestamp": "<%= timestamp %>",
+                    "is-primary": true
+                },
+                {
+                    "type": "LEAD_GUID",
+                    "value": "",
+                    "timestamp": "<%= timestamp %>"
+                }
+            ]
+        }
+    ],
+    "merge-audits":
+    []
+}

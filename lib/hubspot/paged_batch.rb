@@ -10,7 +10,7 @@ module Hubspot
 
     MAX_LIMIT = 100 # HubSpot max items per page
 
-    # customised inspect
+    # :nocov:
     def inspect
       "#<#{self.class.name} " \
       "@url=#{@url.inspect}, " \
@@ -18,6 +18,7 @@ module Hubspot
       "@resource_class=#{@resource_class.inspect}, " \
       "@object_ids_count=#{@object_ids.size}>"
     end
+    # :nocov:
 
     # rubocop:disable Lint/MissingSuper
     def initialize(url:, params: {}, resource_class: nil, object_ids: [])

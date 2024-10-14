@@ -4,11 +4,13 @@ module Hubspot
   class Form < Resource
     METADATA_FIELDS = %w[createdAt updatedAt archived].freeze
 
+    # :nocov:
     def inspect
       "#<#{self.class.name} " \
       "@name=#{name}, " \
       "@fieldGroups=#{respond_to?('fieldGroups') ? fieldGroups.size : '-'}>"
     end
+    # :nocov:
 
     class << self
       def api_root
@@ -18,9 +20,9 @@ module Hubspot
 
     private
 
-    # Extract ID from data and leave as a string
-    def extract_id(data)
-      data.delete('id')
+    # dont convert (from string)
+    def extract_id(id)
+      id
     end
   end
 end

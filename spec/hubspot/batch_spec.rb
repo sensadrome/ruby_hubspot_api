@@ -6,6 +6,7 @@ RSpec.describe Hubspot::Batch do
     instance_double('Company', changes: { name: 'Acme Corp' }, resource_name: 'companies', internal_id: 123)
   end
 
+  let(:updated_at) { Time.now.utc.iso8601(3) }
   let(:response_data) { {} }
   let(:response_code) { 200 }
   let(:response) do
@@ -69,15 +70,27 @@ RSpec.describe Hubspot::Batch do
     let(:response_data) do
       {
         'results' => [
-          { 'id' => '1', 'updatedAt' => Time.now.utc.iso8601(3),
+          { 'id' => '1', 'updatedAt' => updated_at,
             'properties' => { 'email' => 'luke@jedi.org', 'firstname' => 'Luke', 'lastname' => 'Skywalker' } },
-          { 'id' => '2', 'updatedAt' => Time.now.utc.iso8601(3),
+          { 'id' => '2', 'updatedAt' => updated_at,
             'properties' => { 'email' => 'obiwan@jedi.org', 'firstname' => 'Obi-Wan', 'lastname' => 'Kenobi' } },
-          { 'id' => '3', 'updatedAt' => Time.now.utc.iso8601(3),
+          { 'id' => '3', 'updatedAt' => updated_at,
             'properties' => { 'email' => 'quigon@jedi.org', 'firstname' => 'Qui-Gon', 'lastname' => 'Jinn' } }
         ]
       }
     end
+
+    context 'when called with a class argument that is not a Hubspot::Resource' do
+      before do
+        stub_const('Contact', Class.new)
+      end
+
+      it 'will raise an error' do
+        expect { described_class.read(Contact, contact_ids) }.to raise_error(Hubspot::ArgumentError)
+      end
+    end
+
+    context 'when passing a custom resource_matcher'
 
     context 'when called directly from the class' do
       let(:batch) { described_class.read(Hubspot::Contact, contact_ids) }
@@ -129,9 +142,9 @@ RSpec.describe Hubspot::Batch do
       {
         'results' => [
           { 'id' => '1', 'properties' => { 'email' => 'john@example.com', 'firstname' => 'John', 'lastname' => 'Doe' },
-            'updatedAt' => Time.now.utc.iso8601(3) },
+            'updatedAt' => updated_at },
           { 'id' => '2', 'properties' => { 'email' => 'jane@example.com', 'firstname' => 'Jane', 'lastname' => 'Doe' },
-            'updatedAt' => Time.now.utc.iso8601(3) }
+            'updatedAt' => updated_at }
         ]
       }
     end
@@ -171,7 +184,6 @@ RSpec.describe Hubspot::Batch do
       let(:contact2) { Hubspot::Contact.new(id: 2, properties: { 'name' => 'Jane' }) }
       let(:batch) { described_class.new([contact1, contact2], id_property: 'id') }
 
-      let(:updated_at) { Time.now.utc.iso8601(3) }
       let(:response_data) do
         {
           'results' => [
@@ -273,6 +285,78 @@ RSpec.describe Hubspot::Batch do
       it 'will raise an error' do
         batch = Hubspot::Batch.new(companies_including_incomplete, id_property: 'internal_id')
         expect { batch.upsert }.to raise_error(Hubspot::ArgumentError)
+      end
+    end
+
+    context 'when updating resources based on their email address' do
+      let(:response_data) do
+        {
+          'results' => [
+            { 'id' => '1', 'updatedAt' => updated_at,
+              'properties' => { 'email' => 'luke@jedi.org', 'firstname' => 'Luke', 'lastname' => 'Skywalker' } },
+            { 'id' => '2', 'updatedAt' => updated_at,
+              'properties' => { 'email' => 'obiwan@jedi.org', 'firstname' => 'Obi-Wan', 'lastname' => 'Kenobi' } },
+            { 'id' => '3', 'updatedAt' => updated_at,
+              'properties' => { 'email' => 'quigon@jedi.org', 'firstname' => 'Qui-Gon', 'lastname' => 'Jinn' } }
+          ]
+        }
+      end
+      let(:contact1) { Hubspot::Contact.new('email' => 'quigon@jedi.org', 'firstname' => 'Qui-Gon') }
+      let(:contact2) { Hubspot::Contact.new('email' => 'obiwan@jedi.org', 'firstname' => 'Obi-Wan') }
+      let(:contact3) { Hubspot::Contact.new('email' => 'luke@jedi.org', 'firstname' => 'Luke') }
+      let(:batch) { Hubspot::Batch.new([contact1, contact2, contact3], id_property: 'email') }
+
+      it 'updates the correct resources and sets the id property' do
+        batch.upsert
+        expect(contact1.id).to eq(3)
+        expect(contact2.id).to eq(2)
+        expect(contact3.id).to eq(1)
+      end
+    end
+
+    context 'when batch reading contacts by their email address and upserting' do
+      let(:batch_read_response) do
+        instance_double(HTTParty::Response, code: response_code, parsed_response: batch_read_response_data, success?: true)
+      end
+
+      let(:batch_read_response_data) do
+        {
+          'results' => [
+            { 'id' => '1', 'updatedAt' => updated_at, 'properties' => { 'email' => 'luke@jedi.org', 'internal_id' => nil } },
+            { 'id' => '2', 'updatedAt' => updated_at, 'properties' => { 'email' => 'obiwan@jedi.org', 'internal_id' => nil } },
+            { 'id' => '3', 'updatedAt' => updated_at, 'properties' => { 'email' => 'quigon@jedi.org', 'internal_id' => nil } }
+          ]
+        }
+      end
+
+      before do
+        # Mock the API response to return newly created contact IDs and updated properties
+        allow(Hubspot::PagedBatch).to receive(:post).and_return(batch_read_response)
+        batch.contacts.each { |contact| contact.internal_id = "contact-#{contact.id}" }
+      end
+
+      let(:response_data) do
+        {
+          'results' => [
+            { 'id' => '1', 'updatedAt' => updated_at, 'properties' => { 'internal_id' => 'contact-1' } },
+            { 'id' => '2', 'updatedAt' => updated_at, 'properties' => { 'internal_id' => 'contact-2' } },
+            { 'id' => '3', 'updatedAt' => updated_at, 'properties' => { 'internal_id' => 'contact-3' } }
+          ]
+        }
+      end
+      let(:emails) { %w[luke@jedi.org obiwan@jedi.org quigon@jedi.org] }
+      let(:batch) { Hubspot::Contact.batch_read_all(emails, id_property: 'email', properties: %w[email internal_id]) }
+
+      describe 'using a resource matcher' do
+        let(:resource_matcher) do
+          proc { |resource, result| resource.internal_id == result.dig('properties', 'internal_id') }
+        end
+
+        it 'updates the api and then changes the batch resources to match' do
+          expect(batch.any_changes?).to be(true)
+          batch.upsert(resource_matcher: resource_matcher)
+          expect(batch.any_changes?).to be(false)
+        end
       end
     end
   end

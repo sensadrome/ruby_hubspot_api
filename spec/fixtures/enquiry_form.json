@@ -1,0 +1,213 @@
+{
+    "id": "dummy-form-guid",
+    "name": "Enquiry Form",
+    "createdAt": "2024-10-02T18:15:27.676Z",
+    "updatedAt": "2024-10-02T22:58:15.236Z",
+    "archived": false,
+    "fieldGroups":
+    [
+        {
+            "groupType": "default_group",
+            "richTextType": "text",
+            "fields":
+            [
+                {
+                    "objectTypeId": "0-1",
+                    "name": "email",
+                    "label": "Email",
+                    "required": true,
+                    "hidden": false,
+                    "fieldType": "email",
+                    "validation":
+                    {
+                        "blockedEmailDomains":
+                        [],
+                        "useDefaultBlockList": false
+                    }
+                }
+            ]
+        },
+        {
+            "groupType": "default_group",
+            "richTextType": "text",
+            "fields":
+            [
+                {
+                    "objectTypeId": "0-1",
+                    "name": "firstname",
+                    "label": "First name",
+                    "required": false,
+                    "hidden": false,
+                    "fieldType": "single_line_text"
+                }
+            ]
+        },
+        {
+            "groupType": "default_group",
+            "richTextType": "text",
+            "fields":
+            [
+                {
+                    "objectTypeId": "0-1",
+                    "name": "lastname",
+                    "label": "Last name",
+                    "required": false,
+                    "hidden": false,
+                    "fieldType": "single_line_text"
+                }
+            ]
+        },
+        {
+            "groupType": "default_group",
+            "richTextType": "text",
+            "fields":
+            [
+                {
+                    "objectTypeId": "0-1",
+                    "name": "message",
+                    "label": "Message",
+                    "required": false,
+                    "hidden": false,
+                    "fieldType": "multi_line_text"
+                }
+            ]
+        },
+        {
+            "groupType": "default_group",
+            "richTextType": "text",
+            "fields":
+            [
+                {
+                    "objectTypeId": "0-1",
+                    "name": "phone",
+                    "label": "Phone number",
+                    "required": false,
+                    "hidden": false,
+                    "fieldType": "phone",
+                    "useCountryCodeSelect": false,
+                    "validation":
+                    {
+                        "minAllowedDigits": 7,
+                        "maxAllowedDigits": 20
+                    }
+                }
+            ]
+        },
+        {
+            "groupType": "default_group",
+            "richTextType": "text",
+            "fields":
+            [
+                {
+                    "objectTypeId": "0-1",
+                    "name": "education_status",
+                    "label": "Education status",
+                    "required": false,
+                    "hidden": false,
+                    "defaultValues":
+                    [
+                        "not specified"
+                    ],
+                    "options":
+                    [
+                        {
+                            "label": "Student",
+                            "value": "student",
+                            "description": "",
+                            "displayOrder": -1
+                        },
+                        {
+                            "label": "Professional",
+                            "value": "professional",
+                            "description": "",
+                            "displayOrder": -1
+                        },
+                        {
+                            "label": "Not specified",
+                            "value": "not specified",
+                            "description": "",
+                            "displayOrder": -1
+                        }
+                    ],
+                    "fieldType": "dropdown"
+                }
+            ]
+        },
+        {
+            "groupType": "default_group",
+            "richTextType": "text",
+            "fields":
+            [
+                {
+                    "objectTypeId": "0-1",
+                    "name": "date_of_enquiry",
+                    "label": "Date of enquiry",
+                    "required": false,
+                    "hidden": false,
+                    "fieldType": "datepicker"
+                }
+            ]
+        }
+    ],
+    "configuration":
+    {
+        "language": "en",
+        "cloneable": true,
+        "postSubmitAction":
+        {
+            "type": "thank_you",
+            "value": "Thanks for your enquiry - one of the team will be in contact with you shortly."
+        },
+        "editable": true,
+        "archivable": true,
+        "recaptchaEnabled": false,
+        "notifyContactOwner": false,
+        "notifyRecipients":
+        [
+            "69153139"
+        ],
+        "createNewContactForNewEmail": true,
+        "prePopulateKnownValues": false,
+        "allowLinkToResetKnownValues": true,
+        "lifecycleStages":
+        []
+    },
+    "displayOptions":
+    {
+        "renderRawHtml": false,
+        "theme": "round",
+        "submitButtonText": "Submit",
+        "style":
+        {
+            "fontFamily": "arial, helvetica, sans-serif",
+            "backgroundWidth": "100%",
+            "labelTextColor": "#212D3A",
+            "labelTextSize": "13px",
+            "helpTextColor": "#516383DE",
+            "helpTextSize": "11px",
+            "legalConsentTextColor": "#33475B",
+            "legalConsentTextSize": "14px",
+            "submitColor": "#FF7A59",
+            "submitAlignment": "left",
+            "submitFontColor": "#FFFFFF",
+            "submitSize": "12px"
+        },
+        "cssClass": "hs-form stacked"
+    },
+    "legalConsentOptions":
+    {
+        "type": "implicit_consent_to_process",
+        "communicationConsentText": "Work the World is committed to protecting and respecting your privacy, and we’ll only use your personal information to administer your account and to provide the products and services you requested from us. From time to time, we would like to contact you about our products and services, as well as other content that may be of interest to you. If you consent to us contacting you for this purpose, please tick below to say how you would like us to contact you:",
+        "communicationsCheckboxes":
+        [
+            {
+                "required": false,
+                "subscriptionTypeId": 296870342,
+                "label": "I agree to receive other communications from Work the World."
+            }
+        ],
+        "privacyText": "You can unsubscribe from these communications at any time. For more information on how to unsubscribe, our privacy practices, and how we are committed to protecting and respecting your privacy, please review our Privacy Policy.",
+        "consentToProcessText": "By clicking submit below, you consent to allow Work the World to store and process the personal information submitted above to provide you the content requested."
+    },
+    "formType": "hubspot"
+}

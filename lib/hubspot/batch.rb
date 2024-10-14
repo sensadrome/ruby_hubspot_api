@@ -31,6 +31,7 @@ module Hubspot
     CONTACT_LIMIT = 10
     DEFAULT_LIMIT = 100
 
+    # :nocov:
     def inspect
       "#<#{self.class.name} " \
       "@resource_count=#{@resources.size}, " \
@@ -38,16 +39,11 @@ module Hubspot
       "@resource_type=#{@resources.first&.resource_name}, " \
       "@responses_count=#{@responses.size}>"
     end
+    # :nocov:
 
     # rubocop:disable Lint/MissingSuper
     def initialize(resources = [], id_property: 'id', resource_matcher: nil)
-      if resource_matcher
-        unless resource_matcher.is_a?(Proc) && resource_matcher.arity == 2
-          raise ArgumentError, 'resource_matcher must be a proc that accepts exactly 2 arguments'
-        end
-
-        @resource_matcher = resource_matcher
-      end
+      validate_resource_matcher(resource_matcher)
 
       @resources = []
       @id_property = id_property # Set id_property for the batch (default: 'id')
@@ -67,9 +63,21 @@ module Hubspot
     end
 
     # Upsert method that calls save with upsert action
-    def upsert
+    def upsert(resource_matcher: nil)
+      validate_resource_matcher(resource_matcher)
+
       validate_upsert_conditions
       save(action: 'upsert')
+    end
+
+    def validate_resource_matcher(resource_matcher)
+      return if resource_matcher.blank?
+
+      unless resource_matcher.is_a?(Proc) && resource_matcher.arity == 2
+        raise ArgumentError, 'resource_matcher must be a proc that accepts exactly 2 arguments'
+      end
+
+      @resource_matcher = resource_matcher
     end
 
     # Archive method
@@ -93,14 +101,28 @@ module Hubspot
     end
 
     def add_resource(resource)
-      if @resources.any? && @resources.first.resource_name != resource.resource_name
-        raise ArgumentError, 'All resources in a batch must be of the same type'
+      if @resources.any?
+        if @resources.first.resource_name != resource.resource_name
+          raise ArgumentError, 'All resources in a batch must be of the same type'
+        end
+      else
+        add_resource_method(resource.resource_name)
       end
 
       @resources << resource
     end
 
+    def any_changes?
+      @resources.any?(&:changes?)
+    end
+
     private
+
+    def add_resource_method(resource_name)
+      self.class.class_eval do
+        alias_method resource_name.to_sym, :resources
+      end
+    end
 
     # rubocop:disable Metrics/MethodLength
     def save(action: 'update')
@@ -280,13 +302,15 @@ module Hubspot
     end
 
     class << self
-      def read(object_class, object_ids = [], id_property: 'id')
+      def read(object_class, object_ids = [], properties: [], id_property: 'id')
         unless object_class < Hubspot::Resource
           raise ArgumentError, 'Must be a valid Hubspot resource class'
         end
 
         # fetch all the matching resources with paging handled
-        resources = object_class.batch_read(object_ids, id_property: id_property).all
+        resources = object_class.batch_read(object_ids,
+                                            properties: properties,
+                                            id_property: id_property).all
 
         # return instance of Hubspot::Batch with the resources set
         new(resources, id_property: id_property)

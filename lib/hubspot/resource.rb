@@ -45,12 +45,14 @@ module Hubspot
       # Find a resource by ID and return an instance of the class
       #
       # id - [Integer] The ID (or hs_object_id) of the resource to fetch.
+      # properties - an array of property names to fetch in the result
       #
       # Example:
       #   contact = Hubspot::Contact.find(1)
+      #   contact = Hubspot::Contact.find(1, properties: %w[email firstname lastname custom_field])
       #
       # Returns An instance of the resource.
-      def find(id, properties = nil)
+      def find(id, properties: nil)
         all_properties = build_property_list(properties)
         if all_properties.is_a?(Array) && !all_properties.empty?
           params = { query: { properties: all_properties } }
@@ -181,8 +183,8 @@ module Hubspot
       #   Hubspot::Contact.batch_read_all(hubspot_contact_ids)
       #
       # Returns [Hubspot::Batch] A batch of resources that can be operated on further
-      def batch_read_all(object_ids = [], id_property: 'id')
-        Hubspot::Batch.read(self, object_ids, id_property: id_property)
+      def batch_read_all(object_ids = [], properties: [], id_property: 'id')
+        Hubspot::Batch.read(self, object_ids, properties: properties, id_property: id_property)
       end
 
       # Retrieve the complete list of properties for this resource class
@@ -392,8 +394,13 @@ module Hubspot
 
     # Public: Initialize a resouce
     #
-    # data - [2D Hash, nested Hash] data to initialise the resourse This can be either:
-    #   - A Simple 2D Hash, key value pairs of property => value (for the create option)
+    # data - [2D Hash, nested Hash] data to initialise:
+    #   - The response from the api will be of the form:
+    #       { id: <hs_object_id>, properties: { "email": "john@example.org" ... }, ... }
+    #
+    #   - A Simple 2D Hash, key value pairs in the form:
+    #       { email: 'john@example.org', firstname: 'John', lastname: 'Smith' }
+    #
     #   - A structured hash consisting of { id: <hs_object_id>, properties: {}, ... }
     #     This is the same structure as per the API, and can be rebuilt if you store the id
     #     of the object against your own data
@@ -409,7 +416,7 @@ module Hubspot
     #   existing_contact = Hubspot::Contact.new(id: hubspot_id, properties: contact.to_hubspot)
     def initialize(data = {})
       data.transform_keys!(&:to_s)
-      @id = extract_id(data)
+      @id = extract_id(data.delete('id'))
       @properties = {}
       @metadata = {}
       if @id
@@ -520,15 +527,8 @@ module Hubspot
       if method_name.end_with?('=')
         attribute = method_name.chomp('=')
         new_value = args.first
-
-        # Track changes only if the value has actually changed
-        if @properties[attribute] != new_value
-          @changes[attribute] = new_value
-        else
-          @changes.delete(attribute) # Remove from changes if it reverts to the original value
-        end
-
-        return new_value
+        add_accessors attribute
+        return send("#{attribute}=", new_value)
       # Handle getters
       else
         return @changes[method_name] if @changes.key?(method_name)
@@ -547,33 +547,68 @@ module Hubspot
       @properties.key?(property_name) || @changes.key?(property_name) || super
     end
 
-    private
-
-    # Extract ID from data and convert to integer
-    def extract_id(data)
-      data['id'] ? data['id'].to_i : nil
-    end
-
     # Initialize from API response, separating metadata from properties
     def initialize_from_api(data)
+      @changes = data.delete('changes')&.transform_keys!(&:to_s) || {}
+
       if data['properties']
         @metadata = data.reject { |key, _v| key == 'properties' }
         handle_properties(data['properties'])
       else
         handle_properties(data)
       end
+    end
 
-      @changes = {}
+    private
+
+    # Extract ID from data and convert to integer
+    def extract_id(id)
+      id&.to_i
     end
 
     def handle_properties(properties_data)
-      properties_data.each do |key, value|
-        if METADATA_FIELDS.include?(key)
-          @metadata[key] = value
+      properties_data.each do |attribute, value|
+        if metadata_field?(attribute)
+          @metadata[attribute.to_s] = value
         else
-          @properties[key] = value
+          add_accessors attribute.to_s
+          @properties[attribute.to_s] = value
         end
       end
+    end
+
+    def add_accessors(attribute)
+      add_accessors_setter(attribute)
+      add_accessors_getter(attribute)
+    end
+
+    def add_accessors_setter(attribute)
+      # Define the setter method
+      define_singleton_method("#{attribute}=") do |new_value|
+        # Track changes only if the value has actually changed
+        if @properties[attribute] != new_value
+          @changes[attribute] = new_value
+        else
+          @changes.delete(attribute) # Remove from changes if it reverts to the original value
+        end
+
+        new_value
+      end
+    end
+
+    def add_accessors_getter(attribute)
+      # Define the getter method
+      define_singleton_method(attribute) do
+        # Return from changes if available, else return from properties
+        return @changes[attribute] if @changes.key?(attribute)
+
+        @properties[attribute] if @properties.key?(attribute)
+      end
+    end
+
+    # allows overwriting in other resource classes
+    def metadata_field?(key)
+      METADATA_FIELDS.include?(key)
     end
 
     # Initialize a new object (no API response)
@@ -581,11 +616,6 @@ module Hubspot
       @properties = {}
       @changes = data.transform_keys(&:to_s)
       @metadata = {}
-    end
-
-    # Extract metadata from data, excluding properties
-    def extract_metadata(data)
-      data.reject { |key, _| key == 'properties' }
     end
 
     # Create a new resource
