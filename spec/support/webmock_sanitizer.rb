@@ -32,6 +32,8 @@ end
 WebMock::RequestSignature.prepend(WebMockRequestSignatureSanitizer)
 
 %w[HUBSPOT_ACCESS_TOKEN HUBSPOT_CLIENT_SECRET HUBSPOT_PORTAL_ID].each do |secret|
+  next unless ENV[secret]
+
   WebMock::RequestSignature.filter_sensitive_data(
     ENV[secret] => "<#{secret} [filtered]>"
   )
