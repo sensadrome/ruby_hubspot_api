@@ -302,13 +302,15 @@ module Hubspot
     end
 
     class << self
-      def read(object_class, object_ids = [], id_property: 'id')
+      def read(object_class, object_ids = [], properties: [], id_property: 'id')
         unless object_class < Hubspot::Resource
           raise ArgumentError, 'Must be a valid Hubspot resource class'
         end
 
         # fetch all the matching resources with paging handled
-        resources = object_class.batch_read(object_ids, id_property: id_property).all
+        resources = object_class.batch_read(object_ids,
+                                            properties: properties,
+                                            id_property: id_property).all
 
         # return instance of Hubspot::Batch with the resources set
         new(resources, id_property: id_property)
