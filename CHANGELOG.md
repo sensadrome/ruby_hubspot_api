@@ -1,4 +1,61 @@
-## v.0.2.0
+
+## v0.3.0
+
+- Clarify usage
+- More usage clarification
+- Create ruby.yml
+- fix the github workflow
+- fix the github workflow properly
+- add plaatforms to Gemfile.lock
+- add ruby 2.5 and reduce log output
+- try calling rspec directly
+- Use ERB in VCR tests so as to be independent of the env vars
+- ignore ruby version file
+- test on ruby 3.0 too
+- determine if a Hubspot property is read_only (or by negation updatable)
+- adding codecov
+- Using earlier bundler
+- Adding lcov format
+- Add read-only properties to resource class
+- Add property check to the contact spec
+- Only apply lcov formatter if running on github
+- try to upload the coverage results to codacy too
+- Adding Codacy badge
+- Ensure we always apply the right log_level
+- Tidy up documentation of resource
+- Yep. Back ported to 2.4
+- adjust some rubocop settings
+- Tidy up somer doc comments
+- Add some handling of required properties
+- Update user model to force specific properties to be retrieved
+- Improve logic of resource matching
+- Adds  :sparkle: attributes method to a resource
+- Tidy comments
+- Update the hierarchy to allow more flexibility
+- Fix find resources
+- Clear up processing results
+- Update batch spec
+- Bump the version
+- Adds validation for resource matcher
+- Dynamically add a method to batch to allow "resources" to be referred to as the resource_name
+- Ignore gem files
+- Drop cadacy for now
+- Update batch spec to check resource_matcher works
+- Ensure properties are passed as named argument
+- No cov for inspect
+- Allow ERB in json fixtures
+- Contact find_by_token spec
+- find_by_token method - uses v1 API
+- Tests the method missing setter for resource
+- Sanitize web mock output
+- Finish specs
+- check the env vars before sanitising
+- make erb explicitly determined by the file exension (.json.erb)
+- use safe navigation for extracting id
+- bump version
+- update gem version in lock file
+
+## v0.2.0
 
 - Get the development dependencies right!
 - Bump the version again
@@ -21,11 +78,23 @@
 - Simplify mocked responses in batch spec
 - Adds PagedBatch as pager for batch/read request
 - Update the Readme to add Batch operations
-- #5 batch_updating
+- bump version
 
 ## v0.1.2
 
-- initial setup
+- Fix the Readme
+- Sure the search param is values where passing an array
+- update changelog and Gemfile.lock
+- bump version
+
+## v0.1.1
+
+- adds the version numbers to the gemspec
+- Fix dependencies
+- bump version
+
+## v0.1.0
+
 - Setup the configuration block
 - Adds spec for config
 - Set the auth headers when access_token configured
@@ -67,23 +136,4 @@
 - Flatten the properties array into a comma separated list
 - Improve the intialiser
 - Update the changeling and link in gem spec
-- adds the version numbers to the gemspec
-- Fix dependencies
-- bump version
-- Fix the Readme
-- Sure the search param is values where passing an array
-- update changelog and Gemfile.lock
-- bump version
 
-## v0.1.1
-
-- Fix the Readme
-- Sure the search param is values where passing an array
-- update changelog and Gemfile.lock
-- bump version
-
-## v0.1.0
-
-- adds the version numbers to the gemspec
-- Fix dependencies
-- bump version
