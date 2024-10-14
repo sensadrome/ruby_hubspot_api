@@ -106,6 +106,27 @@ RSpec.describe Hubspot::Contact do
       end
     end
 
+    describe '.find_by_token' do
+      let(:contact_by_utk_page) { "https://api.hubapi.com/contacts/v1/contact/utk/#{token}/profile" }
+      let(:token) { 'hubspotutk' }
+      let(:response_data) { load_json('contact_by_utk') }
+
+      # let(:contact_id) { 1 }
+      # let(:contact_fetch_page) { "/crm/v3/objects/contacts/#{contact_id}" }
+
+      before do
+        stub_request(:get, contact_by_utk_page)
+          .with(query: hash_including({}))
+          .to_return(status: 200, body: response_data.to_json, headers: { 'Content-Type' => 'application/json' })
+      end
+
+      it 'makes the right request' do
+        contact = Hubspot::Contact.find_by_token(token, properties: %w[email firstname lastname])
+        expect(contact).to be_a(Hubspot::Contact)
+        expect(WebMock).to have_requested(:get, contact_by_utk_page).with(query: hash_including({}))
+      end
+    end
+
     describe '.find', cassette: 'contacts/find_by_id' do
       it 'retrieves a contact by ID' do
         contact = Hubspot::Contact.find(contact_id)
