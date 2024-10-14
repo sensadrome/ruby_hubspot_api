@@ -2,9 +2,9 @@
 
 module Hubspot
   class Contact < Resource
-    def required_properties
-      %w[email firstname lastname]
-    end
+    # def required_properties
+    #   %w[email firstname lastname]
+    # end
 
     private
 
