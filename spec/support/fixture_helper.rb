@@ -3,7 +3,9 @@
 module FixtureHelper
   def load_json(name)
     file_path = File.join('spec', 'fixtures', "#{name}.json")
-    JSON.parse(File.read(file_path))
+    erb_template = ERB.new(File.read(file_path))
+    json_string = erb_template.result(binding)
+    JSON.parse(json_string)
   end
 end
 
