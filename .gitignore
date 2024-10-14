@@ -1,7 +1,7 @@
 /.bundle/
 /coverage/
 /tmp/
-
+*.gem
 .env
 # rspec failure tracking
 .rspec_status
