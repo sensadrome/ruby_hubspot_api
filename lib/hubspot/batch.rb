@@ -101,14 +101,28 @@ module Hubspot
     end
 
     def add_resource(resource)
-      if @resources.any? && @resources.first.resource_name != resource.resource_name
-        raise ArgumentError, 'All resources in a batch must be of the same type'
+      if @resources.any?
+        if @resources.first.resource_name != resource.resource_name
+          raise ArgumentError, 'All resources in a batch must be of the same type'
+        end
+      else
+        add_resource_method(resource.resource_name)
       end
 
       @resources << resource
     end
 
+    def any_changes?
+      @resources.any?(&:changes?)
+    end
+
     private
+
+    def add_resource_method(resource_name)
+      self.class.class_eval do
+        alias_method resource_name.to_sym, :resources
+      end
+    end
 
     # rubocop:disable Metrics/MethodLength
     def save(action: 'update')
