@@ -19,6 +19,7 @@ module Hubspot
   class RateLimitExceededError < RequestError; end
   class NotConfiguredError < StandardError; end
   class ArgumentError < StandardError; end
+  class NothingToDoError < StandardError; end
 
   class << self
     def error_from_response(response)
