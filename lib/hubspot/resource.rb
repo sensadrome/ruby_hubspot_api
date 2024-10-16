@@ -632,6 +632,8 @@ module Hubspot
     def create_new
       created_resource = self.class.create(@changes)
       @id = created_resource.id
+      @properties.merge!(@changes)
+      @changes = {}
       @id ? true : false
     end
   end
