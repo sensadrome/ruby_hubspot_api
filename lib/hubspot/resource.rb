@@ -458,6 +458,12 @@ module Hubspot
       end
     end
 
+    def save!
+      raise NothingToDoError, 'Nothing to save' unless changes?
+
+      save
+    end
+
     # If the resource exists in Hubspot
     #
     # Returns Boolean
