@@ -263,6 +263,8 @@ module Hubspot
       #
       # If no suffix is provided, the default comparison is equality (`EQ`).
       #
+      # If no value is provided, or is empty the NOT_HAS_PROPERTY operator will be used
+      #
       # query - [String, Hash] The query for searching. This can be either:
       #   - A String: for full-text search.
       #   - A Hash: where each key represents a property and may have suffixes for the comparison
@@ -356,9 +358,9 @@ module Hubspot
         filter_groups = [{ filters: [] }]
 
         filters.each do |key, value|
-          filter = extract_property_and_operator(key)
+          filter = extract_property_and_operator(key, value)
           value_key = value.is_a?(Array) ? :values : :value
-          filter[value_key] = value
+          filter[value_key] = value unless value.blank?
           filter_groups.first[:filters] << filter
         end
 
@@ -366,7 +368,9 @@ module Hubspot
       end
 
       # Extract property name and operator from the key
-      def extract_property_and_operator(key)
+      def extract_property_and_operator(key, value)
+        return { propertyName: key.to_s, operator: 'NOT_HAS_PROPERTY' } if value.blank?
+
         OPERATOR_MAP.each do |suffix, hubspot_operator|
           if key.to_s.end_with?(suffix)
             return {
@@ -452,6 +456,12 @@ module Hubspot
       else
         create_new
       end
+    end
+
+    def save!
+      raise NothingToDoError, 'Nothing to save' unless changes?
+
+      save
     end
 
     # If the resource exists in Hubspot
@@ -622,6 +632,8 @@ module Hubspot
     def create_new
       created_resource = self.class.create(@changes)
       @id = created_resource.id
+      @properties.merge!(@changes)
+      @changes = {}
       @id ? true : false
     end
   end
