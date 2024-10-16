@@ -120,7 +120,7 @@ puts "Contact: #{contact.firstname} #{contact.lastname}"
 
 ### Updating an Existing Object
 
-To update an existing object, you can either modify the object and call `save`, or use the `update` method specifying the properties you want to update. You can test whether or not the object will need to upload changes to the api by using the changes? method
+To update an existing object, you can either modify the object and call `save`, or use the `update` method specifying the properties you want to update. You can test whether or not the object will need to upload changes to the api by using the changes? method. If you don't want to check for changes? you can use the method `save!` on the resource which will raise a Hubspot::NothingToDoError if there are no changes.
 
 Example using `save`:
 
@@ -134,6 +134,22 @@ contact.changes? # true
 # save the updates to Hubspot
 contact.save # true
 contact.changes? # false
+```
+
+Example using `save!`:
+
+```ruby
+contact = Hubspot::Contact.find(1)
+
+MyDecorator.new(contact).apply_changes!
+
+begin
+  contact.save!
+rescue Hubspot::NothingToDoError = _
+  puts "Nothing changed, cancelled api call"
+rescue Hubspot::RequestError => e
+  puts "API Error: #{e.message}"
+end
 ```
 
 Example using `update`:
@@ -273,6 +289,26 @@ end
 - **lt**: Less than.
 - **lte**: Less than or equal to.
 - **IN**: Matches any of the values in an array.
+
+#### Searching for empty values (NOT_HAS_PROPERTY)
+
+Any empty value in your search will be matched using the correect filter in Hubspot
+
+```ruby
+# Search for companies with no value for a given field
+companies = Hubspot::Company.search(query: { client_category: nil }, properties: %w[name number_of_employees])
+# Request body: {"filterGroups":[{"filters":[{"propertyName":"client_category","operator":"NOT_HAS_PROPERTY"}]}]
+
+puts "Searching for uncategorised customers"
+puts ""
+
+companies.each do |company|
+  category = company_category_by_size(company.number_of_employees)
+  company.update(client_category: category)
+
+  puts "  Found: #{company.name} (size #{company.number_of_employees}) - filed under #{category}"
+end
+```
 
 #### Specifying Properties in Search
 
