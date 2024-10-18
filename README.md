@@ -310,6 +310,21 @@ companies.each do |company|
 end
 ```
 
+#### Getting the total number of records
+
+Having created a search collection you can retrieve the total number of matching records from Hubspot by calling .total on the collection. This will make a single request to the api to retrieve the number of matching records
+
+```ruby
+contacts_collection = Hubspot::Contact.search(query: { lead_status: 'cold' } )
+
+if contacts_collection.total > 200
+  puts "Contacts will be processed overnight"
+  # schedule_processing_job
+else
+  puts "Found #{contacts_collection.total} contacts. Processing...."
+  process_contacts(contacts_collection)
+```
+
 #### Specifying Properties in Search
 
 When performing a search, you can also specify which properties to return.
