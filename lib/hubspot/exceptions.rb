@@ -7,7 +7,9 @@ module Hubspot
     attr_accessor :response
 
     def initialize(response, message = nil)
-      message = response.parsed_response['message'] if !message && response.respond_to?(:parsed_response)
+      if !message && response.respond_to?(:parsed_response)
+        message = response.parsed_response['message']
+      end
       message += "\n" if message
       me = super("#{message}Response body: #{response.body}",)
       me.response = response
@@ -20,6 +22,7 @@ module Hubspot
   class NotConfiguredError < StandardError; end
   class ArgumentError < StandardError; end
   class NothingToDoError < StandardError; end
+  class NotImplementedError < StandardError; end
 
   class << self
     def error_from_response(response)
