@@ -314,12 +314,7 @@ module Hubspot
           method: :post
         )
       end
-
       # rubocop:enable Metrics/MethodLength
-
-      # The root of the api call. Mostly this will be "crm"
-      # but you can override this to account for a different
-      # object hierarchy
 
       # Define the resource name based on the class
       def resource_name
@@ -339,6 +334,9 @@ module Hubspot
 
       private
 
+      # The root of the api call. Mostly this will be "crm"
+      # but you can override this to account for a different
+      # object hierarchy
       def api_root
         '/crm/v3/objects'
       end

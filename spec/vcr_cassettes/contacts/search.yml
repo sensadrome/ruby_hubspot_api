@@ -1,3 +1,4 @@
+<% test_domain ||= ENV.fetch('HUBSPOT_SEARCH_TEST_DOMAIN', 'example.org') %>
 ---
 http_interactions:
 - request:
