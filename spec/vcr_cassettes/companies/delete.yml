@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.hubapi.com/crm/v3/objects/companies
     body:
       encoding: UTF-8
-      string: '{"properties":{"name":"Numenor Capital","domain":"example-2024-10-20-20-50-46.com"}}'
+      string: '{"properties":{"name":"ACME Test Company","domain":"example-2024-10-20-20-50-46.com"}}'
     headers:
       Content-Type:
       - application/json
@@ -68,8 +68,8 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"id":"23828159705","properties":{"createdate":"2024-10-20T19:50:46.999Z","domain":"example-2024-10-20-20-50-46.com","hs_lastmodifieddate":"2024-10-20T19:50:46.999Z","hs_object_id":"23828159705","hs_object_source":"INTEGRATION","hs_object_source_id":"4169410","hs_object_source_label":"INTEGRATION","hs_pipeline":"companies-lifecycle-pipeline","lifecyclestage":"lead","name":"Numenor
-        Capital","website":"example-2024-10-20-20-50-46.com"},"createdAt":"2024-10-20T19:50:46.999Z","updatedAt":"2024-10-20T19:50:46.999Z","archived":false}'
+      string: '{"id":"23828159705","properties":{"createdate":"2024-10-20T19:50:46.999Z","domain":"example-2024-10-20-20-50-46.com","hs_lastmodifieddate":"2024-10-20T19:50:46.999Z","hs_object_id":"23828159705","hs_object_source":"INTEGRATION","hs_object_source_id":"4169410","hs_object_source_label":"INTEGRATION","hs_pipeline":"companies-lifecycle-pipeline","lifecyclestage":"lead","name":"ACME
+        Test Company","website":"example-2024-10-20-20-50-46.com"},"createdAt":"2024-10-20T19:50:46.999Z","updatedAt":"2024-10-20T19:50:46.999Z","archived":false}'
   recorded_at: Sun, 20 Oct 2024 19:50:47 GMT
 - request:
     method: get
@@ -137,8 +137,8 @@ http_interactions:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"id":"23828159705","properties":{"createdate":"2024-10-20T19:50:46.999Z","domain":"example-2024-10-20-20-50-46.com","hs_lastmodifieddate":"2024-10-20T19:50:46.999Z","hs_object_id":"23828159705","name":"Numenor
-        Capital"},"createdAt":"2024-10-20T19:50:46.999Z","updatedAt":"2024-10-20T19:50:46.999Z","archived":false}'
+      string: '{"id":"23828159705","properties":{"createdate":"2024-10-20T19:50:46.999Z","domain":"example-2024-10-20-20-50-46.com","hs_lastmodifieddate":"2024-10-20T19:50:46.999Z","hs_object_id":"23828159705","name":"ACME
+        Test Company"},"createdAt":"2024-10-20T19:50:46.999Z","updatedAt":"2024-10-20T19:50:46.999Z","archived":false}'
   recorded_at: Sun, 20 Oct 2024 19:50:47 GMT
 - request:
     method: delete

@@ -71,7 +71,7 @@ RSpec.describe Hubspot::Company do
       end
 
       describe '#create' do
-        let(:test_company_name) { ENV.fetch('HUBSPOT_TEST_COMPANY_NAME', 'ACME Test Company') }
+        let(:test_company_name) { 'ACME Test Company' }
         let(:test_company_domain) { "example-#{ts}.com" }
         let(:company) { Hubspot::Company.new(name: test_company_name, domain: test_company_domain) }
 
@@ -86,7 +86,7 @@ RSpec.describe Hubspot::Company do
       end
 
       describe '#delete' do
-        let(:test_company_name) { ENV.fetch('HUBSPOT_TEST_COMPANY_NAME', 'ACME Test Company') }
+        let(:test_company_name) { 'ACME Test Company' }
         let(:test_company_domain) { "example-#{ts}.com" }
         let(:company) { Hubspot::Company.new(name: test_company_name, domain: test_company_domain) }
 
