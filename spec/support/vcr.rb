@@ -26,6 +26,18 @@ VCR.configure do |c|
   %w[HUBSPOT_ACCESS_TOKEN HUBSPOT_CLIENT_SECRET HUBSPOT_PORTAL_ID HUBSPOT_NO_AUTH_ACCESS_TOKEN].each do |secret|
     c.filter_sensitive_data("<#{secret}>") { ENV[secret] }
   end
+
+  if Hubspot.logger.info?
+    # Log whether playback occurred
+    c.before_playback do |interaction|
+      Hubspot.logger.info "Playing back interaction for #{interaction.request.uri}"
+    end
+
+    # Log whether a new interaction was recorded
+    c.before_record do |interaction|
+      Hubspot.logger.info "Recording new interaction for #{interaction.request.uri}"
+    end
+  end
 end
 
 # if we are just going to specify the cassette, allow shorthand...
