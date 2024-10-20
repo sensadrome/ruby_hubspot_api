@@ -1,11 +1,11 @@
 ---
 http_interactions:
 - request:
-    method: get
-    uri: https://api.hubapi.com/crm/v3/objects/users?limit=1&properties=hs_email,hs_given_name,hs_family_name
+    method: post
+    uri: https://api.hubapi.com/crm/v3/objects/companies
     body:
-      encoding: US-ASCII
-      string: ''
+      encoding: UTF-8
+      string: '{"properties":{"name":"ACME Example","domain":"example.com"}}'
     headers:
       Content-Type:
       - application/json
@@ -19,19 +19,21 @@ http_interactions:
       - Ruby
   response:
     status:
-      code: 200
-      message: OK
+      code: 201
+      message: Created
     headers:
       Date:
-      - Sun, 20 Oct 2024 19:50:48 GMT
+      - Sun, 20 Oct 2024 19:50:45 GMT
       Content-Type:
       - application/json;charset=utf-8
       Content-Length:
-      - '221'
+      - '261'
       Connection:
       - keep-alive
+      Location:
+      - https://api.hubapi.com/crm/v3/objects/companies/22816780518
       Cf-Ray:
-      - 8d5b89f80b68beba-LHR
+      - 8d5b89e63fbe6515-LHR
       Cf-Cache-Status:
       - DYNAMIC
       Strict-Transport-Security:
@@ -43,29 +45,30 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       X-Hubspot-Correlation-Id:
-      - c5bd3681-69d3-4361-966b-22ff690f75bb
+      - b8c9086b-9be2-4853-a7fa-36041fe46af7
       X-Hubspot-Ratelimit-Daily:
       - '250000'
       X-Hubspot-Ratelimit-Daily-Remaining:
-      - '249692'
+      - '249708'
       X-Hubspot-Ratelimit-Interval-Milliseconds:
       - '10000'
       X-Hubspot-Ratelimit-Max:
       - '100'
       X-Hubspot-Ratelimit-Remaining:
-      - '70'
+      - '85'
       X-Hubspot-Ratelimit-Secondly:
       - '10'
       X-Hubspot-Ratelimit-Secondly-Remaining:
-      - '7'
+      - '8'
       Report-To:
-      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=oUn%2FWvZLAJLL1N0Gay9cZr8Egzx4Pc%2F1CcZ%2BQIq%2BrpcC2V0RRB%2BTuZKTyjhy82VK0Gbf%2FVXIS6Ym2C4V62tIYoTwaycsbSE%2B6sdx%2FwuEMpjzwDLyi3BrFR9va2og%2BYhk3xAD6RsqUGba0DNO"}],"group":"cf-nel","max_age":604800}'
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=bdEFzcefU78lEl6i9Ck5C%2BiEDAo8Fw9iz%2FvC7RDOLzNhfATZuHvD1CcMSNQ9fv%2FeXooC49%2B8KSGR1r5VU2Gyjze0bRvabtSQYuwpsy3RYxCqrmqjEeJO4U2czVtIEHu7U1r5X7D%2FyBiAMNIM"}],"group":"cf-nel","max_age":604800}'
       Nel:
       - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
       Server:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"results":[{"id":"168371669198","properties":{"hs_createdate":"2024-10-18T13:31:06.071Z","hs_email":"simon@sensadrome.com","hs_family_name":"Brook","hs_given_name":"Simon","hs_lastmodifieddate":"2024-10-19T18:55:36.726Z","hs_object_id":"168371669198"},"createdAt":"2024-10-18T13:31:06.071Z","updatedAt":"2024-10-19T18:55:36.726Z","archived":false}]}'
-  recorded_at: Sun, 20 Oct 2024 19:50:48 GMT
+      string: '{"id":"22816780518","properties":{"createdate":"2024-10-20T19:50:45.541Z","domain":"example.com","hs_lastmodifieddate":"2024-10-20T19:50:45.541Z","hs_object_id":"22816780518","hs_object_source":"INTEGRATION","hs_object_source_id":"4169410","hs_object_source_label":"INTEGRATION","hs_pipeline":"companies-lifecycle-pipeline","lifecyclestage":"lead","name":"ACME
+        Example","website":"example.com"},"createdAt":"2024-10-20T19:50:45.541Z","updatedAt":"2024-10-20T19:50:45.541Z","archived":false}'
+  recorded_at: Sun, 20 Oct 2024 19:50:45 GMT
 recorded_with: VCR 6.0.0

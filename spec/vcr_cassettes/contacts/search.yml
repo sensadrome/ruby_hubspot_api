@@ -1,4 +1,3 @@
-<% test_domain ||= ENV.fetch('HUBSPOT_SEARCH_TEST_DOMAIN', 'example.org') %>
 ---
 http_interactions:
 - request:
@@ -6,7 +5,7 @@ http_interactions:
     uri: https://api.hubapi.com/crm/v3/objects/contacts/search
     body:
       encoding: UTF-8
-      string: '{"filterGroups":[{"filters":[{"propertyName":"email","operator":"CONTAINS_TOKEN","value":"<%= test_domain %>"}]}],"limit":5,"after":null}'
+      string: '{"filterGroups":[{"filters":[{"propertyName":"email","operator":"CONTAINS_TOKEN","value":"example.org"}]}],"limit":5}'
     headers:
       Content-Type:
       - application/json
@@ -24,15 +23,15 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 20 Sep 2024 03:54:09 GMT
+      - Sun, 20 Oct 2024 19:50:40 GMT
       Content-Type:
       - application/json;charset=utf-8
       Content-Length:
-      - '346'
+      - '310'
       Connection:
       - keep-alive
       Cf-Ray:
-      - 8c5edf61cacc6431-LHR
+      - 8d5b89c7ee7dbe9c-LHR
       Cf-Cache-Status:
       - DYNAMIC
       Strict-Transport-Security:
@@ -43,36 +42,25 @@ http_interactions:
       - 'false'
       X-Content-Type-Options:
       - nosniff
-      X-Envoy-Upstream-Service-Time:
-      - '178'
-      X-Evy-Trace-Listener:
-      - listener_https
-      X-Evy-Trace-Route-Configuration:
-      - listener_https/all
-      X-Evy-Trace-Route-Service-Name:
-      - envoyset-translator
-      X-Evy-Trace-Served-By-Pod:
-      - fra04/hubapi-td/envoy-proxy-576d445cf9-r5bn8
-      X-Evy-Trace-Virtual-Host:
-      - all
       X-Hubspot-Correlation-Id:
-      - 79067ce8-2c6d-4a0d-89f9-462adb7d3283
+      - 1bcb0f86-60ae-41ec-bac7-b01c27094ae7
       X-Hubspot-Ratelimit-Daily:
-      - '625000'
+      - '250000'
       X-Hubspot-Ratelimit-Daily-Remaining:
-      - '624988'
-      X-Request-Id:
-      - 79067ce8-2c6d-4a0d-89f9-462adb7d3283
+      - '249729'
       Report-To:
-      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=ZRe8M1d%2Fy9oFoFo0DBFTcy5rUxEeeCXo07L4qxz1QeV9fwyWEpTtxA6GSmS3sL%2BA2I0qVXsKk1G5LT6Uo1LtAbCpQGssyxhdRhrCmAghOvAegzea3CHQ8BW7UOdS6BRwloRXSVWF0J3kkd3E"}],"group":"cf-nel","max_age":604800}'
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=9WcysKpQg98MpD3Pa7%2FFhAJnHbSuxP5ihMZBEppLMo56LJyrQCaYhIrxiENCHQFF6qnEhiPU64%2FG%2ByflbkHxqK3IVkB82wPmT6AowTDVDGjjVIspQEETrbqrUlkF2Ka5dmWAnUjzOMoEFw9a"}],"group":"cf-nel","max_age":604800}'
       Nel:
       - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
       Server:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"total":3,"results":[{"id":"1","properties":{"createdate":"2024-01-18T15:01:13.519Z","email":"john.doe@<%= test_domain %>","firstname":"John","hs_object_id":"1","lastmodifieddate":"2024-09-19T15:29:39.856Z","lastname":"Doe"},"createdAt":"2024-01-18T15:01:13.519Z","updatedAt":"2024-09-19T15:29:39.856Z","archived":false},
-        {"id":"2","properties":{"createdate":"2024-01-18T15:01:13.930Z","email":"jane.doe@<%= test_domain %>","firstname":"Jane","hs_object_id":"2","lastmodifieddate":"2024-01-18T15:01:30.025Z","lastname":"Doe"},"createdAt":"2024-01-18T15:01:13.930Z","updatedAt":"2024-01-18T15:01:30.025Z","archived":false},
-        {"id":"3","properties":{"createdate":"2024-08-15T13:19:15.521Z","email":"test@<%= test_domain %>","firstname":"Test","hs_object_id":"30040593139","lastmodifieddate":"2024-08-15T13:19:30.345Z","lastname":"Contact"},"createdAt":"2024-08-15T13:19:15.521Z","updatedAt":"2024-08-15T13:19:30.345Z","archived":false}]}'
-  recorded_at: Fri, 20 Sep 2024 03:54:09 GMT
+      string: '{"total":10,"results":[{"id":"54891258050","properties":{"createdate":"2024-10-20T19:50:34.350Z","email":"test6@example.org","firstname":"Test
+        6","hs_object_id":"54891258050","lastmodifieddate":"2024-10-20T19:50:36.382Z","lastname":"User"},"createdAt":"2024-10-20T19:50:34.350Z","updatedAt":"2024-10-20T19:50:36.382Z","archived":false},{"id":"54891258051","properties":{"createdate":"2024-10-20T19:50:34.350Z","email":"test10@example.org","firstname":"Test
+        10","hs_object_id":"54891258051","lastmodifieddate":"2024-10-20T19:50:36.382Z","lastname":"User"},"createdAt":"2024-10-20T19:50:34.350Z","updatedAt":"2024-10-20T19:50:36.382Z","archived":false},{"id":"54891258052","properties":{"createdate":"2024-10-20T19:50:34.350Z","email":"test5@example.org","firstname":"Test
+        5","hs_object_id":"54891258052","lastmodifieddate":"2024-10-20T19:50:38.418Z","lastname":"User"},"createdAt":"2024-10-20T19:50:34.350Z","updatedAt":"2024-10-20T19:50:38.418Z","archived":false},{"id":"54891258053","properties":{"createdate":"2024-10-20T19:50:34.350Z","email":"test8@example.org","firstname":"Test
+        8","hs_object_id":"54891258053","lastmodifieddate":"2024-10-20T19:50:36.338Z","lastname":"User"},"createdAt":"2024-10-20T19:50:34.350Z","updatedAt":"2024-10-20T19:50:36.338Z","archived":false},{"id":"54891258054","properties":{"createdate":"2024-10-20T19:50:34.350Z","email":"test7@example.org","firstname":"Test
+        7","hs_object_id":"54891258054","lastmodifieddate":"2024-10-20T19:50:36.382Z","lastname":"User"},"createdAt":"2024-10-20T19:50:34.350Z","updatedAt":"2024-10-20T19:50:36.382Z","archived":false}],"paging":{"next":{"after":"5"}}}'
+  recorded_at: Sun, 20 Oct 2024 19:50:40 GMT
 recorded_with: VCR 6.0.0

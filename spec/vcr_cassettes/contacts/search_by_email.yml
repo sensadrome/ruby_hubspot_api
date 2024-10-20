@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.hubapi.com/crm/v3/objects/contacts/search
     body:
       encoding: UTF-8
-      string: '{"filterGroups":[{"filters":[{"propertyName":"email","operator":"EQ","value":"<%= test_contact_email %>"}]}],"limit":5}'
+      string: '{"filterGroups":[{"filters":[{"propertyName":"email","operator":"EQ","value":"test1@example.org"}]}],"limit":5}'
     headers:
       Content-Type:
       - application/json
@@ -23,15 +23,15 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Sun, 22 Sep 2024 21:42:33 GMT
+      - Sun, 20 Oct 2024 19:50:40 GMT
       Content-Type:
       - application/json;charset=utf-8
       Content-Length:
-      - '230'
+      - '209'
       Connection:
       - keep-alive
       Cf-Ray:
-      - 8c757729bf639545-LHR
+      - 8d5b89c90c7a63aa-LHR
       Cf-Cache-Status:
       - DYNAMIC
       Strict-Transport-Security:
@@ -42,34 +42,21 @@ http_interactions:
       - 'false'
       X-Content-Type-Options:
       - nosniff
-      X-Envoy-Upstream-Service-Time:
-      - '60'
-      X-Evy-Trace-Listener:
-      - listener_https
-      X-Evy-Trace-Route-Configuration:
-      - listener_https/all
-      X-Evy-Trace-Route-Service-Name:
-      - envoyset-translator
-      X-Evy-Trace-Served-By-Pod:
-      - fra04/hubapi-td/envoy-proxy-576d445cf9-nknjb
-      X-Evy-Trace-Virtual-Host:
-      - all
       X-Hubspot-Correlation-Id:
-      - c340d5d1-0f1d-4d9b-b917-3e0e9aa236ec
+      - 93aebb4e-f0e1-4490-a597-085ac5206e61
       X-Hubspot-Ratelimit-Daily:
-      - '625000'
+      - '250000'
       X-Hubspot-Ratelimit-Daily-Remaining:
-      - '624978'
-      X-Request-Id:
-      - c340d5d1-0f1d-4d9b-b917-3e0e9aa236ec
+      - '249728'
       Report-To:
-      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=L7kWWL4OLuWS5byn8nnLk7BHIL3ILCd8ynUaUuoqSg3slwyO7UwNWWyiaVHq0RDy2XllbUKMc7VUJRmgvmH8MzQizPgSv58UbZv5EPJJNJ9TFOpw4fBbw%2FQhLylq1CroyMM6Op%2BZvAm60LR4"}],"group":"cf-nel","max_age":604800}'
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=UjubGX8eml2SnNj%2B%2BjfZZNfKJyikNWa1pZv6nuupqQohE4CB49zpkkGMMKfNsAVnhtPwjulwhyJbxa9pxjlGfQPEpvkrXTIrfgewb1S3uC98X%2FQ7K0r%2FQFasKP39PcjnC2PrseYQ35oEgH1k"}],"group":"cf-nel","max_age":604800}'
       Nel:
       - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
       Server:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"total":1,"results":[{"id":"1","properties":{"createdate":"2024-01-18T15:01:13.519Z","email":"<%= test_contact_email %>","firstname":"Test","hs_object_id":"1","lastmodifieddate":"2024-09-19T15:29:39.856Z","lastname":"User"},"createdAt":"2024-01-18T15:01:13.519Z","updatedAt":"2024-09-19T15:29:39.856Z","archived":false}]}'
-  recorded_at: Sun, 22 Sep 2024 21:42:33 GMT
+      string: '{"total":1,"results":[{"id":"54891258057","properties":{"createdate":"2024-10-20T19:50:34.350Z","email":"test1@example.org","firstname":"Test
+        1","hs_object_id":"54891258057","lastmodifieddate":"2024-10-20T19:50:36.281Z","lastname":"User"},"createdAt":"2024-10-20T19:50:34.350Z","updatedAt":"2024-10-20T19:50:36.281Z","archived":false}]}'
+  recorded_at: Sun, 20 Oct 2024 19:50:40 GMT
 recorded_with: VCR 6.0.0

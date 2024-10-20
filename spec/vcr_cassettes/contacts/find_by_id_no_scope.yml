@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - Bearer <HUBSPOT_ACCESS_TOKEN>
+      - Bearer <HUBSPOT_NO_AUTH_ACCESS_TOKEN>
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
@@ -23,7 +23,7 @@ http_interactions:
       message: Forbidden
     headers:
       Date:
-      - Thu, 19 Sep 2024 17:19:53 GMT
+      - Sun, 20 Oct 2024 19:50:45 GMT
       Content-Type:
       - application/json;charset=utf-8
       Transfer-Encoding:
@@ -31,7 +31,7 @@ http_interactions:
       Connection:
       - keep-alive
       Cf-Ray:
-      - 8c5b3e450c0a948a-LHR
+      - 8d5b89e2ecef52e6-LHR
       Cf-Cache-Status:
       - DYNAMIC
       Strict-Transport-Security:
@@ -42,38 +42,10 @@ http_interactions:
       - 'false'
       X-Content-Type-Options:
       - nosniff
-      X-Envoy-Upstream-Service-Time:
-      - '17'
-      X-Evy-Trace-Listener:
-      - listener_https
-      X-Evy-Trace-Route-Configuration:
-      - listener_https/all
-      X-Evy-Trace-Route-Service-Name:
-      - envoyset-translator
-      X-Evy-Trace-Served-By-Pod:
-      - fra04/hubapi-td/envoy-proxy-576d445cf9-xc9kk
-      X-Evy-Trace-Virtual-Host:
-      - all
       X-Hubspot-Correlation-Id:
-      - fd32a844-5f21-48e2-b4c5-9a17d067aa7a
-      X-Hubspot-Ratelimit-Daily:
-      - '625000'
-      X-Hubspot-Ratelimit-Daily-Remaining:
-      - '624980'
-      X-Hubspot-Ratelimit-Interval-Milliseconds:
-      - '10000'
-      X-Hubspot-Ratelimit-Max:
-      - '190'
-      X-Hubspot-Ratelimit-Remaining:
-      - '189'
-      X-Hubspot-Ratelimit-Secondly:
-      - '19'
-      X-Hubspot-Ratelimit-Secondly-Remaining:
-      - '18'
-      X-Request-Id:
-      - fd32a844-5f21-48e2-b4c5-9a17d067aa7a
+      - bcddc08d-6cfc-41be-85b0-b2d059d15485
       Report-To:
-      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=cJn9se1V7UGIs6eGgvlVjJzGRuaFWNpvU4dB4P0MgqPemC8lr8%2FEch%2BA7Pf%2FsaXAvAe4nR3nO7DnUEWXSK0xhzPGIWO%2F01vv4GpiPFZb%2FkcTZ6bFAaumxaUDj3ALNIeuYZ8S7CEDVpF3z5Zx"}],"group":"cf-nel","max_age":604800}'
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=9FZvikZT1VsEbBZ87KrfnrxSvMZmWW1qeeuRK9wq9qcOyS9tmp7H9S8%2B5QrcTpGpyivt9KZEvVRyO%2BXIRE6Kdoom2MWoo5kSHxolDCDCTzIQfMw9AUymSEOq6Bez4PoriZjJF%2FUrNUiRrcqo"}],"group":"cf-nel","max_age":604800}'
       Nel:
       - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
       Server:
@@ -81,7 +53,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","message":"This app hasn''t been granted all required
-        scopes to make this call. Read more about required scopes here: https://developers.hubspot.com/scopes.","correlationId":"fd32a844-5f21-48e2-b4c5-9a17d067aa7a","errors":[{"message":"One
-        or more of the following scopes are required.","context":{"requiredGranularScopes":["crm.schemas.contacts.read","crm.objects.contacts.read"]}}],"links":{"scopes":"https://developers.hubspot.com/scopes"},"category":"MISSING_SCOPES"}'
-  recorded_at: Thu, 19 Sep 2024 17:19:53 GMT
+        scopes to make this call. Read more about required scopes here: https://developers.hubspot.com/scopes.","correlationId":"bcddc08d-6cfc-41be-85b0-b2d059d15485","errors":[{"message":"One
+        or more of the following scopes are required.","context":{"requiredScopes":["e-commerce","tickets","crm.objects.goals.read","media_bridge.read","crm.objects.custom.read","crm.objects.custom.write"],"requiredGranularScopes":["crm.objects.commercepayments.read","crm.objects.invoices.read","crm.objects.carts.write","crm.objects.contacts.write","crm.objects.carts.read","crm.objects.subscriptions.read","crm.objects.appointments.read","crm.objects.line_items.read","crm.objects.appointments.write","crm.objects.line_items.write","crm.objects.listings.read","crm.objects.listings.write","crm.objects.quotes.write","crm.objects.services.read","crm.objects.quotes.read","crm.objects.services.write","crm.objects.leads.read","crm.objects.contacts.read","crm.objects.companies.read","crm.objects.leads.write","crm.objects.partner-clients.read","crm.objects.deals.read","crm.objects.courses.read","crm.objects.partner-clients.write","crm.objects.courses.write","crm.objects.deals.write","crm.objects.users.read","crm.objects.users.write","crm.objects.orders.write","crm.objects.orders.read","crm.objects.companies.write"]}}],"links":{"scopes":"https://developers.hubspot.com/scopes"},"category":"MISSING_SCOPES"}'
+  recorded_at: Sun, 20 Oct 2024 19:50:45 GMT
 recorded_with: VCR 6.0.0

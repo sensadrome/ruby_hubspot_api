@@ -1,8 +1,8 @@
 ---
 http_interactions:
 - request:
-    method: get
-    uri: https://api.hubapi.com/crm/v3/objects/users?limit=1&properties=hs_email,hs_given_name,hs_family_name
+    method: delete
+    uri: https://api.hubapi.com/crm/v3/objects/contacts/55037918395
     body:
       encoding: US-ASCII
       string: ''
@@ -19,19 +19,15 @@ http_interactions:
       - Ruby
   response:
     status:
-      code: 200
-      message: OK
+      code: 204
+      message: No Content
     headers:
       Date:
-      - Sun, 20 Oct 2024 19:50:48 GMT
-      Content-Type:
-      - application/json;charset=utf-8
-      Content-Length:
-      - '221'
+      - Sun, 20 Oct 2024 19:50:43 GMT
       Connection:
       - keep-alive
       Cf-Ray:
-      - 8d5b89f80b68beba-LHR
+      - 8d5b89d61b71bd9a-LHR
       Cf-Cache-Status:
       - DYNAMIC
       Strict-Transport-Security:
@@ -43,29 +39,29 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       X-Hubspot-Correlation-Id:
-      - c5bd3681-69d3-4361-966b-22ff690f75bb
+      - 7c850123-b6f4-4615-9de9-275578dea96a
       X-Hubspot-Ratelimit-Daily:
       - '250000'
       X-Hubspot-Ratelimit-Daily-Remaining:
-      - '249692'
+      - '249719'
       X-Hubspot-Ratelimit-Interval-Milliseconds:
       - '10000'
       X-Hubspot-Ratelimit-Max:
       - '100'
       X-Hubspot-Ratelimit-Remaining:
-      - '70'
+      - '91'
       X-Hubspot-Ratelimit-Secondly:
       - '10'
       X-Hubspot-Ratelimit-Secondly-Remaining:
-      - '7'
+      - '9'
       Report-To:
-      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=oUn%2FWvZLAJLL1N0Gay9cZr8Egzx4Pc%2F1CcZ%2BQIq%2BrpcC2V0RRB%2BTuZKTyjhy82VK0Gbf%2FVXIS6Ym2C4V62tIYoTwaycsbSE%2B6sdx%2FwuEMpjzwDLyi3BrFR9va2og%2BYhk3xAD6RsqUGba0DNO"}],"group":"cf-nel","max_age":604800}'
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=%2F%2Fthuo6esa0tin2JAicbjPPrfwCC19YBWp5E9BWRoY8oNNkJakl8jjee2WmgdX2K5IVwpPFEq2lV9OCyks4G0gYOOYEXZmGr0i%2FEP%2BgZHRGZCXTzJAjoGnELB9xG7xw1etMBsRyJCNUQims%2B"}],"group":"cf-nel","max_age":604800}'
       Nel:
       - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
       Server:
       - cloudflare
     body:
-      encoding: ASCII-8BIT
-      string: '{"results":[{"id":"168371669198","properties":{"hs_createdate":"2024-10-18T13:31:06.071Z","hs_email":"simon@sensadrome.com","hs_family_name":"Brook","hs_given_name":"Simon","hs_lastmodifieddate":"2024-10-19T18:55:36.726Z","hs_object_id":"168371669198"},"createdAt":"2024-10-18T13:31:06.071Z","updatedAt":"2024-10-19T18:55:36.726Z","archived":false}]}'
-  recorded_at: Sun, 20 Oct 2024 19:50:48 GMT
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sun, 20 Oct 2024 19:50:43 GMT
 recorded_with: VCR 6.0.0
