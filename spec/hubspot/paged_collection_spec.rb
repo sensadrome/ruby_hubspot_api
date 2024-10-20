@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hubspot::PagedCollection do
-  include_examples 'hubspot configuration'
-
+RSpec.describe Hubspot::PagedCollection, configure_hubspot: true do
   let(:contacts_list_page) { 'https://api.hubapi.com/crm/v3/objects/contacts' }
   let(:contacts_collection) { Hubspot::Contact.list }
 

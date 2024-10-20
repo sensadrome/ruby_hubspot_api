@@ -23,7 +23,7 @@ VCR.configure do |c|
     WebMock.disable_net_connect!(allow_localhost: true)
   end
 
-  %w[HUBSPOT_ACCESS_TOKEN HUBSPOT_CLIENT_SECRET HUBSPOT_PORTAL_ID].each do |secret|
+  %w[HUBSPOT_ACCESS_TOKEN HUBSPOT_CLIENT_SECRET HUBSPOT_PORTAL_ID HUBSPOT_NO_AUTH_ACCESS_TOKEN].each do |secret|
     c.filter_sensitive_data("<#{secret}>") { ENV[secret] }
   end
 end

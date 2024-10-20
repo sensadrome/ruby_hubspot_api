@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hubspot::Form do
+RSpec.describe Hubspot::Form, configure_hubspot: true do
   it 'inherits from Resource' do
     expect(described_class < Hubspot::Resource).to be true
   end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hubspot::Batch do
-  include_examples 'hubspot configuration'
+RSpec.describe Hubspot::Batch, configure_hubspot: true do
   let(:company) do
     instance_double('Company', changes: { name: 'Acme Corp' }, resource_name: 'companies', internal_id: 123)
   end

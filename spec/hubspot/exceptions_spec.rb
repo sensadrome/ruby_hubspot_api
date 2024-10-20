@@ -2,9 +2,7 @@
 
 require 'webmock/rspec'
 
-RSpec.describe 'Hubspot Errors' do
-  include_examples 'hubspot configuration'
-
+RSpec.describe 'Hubspot Errors', configure_hubspot: true do
   let(:contacts_list_page) { 'https://api.hubapi.com/crm/v3/objects/contacts' }
 
   before do

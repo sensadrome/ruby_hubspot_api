@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hubspot::ApiClient do
-  include_examples 'hubspot configuration'
+RSpec.describe Hubspot::ApiClient, configure_hubspot: true do
   let(:logger) { instance_double(Logger) }
 
   before do
