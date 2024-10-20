@@ -11,6 +11,39 @@ RSpec.describe Hubspot::Resource do
     expect(subject).to respond_to(:fake_property)
   end
 
+  describe '.update' do
+    let(:resource) { described_class.new }
+
+    context 'when the resource is not saved in Hubspot' do
+      it 'will raise an error' do
+        expect { resource.update(firstname: 'Test') }.to raise_error(/not persisted/)
+      end
+    end
+
+    context 'when the resource is saved in Hubspot', configure_hubspot: true do
+      let(:resource) { described_class.new(id: 1) }
+      before do
+        stub_request(:patch, 'https://api.hubapi.com/crm/v3/objects/resources/1').to_return(status: 200)
+      end
+
+      it 'will raise an error' do
+        expect { resource.update(firstname: 'Test') }.not_to raise_error
+      end
+    end
+  end
+
+  describe '.update_attributes' do
+    it 'expects a hash' do
+      expect { subject.update_attributes('firstname') }.to raise_error(Hubspot::ArgumentError)
+    end
+
+    it 'will update the changes tracker on the resource' do
+      subject.update_attributes(firstname: 'Test')
+      expect(subject.firstname).to eq('Test')
+      expect(subject.changes.keys).to include('firstname')
+    end
+  end
+
   describe '.save!' do
     let(:resource) { described_class.new(id: 1) }
 
