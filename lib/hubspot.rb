@@ -24,14 +24,20 @@ module Hubspot
     end
 
     def configured?
-      return true unless @config.nil?
+      true unless @config.nil?
     end
 
     private
 
-    # Set Authorization header on Hubspot::ApiClient when access_token is configured
+    # Set Authorization header on all the resource classes when access_token is configured
     def set_client_headers
-      Hubspot::ApiClient.headers 'Authorization' => "Bearer #{config.access_token}"
+      api_classes = ObjectSpace.each_object(Class).select do |klass|
+        klass < Hubspot::ApiClient && !klass.singleton_class?
+      end
+
+      api_classes.each do |subclass|
+        subclass.headers 'Authorization' => "Bearer #{config.access_token}"
+      end
     end
 
     def set_request_timeouts

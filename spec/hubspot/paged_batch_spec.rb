@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Hubspot::PagedBatch do
-  include_examples 'hubspot configuration'
-
+RSpec.describe Hubspot::PagedBatch, configure_hubspot: true do
   let(:contacts_batch_read_page) { 'https://api.hubapi.com/crm/v3/objects/contacts/batch/read' }
   let(:contact_ids) { (1...15).to_a }
 

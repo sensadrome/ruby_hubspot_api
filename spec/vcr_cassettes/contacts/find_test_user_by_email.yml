@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.hubapi.com/crm/v3/objects/users?limit=1&properties=hs_email,hs_given_name,hs_family_name
+    uri: https://api.hubapi.com/crm/v3/objects/contacts/test@example.com?idProperty=email
     body:
       encoding: US-ASCII
       string: ''
@@ -23,15 +23,15 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Sun, 20 Oct 2024 19:50:48 GMT
+      - Sun, 20 Oct 2024 19:50:41 GMT
       Content-Type:
       - application/json;charset=utf-8
       Content-Length:
-      - '221'
+      - '182'
       Connection:
       - keep-alive
       Cf-Ray:
-      - 8d5b89f80b68beba-LHR
+      - 8d5b89cf08a863ed-LHR
       Cf-Cache-Status:
       - DYNAMIC
       Strict-Transport-Security:
@@ -43,29 +43,29 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       X-Hubspot-Correlation-Id:
-      - c5bd3681-69d3-4361-966b-22ff690f75bb
+      - fe68585f-8146-497e-9073-5994cd29fd32
       X-Hubspot-Ratelimit-Daily:
       - '250000'
       X-Hubspot-Ratelimit-Daily-Remaining:
-      - '249692'
+      - '249724'
       X-Hubspot-Ratelimit-Interval-Milliseconds:
       - '10000'
       X-Hubspot-Ratelimit-Max:
       - '100'
       X-Hubspot-Ratelimit-Remaining:
-      - '70'
+      - '96'
       X-Hubspot-Ratelimit-Secondly:
       - '10'
       X-Hubspot-Ratelimit-Secondly-Remaining:
-      - '7'
+      - '9'
       Report-To:
-      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=oUn%2FWvZLAJLL1N0Gay9cZr8Egzx4Pc%2F1CcZ%2BQIq%2BrpcC2V0RRB%2BTuZKTyjhy82VK0Gbf%2FVXIS6Ym2C4V62tIYoTwaycsbSE%2B6sdx%2FwuEMpjzwDLyi3BrFR9va2og%2BYhk3xAD6RsqUGba0DNO"}],"group":"cf-nel","max_age":604800}'
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=Ydk5fwmQosE9Diox0DCa6jl4TU07BQSfC2q8CGBHXQ4%2F5l0e99agqFtD%2BPSuBhvaxpYR91vkacMLVmk7LyY92FgTML66zLa7KBc0Ln2ZKSp8tbNjlqZWZSX4vQax3vr6SwmZnpXdpvaJUIQF"}],"group":"cf-nel","max_age":604800}'
       Nel:
       - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
       Server:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"results":[{"id":"168371669198","properties":{"hs_createdate":"2024-10-18T13:31:06.071Z","hs_email":"simon@sensadrome.com","hs_family_name":"Brook","hs_given_name":"Simon","hs_lastmodifieddate":"2024-10-19T18:55:36.726Z","hs_object_id":"168371669198"},"createdAt":"2024-10-18T13:31:06.071Z","updatedAt":"2024-10-19T18:55:36.726Z","archived":false}]}'
-  recorded_at: Sun, 20 Oct 2024 19:50:48 GMT
+      string: '{"id":"55122963644","properties":{"createdate":"2024-10-20T19:50:41.564Z","email":"test@example.com","firstname":"Test","hs_object_id":"55122963644","lastmodifieddate":"2024-10-20T19:50:41.564Z","lastname":"User"},"createdAt":"2024-10-20T19:50:41.564Z","updatedAt":"2024-10-20T19:50:41.564Z","archived":false}'
+  recorded_at: Sun, 20 Oct 2024 19:50:41 GMT
 recorded_with: VCR 6.0.0
