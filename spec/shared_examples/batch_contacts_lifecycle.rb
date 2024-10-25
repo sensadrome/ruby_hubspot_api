@@ -15,8 +15,9 @@ RSpec.shared_examples 'batch_contacts_lifecycle' do |count, domain, cassette_nam
       @created_batch.create
       break unless VCR.current_cassette.recording?
 
-      Hubspot.logger.warn "Wating for Batch #{cassette_name}"
-      batch_wait = ENV.fetch('HUBSPOT_BATCH_WAIT', 5).to_i
+      wait_per_contact = ENV.fetch('HUBSPOT_BATCH_WAIT_PER_RESOURCE', 1).to_i
+      batch_wait = wait_per_contact * count
+      Hubspot.logger.warn "Wating for Batch #{cassette_name} (#{batch_wait} seconds)"
       sleep(batch_wait)
     end
   end

@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.hubapi.com/crm/v3/objects/contacts?limit=1
+    uri: https://api.hubapi.com/crm/v3/objects/contacts/non-existent-person@non-existent-domain.non-tld?idProperty=email
     body:
       encoding: US-ASCII
       string: ''
@@ -19,21 +19,23 @@ http_interactions:
       - Ruby
   response:
     status:
-      code: 200
-      message: OK
+      code: 404
+      message: Not Found
     headers:
       Date:
-      - Wed, 23 Oct 2024 22:42:36 GMT
+      - Wed, 23 Oct 2024 22:42:58 GMT
       Content-Type:
-      - application/json;charset=utf-8
-      Content-Length:
-      - '299'
+      - text/html;charset=iso-8859-1
+      Transfer-Encoding:
+      - chunked
       Connection:
       - keep-alive
       Cf-Ray:
-      - 8d753dbfa90d9463-LHR
+      - 8d753e4baf2c60e7-LHR
       Cf-Cache-Status:
       - DYNAMIC
+      Cache-Control:
+      - must-revalidate,no-cache,no-store
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains; preload
       Vary:
@@ -43,30 +45,40 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       X-Hubspot-Correlation-Id:
-      - 6af44fce-cf08-41f5-ba2a-ac88ee3da22a
+      - 1fd3297e-4799-47f1-a24b-d0605832ba6f
+      X-Hubspot-Notfound:
+      - 'true'
       X-Hubspot-Ratelimit-Daily:
       - '250000'
       X-Hubspot-Ratelimit-Daily-Remaining:
-      - '249841'
+      - '249829'
       X-Hubspot-Ratelimit-Interval-Milliseconds:
       - '10000'
       X-Hubspot-Ratelimit-Max:
       - '100'
       X-Hubspot-Ratelimit-Remaining:
-      - '98'
+      - '95'
       X-Hubspot-Ratelimit-Secondly:
       - '10'
       X-Hubspot-Ratelimit-Secondly-Remaining:
       - '9'
       Report-To:
-      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=wIkkgvnj%2BLkGrzsN70VRjr%2B3JzEqt6cZbvnpgbdG8M64hqeKQqkoV0q%2Fe6YhB2AOubQUK%2BZXYk14IGasAeRG3i%2FSB8pVyTCYHjC4YtbR8BxCOV6Bga%2FP0rUmOu1vfTZ2hz8NESNd2DNrhkEP"}],"group":"cf-nel","max_age":604800}'
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=EJLPHDIA8tVKat58r%2BQNOELxFZ5%2FMUc8ZZYIngSRXCvKa%2FXn3kMb5L8vPlc3l0Yj0bIezsxgr%2F7z7itdHpxv0Segk3oiNFhRmepgsX9QdTu9w01Gul2T4gVImcWz2jzDeF7wY2J%2B%2BzaGXxRG"}],"group":"cf-nel","max_age":604800}'
       Nel:
       - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
       Server:
       - cloudflare
     body:
       encoding: ASCII-8BIT
-      string: '{"results":[{"id":"51854903509","properties":{"createdate":"2024-10-18T13:31:11.334Z","email":"emailmaria@hubspot.com","firstname":"Maria","hs_object_id":"51854903509","lastmodifieddate":"2024-10-21T02:57:29.952Z","lastname":"Johnson
-        (Sample Contact)"},"createdAt":"2024-10-18T13:31:11.334Z","updatedAt":"2024-10-21T02:57:29.952Z","archived":false}],"paging":{"next":{"after":"51854903510","link":"https://api.hubapi.com/crm/v3/objects/contacts?limit=1&after=51854903510"}}}'
-  recorded_at: Wed, 23 Oct 2024 22:42:36 GMT
+      string: |
+        <html>
+        <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+        <title>Error 404 Not Found</title>
+        </head>
+        <body><h2>HTTP ERROR 404</h2>
+        <p>Resource not found</p>
+        </body>
+        </html>
+  recorded_at: Wed, 23 Oct 2024 22:42:58 GMT
 recorded_with: VCR 6.0.0

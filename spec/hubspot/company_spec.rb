@@ -97,7 +97,7 @@ RSpec.describe Hubspot::Company do
           expect(company.name).to eq(company_in_hubspot.name)
 
           company.delete
-          expect { Hubspot::Company.find(company.id) }.to raise_error(Hubspot::NotFoundError)
+          expect { Hubspot::Company.find!(company.id) }.to raise_error(Hubspot::NotFoundError)
         end
       end
     end

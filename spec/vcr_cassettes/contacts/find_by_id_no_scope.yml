@@ -23,7 +23,7 @@ http_interactions:
       message: Forbidden
     headers:
       Date:
-      - Sun, 20 Oct 2024 19:50:45 GMT
+      - Wed, 23 Oct 2024 22:43:01 GMT
       Content-Type:
       - application/json;charset=utf-8
       Transfer-Encoding:
@@ -31,7 +31,7 @@ http_interactions:
       Connection:
       - keep-alive
       Cf-Ray:
-      - 8d5b89e2ecef52e6-LHR
+      - 8d753e5c8c1363db-LHR
       Cf-Cache-Status:
       - DYNAMIC
       Strict-Transport-Security:
@@ -43,9 +43,9 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       X-Hubspot-Correlation-Id:
-      - bcddc08d-6cfc-41be-85b0-b2d059d15485
+      - 65b5056f-a545-4c7b-bacc-407ec686e44c
       Report-To:
-      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=9FZvikZT1VsEbBZ87KrfnrxSvMZmWW1qeeuRK9wq9qcOyS9tmp7H9S8%2B5QrcTpGpyivt9KZEvVRyO%2BXIRE6Kdoom2MWoo5kSHxolDCDCTzIQfMw9AUymSEOq6Bez4PoriZjJF%2FUrNUiRrcqo"}],"group":"cf-nel","max_age":604800}'
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=XCWr0fTop3WuwqrF5GOxVby7odojzLS1Shj1TrddFcY3ehJovF1rgTft67%2BQo94GqA8XpmYFO1DMJ8gE1rhFmBD4%2BFlTIOpoMUjj54ftDVth%2FMvTPMH4uNzingXI5BIb3J95OJ%2F0B135PqIC"}],"group":"cf-nel","max_age":604800}'
       Nel:
       - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
       Server:
@@ -53,7 +53,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"status":"error","message":"This app hasn''t been granted all required
-        scopes to make this call. Read more about required scopes here: https://developers.hubspot.com/scopes.","correlationId":"bcddc08d-6cfc-41be-85b0-b2d059d15485","errors":[{"message":"One
+        scopes to make this call. Read more about required scopes here: https://developers.hubspot.com/scopes.","correlationId":"65b5056f-a545-4c7b-bacc-407ec686e44c","errors":[{"message":"One
         or more of the following scopes are required.","context":{"requiredScopes":["e-commerce","tickets","crm.objects.goals.read","media_bridge.read","crm.objects.custom.read","crm.objects.custom.write"],"requiredGranularScopes":["crm.objects.commercepayments.read","crm.objects.invoices.read","crm.objects.carts.write","crm.objects.contacts.write","crm.objects.carts.read","crm.objects.subscriptions.read","crm.objects.appointments.read","crm.objects.line_items.read","crm.objects.appointments.write","crm.objects.line_items.write","crm.objects.listings.read","crm.objects.listings.write","crm.objects.quotes.write","crm.objects.services.read","crm.objects.quotes.read","crm.objects.services.write","crm.objects.leads.read","crm.objects.contacts.read","crm.objects.companies.read","crm.objects.leads.write","crm.objects.partner-clients.read","crm.objects.deals.read","crm.objects.courses.read","crm.objects.partner-clients.write","crm.objects.courses.write","crm.objects.deals.write","crm.objects.users.read","crm.objects.users.write","crm.objects.orders.write","crm.objects.orders.read","crm.objects.companies.write"]}}],"links":{"scopes":"https://developers.hubspot.com/scopes"},"category":"MISSING_SCOPES"}'
-  recorded_at: Sun, 20 Oct 2024 19:50:45 GMT
+  recorded_at: Wed, 23 Oct 2024 22:43:01 GMT
 recorded_with: VCR 6.0.0
