@@ -3,7 +3,7 @@
 RSpec.shared_examples 'contact_lifecycle' do |properties, cassette_name|
   let(:created_contact) { nil }
 
-  before(:example) do
+  before(:all) do
     VCR.use_cassette("lifecycle/contacts/#{cassette_name}") do
       @created_contact = Hubspot::Contact.create(properties)
       expect(@created_contact).not_to be_nil
@@ -11,7 +11,7 @@ RSpec.shared_examples 'contact_lifecycle' do |properties, cassette_name|
     end
   end
 
-  after(:example) do
+  after(:all) do
     # Clean up by deleting the contact
     VCR.use_cassette("lifecycle/contacts/#{cassette_name}_delete") do
       @created_contact&.delete
