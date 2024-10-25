@@ -4,6 +4,69 @@ RSpec.describe Hubspot::PagedCollection, configure_hubspot: true do
   let(:contacts_list_page) { 'https://api.hubapi.com/crm/v3/objects/contacts' }
   let(:contacts_collection) { Hubspot::Contact.list }
 
+  describe 'filtering' do
+    let(:collection_params) { collection_to_check.instance_variable_get('@params') }
+
+    let(:filter_groups) do
+      return unless collection_params.is_a?(Hash)
+
+      collection_params[:filterGroups]
+    end
+
+    let(:filters) do
+      return unless filter_groups.is_a?(Array)
+      return unless filter_groups.first.is_a?(Hash)
+
+      filter_groups.first[:filters]
+    end
+    let(:search_collection) { Hubspot::Contact.all }
+
+    context 'using an empty search collection from a resource set' do
+      let(:collection_to_check) { search_collection }
+
+      it 'should have empty filters' do
+        expect(filter_groups).to be(nil)
+      end
+
+      describe '#where' do
+        let(:filtered_collection) { search_collection.where(email_contains: 'example.org') }
+        let(:collection_to_check) { filtered_collection }
+
+        it 'returns a PagedCollection' do
+          expect(filtered_collection).to be_a(Hubspot::PagedCollection)
+        end
+
+        it 'updates the filters' do
+          expect(filter_groups).not_to be_empty
+        end
+      end
+
+      describe '#where!' do
+        let(:filtered_collection) { search_collection.where(email_contains: 'example.org') }
+
+        it 'returns a PagedCollection' do
+          expect(filtered_collection).to be_a(Hubspot::PagedCollection)
+        end
+
+        it 'updates the filters in the original collection' do
+          _ignore = filtered_collection
+          expect(filter_groups).not_to be_empty
+        end
+      end
+    end
+
+    describe 'when called in a chain' do
+      let(:collection_to_check) { filtered_collection }
+      let(:filtered_collection) do
+        search_collection.where(email_contains: 'example.org').where(enquiry_status: 'new')
+      end
+
+      it 'will add to the filters within the filter groups' do
+        expect(filters.length).to eq(2)
+      end
+    end
+  end
+
   context 'when hitting the rate limit' do
     before do
       # Stub the request to return a 429 rate-limit response (with immediate retry ;)
@@ -79,11 +142,36 @@ RSpec.describe Hubspot::PagedCollection, configure_hubspot: true do
     end
 
     describe '.total' do
+      def new_contact(seq)
+        id = seq + 1
+        {
+          id: id,
+          properties: {
+            firstname: "Contact #{id}",
+            email: "contact#{id}.test@example.org"
+          }
+        }
+      end
+
+      before do
+        # Stub the first page of contacts (10 contacts) with a 'next' paging parameter
+        stub_request(:post, contacts_search_page)
+          .with(query: hash_including({}))
+          .to_return(
+            status: 200,
+            body: {
+              'results' => Array.new(5) { |i| new_contact(i) },
+              'total' => 5
+            }.to_json,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+      end
+
       let(:search_domain) { ENV.fetch('HUBSPOT_SEARCH_TEST_DOMAIN', 'example.org') }
       let(:contacts_search_collection) { Hubspot::Contact.search(query: search_params) }
       let(:contacts_search_page) { 'https://api.hubapi.com/crm/v3/objects/contacts/search' }
 
-      context 'when using a collection based on search', :erb, cassette: 'contacts/search' do
+      context 'when using a collection based on search' do
         let(:search_params) { { 'email_contains' => search_domain } }
 
         it 'will return the total by making a single request' do

@@ -104,21 +104,52 @@ RSpec.describe Hubspot::Contact do
         end
       end
 
-      describe '.find_by' do
+      describe 'finding by unique property' do
         include_examples 'contact_lifecycle', {
           email: 'test@example.com',
           firstname: 'Test',
           lastname: 'User'
         }, 'find_by'
+        let(:bad_email) { 'non-existent-person@non-existent-domain.non-tld' }
 
-        it 'retrieves a contact by email', cassette: 'contacts/find_test_user_by_email' do
-          contact = Hubspot::Contact.find_by('email', 'test@example.com')
+        describe '.find_by' do
+          let(:missing_contact) { Hubspot::Contact.find_by('email', bad_email) }
 
-          expect(contact).to be_a(Hubspot::Contact)
-          expect(contact.id).to eq(test_contact.id)
-          expect(contact.firstname).to eq('Test')
-          expect(contact.lastname).to eq('User')
-          expect(contact.email).to eq('test@example.com')
+          it 'retrieves a contact by email', cassette: 'contacts/find_test_user_by_email' do
+            contact = Hubspot::Contact.find_by('email', 'test@example.com')
+
+            expect(contact).to be_a(Hubspot::Contact)
+            expect(contact.id).to eq(test_contact.id)
+            expect(contact.firstname).to eq('Test')
+            expect(contact.lastname).to eq('User')
+            expect(contact.email).to eq('test@example.com')
+          end
+
+          it 'will return nil if the resource is not found', cassette: 'contacts/find_missing_user_by_email' do
+            expect(missing_contact).to be_nil
+          end
+
+          it 'will not raise an error if the resource is not found', cassette: 'contacts/find_missing_user_by_email' do
+            expect { missing_contact }.not_to raise_error
+          end
+        end
+
+        describe '.find_by!' do
+          let(:missing_contact) { Hubspot::Contact.find_by!('email', bad_email) }
+
+          it 'retrieves a contact by email', cassette: 'contacts/find_test_user_by_email_bang' do
+            contact = Hubspot::Contact.find_by!('email', 'test@example.com')
+
+            expect(contact).to be_a(Hubspot::Contact)
+            expect(contact.id).to eq(test_contact.id)
+            expect(contact.firstname).to eq('Test')
+            expect(contact.lastname).to eq('User')
+            expect(contact.email).to eq('test@example.com')
+          end
+
+          it 'will raise an error if the resource is not found', cassette: 'contacts/find_missing_user_by_email_bang' do
+            expect { missing_contact }.to raise_error(Hubspot::NotFoundError)
+          end
         end
       end
 
@@ -227,7 +258,7 @@ RSpec.describe Hubspot::Contact do
       describe '#search', configure_hubspot: true do
         context 'with invalid params' do
           it 'will only accept a string or a hash' do
-            expect { Hubspot::Contact.search(query: 1) }.to raise_error(Hubspot::ArgumentError)
+            expect { Hubspot::Contact.search(1) }.to raise_error(Hubspot::ArgumentError)
           end
         end
 
@@ -236,7 +267,7 @@ RSpec.describe Hubspot::Contact do
           let(:created_batch) { @created_batch }
 
           let(:limit) { 5 }
-          let(:results) { Hubspot::Contact.search(query: search_params).first(limit) }
+          let(:results) { Hubspot::Contact.search(search_params).first(limit) }
 
           context 'when searching using search parameters as a hash' do
             context 'by email contains', cassette: 'contacts/search' do

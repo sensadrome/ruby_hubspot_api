@@ -11,6 +11,33 @@ RSpec.describe Hubspot::Resource do
     expect(subject).to respond_to(:fake_property)
   end
 
+  describe '#all' do
+    let(:collection) { described_class.all }
+    it 'will return a PagedCollection' do
+      expect(collection).to be_a(Hubspot::PagedCollection)
+    end
+    it 'will be a search collection' do
+      expect(collection.send(:search_request?)).to be(true)
+    end
+  end
+
+  describe '#where' do
+    let(:collection) { described_class.where(email_contains: 'hubspot.com') }
+    it 'will return a PagedCollection' do
+      expect(collection).to be_a(Hubspot::PagedCollection)
+    end
+    it 'will be a search collection' do
+      expect(collection.send(:search_request?)).to be(true)
+    end
+  end
+
+  describe '#select' do
+    let(:collection) { described_class.select(:email, :firstname, :lastname) }
+    it 'will return a PagedCollection' do
+      expect(collection).to be_a(Hubspot::PagedCollection)
+    end
+  end
+
   describe '.update' do
     let(:resource) { described_class.new }
 
@@ -26,7 +53,7 @@ RSpec.describe Hubspot::Resource do
         stub_request(:patch, 'https://api.hubapi.com/crm/v3/objects/resources/1').to_return(status: 200)
       end
 
-      it 'will raise an error' do
+      it 'will not raise an error' do
         expect { resource.update(firstname: 'Test') }.not_to raise_error
       end
     end

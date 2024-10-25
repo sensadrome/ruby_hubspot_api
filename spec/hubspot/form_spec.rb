@@ -35,5 +35,9 @@ RSpec.describe Hubspot::Form, configure_hubspot: true do
     it 'is converted into a Hubspot::Form object' do
       expect(form).to be_a(Hubspot::Form)
     end
+
+    it 'sets the metadata on the form' do
+      expect(form.metadata).not_to be_empty
+    end
   end
 end
