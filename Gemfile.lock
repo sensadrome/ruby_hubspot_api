@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ruby_hubspot_api (0.3.2)
+    ruby_hubspot_api (0.3.3)
       httparty (>= 0.1, < 1.0)
 
 GEM
