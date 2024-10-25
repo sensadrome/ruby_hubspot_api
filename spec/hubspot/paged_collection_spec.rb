@@ -168,7 +168,7 @@ RSpec.describe Hubspot::PagedCollection, configure_hubspot: true do
       end
 
       let(:search_domain) { ENV.fetch('HUBSPOT_SEARCH_TEST_DOMAIN', 'example.org') }
-      let(:contacts_search_collection) { Hubspot::Contact.search(query: search_params) }
+      let(:contacts_search_collection) { Hubspot::Contact.search(search_params) }
       let(:contacts_search_page) { 'https://api.hubapi.com/crm/v3/objects/contacts/search' }
 
       context 'when using a collection based on search' do
