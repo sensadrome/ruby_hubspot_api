@@ -3,20 +3,23 @@
 require 'json'
 require_relative './api_client'
 require_relative './exceptions'
+require_relative './resource_filter'
 
 module Hubspot
   # Enumerable class for handling paged data from the API
   class PagedCollection < ApiClient
     include Enumerable
+    include ResourceFilter::FilterGroupMethods
 
-    MAX_LIMIT = 100 # HubSpot max items per page
+    MAX_LIMIT = 200 # HubSpot max items per page
 
     # rubocop:disable Lint/MissingSuper
-    def initialize(url:, params: {}, resource_class: nil, method: :get)
+    def initialize(url:, params: {}, resource_class: nil, method: :get, results_param: 'results')
       @url = url
       @params = params
       @resource_class = resource_class
       @method = method.to_sym
+      @results_param = results_param
     end
     # rubocop:enable Lint/MissingSuper
 
@@ -31,6 +34,7 @@ module Hubspot
         @total = response['total'] if response['total']
         mapped_results = process_results(response)
         yield mapped_results unless mapped_results.empty?
+        sleep wait_between_pages
         offset = response.dig('paging', 'next', 'after')
         break unless offset
       end
@@ -70,6 +74,34 @@ module Hubspot
       each_page do |page|
         page.each(&block)
       end
+    end
+
+    def where(filters = {})
+      dup.where!(filters)
+    end
+
+    def where!(filters = {})
+      # Build new filter groups from the provided filters
+      new_filter_groups = build_filter_groups(filters)
+
+      # Merge new filters into the existing params structure
+      if @params[:filterGroups]&.any?
+        @params[:filterGroups][0][:filters].concat(new_filter_groups[0][:filters])
+      else
+        @params[:filterGroups] = new_filter_groups
+      end
+
+      self # Returning self for method chaining if needed
+    end
+
+    def select(*properties)
+      unless properties.blank?
+        @params ||= {}
+        @params[:properties] ||= []
+        @params[:properties].concat(properties.flatten)
+      end
+
+      self
     end
 
     private
@@ -120,8 +152,14 @@ module Hubspot
       end
     end
 
+    def wait_between_pages
+      return 0.2 if search_request?
+
+      0
+    end
+
     def process_results(response)
-      results = response['results'] || []
+      results = response[@results_param] || []
       return results unless @resource_class
 
       results.map { |result| @resource_class.new(result) }

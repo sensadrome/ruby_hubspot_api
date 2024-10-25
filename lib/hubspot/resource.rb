@@ -3,6 +3,7 @@
 require_relative './api_client'
 require_relative './paged_collection'
 require_relative './paged_batch'
+require_relative './resource_filter'
 
 module Hubspot
   # rubocop:disable Metrics/ClassLength
@@ -26,6 +27,7 @@ module Hubspot
   #
   class Resource < ApiClient
     METADATA_FIELDS = %w[createdate hs_object_id lastmodifieddate].freeze
+    extend ResourceFilter::FilterGroupMethods
 
     # Allow read/write access to id, properties, changes and metadata
 
@@ -42,6 +44,62 @@ module Hubspot
     attr_accessor :metadata
 
     class << self
+      # Return a paged_collection - similar to an ActiveRecord Relation
+      #
+      # Example:
+      #   contacts_collection = Hubspot::Contact.all
+      #     <PagedCollection>
+      #
+      #   contacts_collection.where(email_contains: 'hubspot.com')
+      #     <PagedCollection, @params={:filterGroups=> ....
+      def all
+        PagedCollection.new(
+          url: "#{api_root}/#{resource_name}/search",
+          params: {},
+          resource_class: self,
+          method: :post,
+          results_param: results_param
+        )
+      end
+
+      # Filter resources - allows chaining
+      #
+      # This method allows searching for resources by passing a hash with special suffixes
+      # on the keys to define different comparison operators.
+      #
+      # Available suffixes for query keys (when using a hash):
+      #   - `_contains`: Matches values that contain the given string.
+      #   - `_gt`: Greater than comparison.
+      #   - `_lt`: Less than comparison.
+      #   - `_gte`: Greater than or equal to comparison.
+      #   - `_lte`: Less than or equal to comparison.
+      #   - `_neq`: Not equal to comparison.
+      #
+      # If value is an array the 'IN' operator will be used
+      #
+      # Otherwise if no suffix is provided, the default comparison is equality (`EQ`).
+      #
+      # If no value is provided, or is empty the NOT_HAS_PROPERTY operator will be used
+      #
+      # filters - [Hash] The query for searching.
+      #                  each key represents a property and may have suffixes for the comparison
+      #                  (e.g., `{ email_contains: 'example.org', age_gt: 30 }`).
+
+      # Example:
+      #
+      #   big_companies = Hubspot:Company.where(number_of_employees_gte: 100 )
+      #   live_contacts = Hubspot::Contact.where(hs_lead_status: %w[NEW OPEN IN_PROGRESS])
+      #
+      # Returns a PagedCollection
+      def where(filters = {})
+        all.where!(filters)
+      end
+
+      # Select which properties to return from the api - allows chaining
+      def select(*properties)
+        all.select(*properties)
+      end
+
       # Find a resource by ID and return an instance of the class
       #
       # id - [Integer] The ID (or hs_object_id) of the resource to fetch.
@@ -53,11 +111,14 @@ module Hubspot
       #
       # Returns An instance of the resource.
       def find(id, properties: nil)
-        all_properties = build_property_list(properties)
-        if all_properties.is_a?(Array) && !all_properties.empty?
-          params = { query: { properties: all_properties } }
-        end
-        response = get("#{api_root}/#{resource_name}/#{id}", params || {})
+        response = response_for_find_by_id(id, properties: properties)
+        return if response.not_found?
+
+        instantiate_from_response(response)
+      end
+
+      def find!(id, properties: nil)
+        response = response_for_find_by_id(id, properties: properties)
         instantiate_from_response(response)
       end
 
@@ -69,16 +130,16 @@ module Hubspot
       #
       # Example:
       #   properties = %w[firstname lastname email last_contacted]
-      #   contact = Hubspot::Contact.find_by("email", "john@example.com", properties)
+      #   contact = Hubspot::Contact.find_by("email", "john@example.com", properties: properties)
       #
       # Returns An instance of the resource.
-      def find_by(property, value, properties = nil)
-        params = { idProperty: property }
+      def find_by(property, value, properties: nil)
+        response = response_for_find_by_property(property, value, properties: properties)
+        instantiate_from_response(response) unless response.not_found?
+      end
 
-        all_properties = build_property_list(properties)
-        params[:properties] = all_properties unless all_properties.empty?
-
-        response = get("#{api_root}/#{resource_name}/#{value}", query: params)
+      def find_by!(property, value, properties: nil)
+        response = response_for_find_by_property(property, value, properties: properties)
         instantiate_from_response(response)
       end
 
@@ -231,17 +292,6 @@ module Hubspot
         properties.detect { |prop| prop.name == property_name }
       end
 
-      # Simplified search interface
-      OPERATOR_MAP = {
-        '_contains' => 'CONTAINS_TOKEN',
-        '_gt' => 'GT',
-        '_lt' => 'LT',
-        '_gte' => 'GTE',
-        '_lte' => 'LTE',
-        '_neq' => 'NEQ',
-        '_in' => 'IN'
-      }.freeze
-
       # rubocop:disable Metrics/MethodLength
 
       # Search for resources using a flexible query format and optional properties.
@@ -287,11 +337,11 @@ module Hubspot
       #   )
       #
       # Returns [PagedCollection] A paged collection of results that can be iterated over.
-      def search(query:, properties: [], page_size: 100)
+      def search(query, properties: [], page_size: 200)
         search_body = {}
 
         # Add properties if specified
-        search_body[:properties] = properties unless properties.empty?
+        search_body[:properties] = build_property_list(properties) unless properties.empty?
 
         # Handle the query using case-when for RuboCop compliance
         case query
@@ -311,7 +361,8 @@ module Hubspot
           url: "#{api_root}/#{resource_name}/search",
           params: search_body,
           resource_class: self,
-          method: :post
+          method: :post,
+          results_param: results_param
         )
       end
       # rubocop:enable Metrics/MethodLength
@@ -341,45 +392,37 @@ module Hubspot
         '/crm/v3/objects'
       end
 
+      # In the response from the api the resources returned in this key
+      def results_param
+        'results'
+      end
+
       def list_page_uri
         "#{api_root}/#{resource_name}"
+      end
+
+      def response_for_find_by_id(id, properties: nil)
+        all_properties = build_property_list(properties)
+        if all_properties.is_a?(Array) && !all_properties.empty?
+          params = { query: { properties: all_properties } }
+        end
+
+        get("#{api_root}/#{resource_name}/#{id}", params || {})
+      end
+
+      def response_for_find_by_property(property, value, properties: nil)
+        params = { idProperty: property }
+
+        all_properties = build_property_list(properties)
+        params[:properties] = all_properties unless all_properties.empty?
+
+        get("#{api_root}/#{resource_name}/#{value}", query: params)
       end
 
       # Instantiate a single resource object from the response
       def instantiate_from_response(response)
         data = handle_response(response)
         new(data) # Passing full response data to initialize
-      end
-
-      # Convert simple filters to HubSpot's filterGroups format
-      def build_filter_groups(filters)
-        filter_groups = [{ filters: [] }]
-
-        filters.each do |key, value|
-          filter = extract_property_and_operator(key, value)
-          value_key = value.is_a?(Array) ? :values : :value
-          filter[value_key] = value unless value.blank?
-          filter_groups.first[:filters] << filter
-        end
-
-        filter_groups
-      end
-
-      # Extract property name and operator from the key
-      def extract_property_and_operator(key, value)
-        return { propertyName: key.to_s, operator: 'NOT_HAS_PROPERTY' } if value.blank?
-
-        OPERATOR_MAP.each do |suffix, hubspot_operator|
-          if key.to_s.end_with?(suffix)
-            return {
-              propertyName: key.to_s.sub(suffix, ''),
-              operator: hubspot_operator
-            }
-          end
-        end
-
-        # Default to 'EQ' operator if no suffix is found
-        { propertyName: key.to_s, operator: 'EQ' }
       end
 
       # Internal make a list of properties to request from the API
@@ -418,7 +461,7 @@ module Hubspot
     #   existing_contact = Hubspot::Contact.new(id: hubspot_id, properties: contact.to_hubspot)
     def initialize(data = {})
       data.transform_keys!(&:to_s)
-      @id = extract_id(data.delete('id'))
+      @id = extract_id(data.delete(api_id_field))
       @properties = {}
       @metadata = {}
       if @id
@@ -569,6 +612,10 @@ module Hubspot
 
     private
 
+    def api_id_field
+      'id'
+    end
+
     # Extract ID from data and convert to integer
     def extract_id(id)
       id&.to_i
@@ -614,9 +661,13 @@ module Hubspot
       end
     end
 
-    # allows overwriting in other resource classes
     def metadata_field?(key)
-      METADATA_FIELDS.include?(key)
+      metadata_fields.include?(key)
+    end
+
+    # allows overwriting in other resource classes
+    def metadata_fields
+      METADATA_FIELDS
     end
 
     # Initialize a new object (no API response)
