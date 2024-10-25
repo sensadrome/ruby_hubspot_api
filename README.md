@@ -78,7 +78,7 @@ Hubspot::Company  # crm > companies
 Hubspot::User     # hubspot users (also referred to as 'owners')
 Hubspot::Owner    # alias of Hubspot::User if you prefer to use it
 ```
- 
+
 however you can [add custom objects of your own](#user-content-custom-resources) based on your own custom defined Objects in Hubspot
 
 ### Creating and Saving an Object
@@ -254,7 +254,7 @@ Example:
 
 ```ruby
 # Search for contacts with email containing "hubspot.com"
-contacts = Hubspot::Contact.search(query: { email_contains: 'hubspot.com' })
+contacts = Hubspot::Contact.search({ email_contains: 'hubspot.com' }, properties: %w[firstname lastname email])
 
 puts "Searching for Hubspot staff in the contacts CRM"
 puts ""
@@ -264,17 +264,18 @@ contacts.each do |contact|
 end
 
 # Search for companies with number of employees greater than or equal to 100
-companies = Hubspot::Company.search(query: { number_of_employees_gte: 100 })
-
 puts "Searching for medium to large companies"
 puts ""
 
-companies.each do |company|
-  puts "  Found: #{company.name} (#{company.number_of_employees} employees)"
+companies = Hubspot::Company.search(number_of_employees_gte: 100).all # returns a PagedCollection
+companies.each_page do |page_of_companies|
+  page_of_companies.each do |company|
+    puts "  Found: #{company.name} (#{company.number_of_employees} employees)"
+  end
 end
 
 # Search for contacts with email in a specific list (IN operator)
-contacts = Hubspot::Contact.search(query: { email_in: ['user1@example.com', 'user2@example.com'] })
+contacts = Hubspot::Contact.search(email: ['user1@example.com', 'user2@example.com'])
 
 contacts.each do |contact|
   puts "Found: #{contact.email}"
@@ -288,7 +289,6 @@ end
 - **gte**: Greater than or equal to.
 - **lt**: Less than.
 - **lte**: Less than or equal to.
-- **IN**: Matches any of the values in an array.
 
 #### Searching for empty values (NOT_HAS_PROPERTY)
 
@@ -296,7 +296,7 @@ Any empty value in your search will be matched using the correect filter in Hubs
 
 ```ruby
 # Search for companies with no value for a given field
-companies = Hubspot::Company.search(query: { client_category: nil }, properties: %w[name number_of_employees])
+companies = Hubspot::Company.search({ client_category: nil }, properties: %w[name number_of_employees])
 # Request body: {"filterGroups":[{"filters":[{"propertyName":"client_category","operator":"NOT_HAS_PROPERTY"}]}]
 
 puts "Searching for uncategorised customers"
@@ -310,12 +310,38 @@ companies.each do |company|
 end
 ```
 
+#### Searching for any value in an array (IN)
+
+If value is an array the operator will be set to 'IN'
+
+```ruby
+# Search for companies with no value for a given field
+hot_contacts = Hubspot::Contact.search(hs_lead_status: %w[IN_PROGRESS OPEN_DEAL])
+# Request body: {"filterGroups":[{"filters":[{"propertyName":"hs_lead_status","operator":"IN","values":["IN_PROGRESS", "OPEN_DEAL"]}]}]
+
+puts "Current best leads"
+puts ""
+
+hot_contacts.each do |contact|
+  puts "#{contact.name} .... "
+end
+
+```
+
+#### Chaining search conditions (a la Active Record)
+
+You can use the alternative Rails-like interface to return a PagedCollection and can chain calls. Use `where(search_params)` to filter and `.select('firstname', 'lastname', 'email', 'custom_property')` to determine the properties returned by the API.
+
+```ruby
+contact = Hubspot::Contact.where(hs_lead_status: [])
+```
+
 #### Getting the total number of records
 
 Having created a search collection you can retrieve the total number of matching records from Hubspot by calling .total on the collection. This will make a single request to the api to retrieve the number of matching records
 
 ```ruby
-contacts_collection = Hubspot::Contact.search(query: { lead_status: 'cold' } )
+contacts_collection = Hubspot::Contact.search(lead_status: 'cold')
 
 if contacts_collection.total > 200
   puts "Contacts will be processed overnight"
@@ -335,7 +361,7 @@ Example:
 ```ruby
 # Search for contacts with email containing "hubspot.com" and only return specific properties
 contacts = Hubspot::Contact.search(
-  query: { email_contains: 'hubspot.com' },
+  { email_contains: 'hubspot.com' },
   properties: ['firstname', 'lastname', 'email', 'mobile', 'custom_property_1']
 )
 
@@ -398,7 +424,7 @@ companies = batch.resources
 ```
 
 Example of reading contacts by email and the helper method `batch_read`
-By using this method you can page through the results as needed or collect them 
+By using this method you can page through the results as needed or collect them
 
 ```ruby
 email_addresses = my_selected_contacts.collect(&:email).compact
@@ -415,7 +441,7 @@ batch.each_page do |contacts|
 end
 ```
 
-Finally there is another helper method `batch_read_all` on any Hubspot::Resource class (Hubspot::Contact, Hubspot::Company, Hubspot::User etc) which will read all of the resources and return a HubSpot::Batch (with all of the resources). 
+Finally there is another helper method `batch_read_all` on any Hubspot::Resource class (Hubspot::Contact, Hubspot::Company, Hubspot::User etc) which will read all of the resources and return a HubSpot::Batch (with all of the resources).
 
 You can then update the resources and call `update` on the batch.... see below
 
@@ -471,7 +497,7 @@ In this example, if a contact with the given email already exists in HubSpot, it
 To archive objects in bulk, you can use the `archive` method. This removes the objects from HubSpot.
 
 ```ruby
-contacts = Hubspot::Contact.search(query: { email_contains: 'hubspot.com' }).all
+contacts = Hubspot::Contact.where(email_contains: 'hubspot.com').all
 
 batch = Hubspot::Batch.new(contacts)
 batch.archive
@@ -504,7 +530,7 @@ require 'ruby_hubspot_api' # if not required by bundler already...
 
 module Hubspot
   class Project < Resource
-    
+
     # resource_name (part of the url in the api) will default
     # to a simple plural of the class name - in this case 'projects'
     # if the url for your custom object is different you can override it
@@ -515,7 +541,7 @@ module Hubspot
   end
 end
 
-projects = Hubspot::Projects.search(query: { status_in: ['upcoming', 'active', 'overrun'] }).all
+projects = Hubspot::Projects.where(status: ['upcoming', 'active', 'overrun']).all
 
 ```
 
