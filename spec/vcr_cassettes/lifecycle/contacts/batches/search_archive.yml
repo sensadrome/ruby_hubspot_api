@@ -5,7 +5,7 @@ http_interactions:
     uri: https://api.hubapi.com/crm/v3/objects/contacts/batch/archive
     body:
       encoding: UTF-8
-      string: '{"inputs":[{"id":54891258057},{"id":54891258055},{"id":54891258059},{"id":54891258058},{"id":54891258052},{"id":54891258050},{"id":54891258054},{"id":54891258053},{"id":54891258056},{"id":54891258051}]}'
+      string: '{"inputs":[{"id":73183578361},{"id":73183578360},{"id":73183578359},{"id":73183578358},{"id":73183578356},{"id":73183579325},{"id":73183579324},{"id":73183579323},{"id":73183579322},{"id":73183578357}]}'
     headers:
       Content-Type:
       - application/json
@@ -23,11 +23,11 @@ http_interactions:
       message: No Content
     headers:
       Date:
-      - Sun, 20 Oct 2024 19:50:41 GMT
+      - Wed, 23 Oct 2024 22:42:57 GMT
       Connection:
       - keep-alive
       Cf-Ray:
-      - 8d5b89cb5fd36554-LHR
+      - 8d753e461bfa653b-LHR
       Cf-Cache-Status:
       - DYNAMIC
       Strict-Transport-Security:
@@ -39,23 +39,23 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       X-Hubspot-Correlation-Id:
-      - 3c8af62e-d5d7-47fb-ad17-d74a3cad09b7
+      - '03493d2a-7085-40cf-b599-616a137f7650'
       X-Hubspot-Ratelimit-Daily:
       - '250000'
       X-Hubspot-Ratelimit-Daily-Remaining:
-      - '249726'
+      - '249833'
       X-Hubspot-Ratelimit-Interval-Milliseconds:
       - '10000'
       X-Hubspot-Ratelimit-Max:
       - '100'
       X-Hubspot-Ratelimit-Remaining:
-      - '98'
+      - '99'
       X-Hubspot-Ratelimit-Secondly:
       - '10'
       X-Hubspot-Ratelimit-Secondly-Remaining:
       - '9'
       Report-To:
-      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=DNlX8NT0xtYWMYtmyUtVRWo9GSPLXj7hQfapK08pTz%2F%2BlHyfCxdY6VAkp0cY27xQbHpxt3b%2F4M1GQXz6wCNMUcUmAZLXNRvBcUdlm4gxFsl%2FuSv0DQ7Wpcqa8SaEdnSNzay7ef5V%2FbxeydU%2F"}],"group":"cf-nel","max_age":604800}'
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=i%2B%2BLi5iMF7w8wnpCtItrg7Rbg%2FJXzC6v48mT66U3zcbJzXCe7cFO22bxLxdLQElj5UEmoBvrt0gQJoecDIa8ZnbjSfSmk%2B3jB%2FW7cJkWXL5LfBnvShE7Z7sYXSzuqn%2Bpudwa973jetHeo8ZM"}],"group":"cf-nel","max_age":604800}'
       Nel:
       - '{"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}'
       Server:
@@ -63,5 +63,5 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ''
-  recorded_at: Sun, 20 Oct 2024 19:50:41 GMT
+  recorded_at: Wed, 23 Oct 2024 22:42:57 GMT
 recorded_with: VCR 6.0.0
