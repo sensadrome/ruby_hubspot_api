@@ -2,8 +2,6 @@
 
 module Hubspot
   class Form < Resource
-    METADATA_FIELDS = %w[createdAt updatedAt archived].freeze
-
     # :nocov:
     def inspect
       "#<#{self.class.name} " \
@@ -13,6 +11,8 @@ module Hubspot
     # :nocov:
 
     class << self
+      private
+
       def api_root
         '/marketing/v3'
       end
@@ -23,6 +23,10 @@ module Hubspot
     # dont convert (from string)
     def extract_id(id)
       id
+    end
+
+    def metadata_fields
+      %w[createdAt updatedAt archived].freeze
     end
   end
 end
