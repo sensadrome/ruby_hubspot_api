@@ -25,6 +25,10 @@ module Hubspot
       id
     end
 
+    def api_formed_reponse?(data)
+      data['fieldGroups'].is_a?(Array) || data['configuration'].is_a?(Hash)
+    end
+
     def metadata_fields
       %w[createdAt updatedAt archived].freeze
     end
