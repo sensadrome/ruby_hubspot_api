@@ -93,4 +93,63 @@ RSpec.describe Hubspot::Resource do
       end
     end
   end
+
+  describe '#new' do
+    let(:attributes) do
+      { 'firstname' => 'Mace', 'lastname' => 'Windu' }
+    end
+
+    context 'when instantiated from an api response' do
+      let(:api_resource) do
+        { 'id' => 1, 'properties' => attributes }
+      end
+      let(:resource) { described_class.new(api_resource) }
+
+      it 'will have an id' do
+        expect(resource.id).to eq(1)
+      end
+
+      it 'will be persisted' do
+        expect(resource).to be_persisted
+      end
+
+      it 'will not have any changes' do
+        expect(resource).not_to be_changed
+      end
+    end
+
+    context 'when instantiated from an attributes hash' do
+      context 'without an id' do
+        let(:resource) { described_class.new(attributes) }
+
+        it 'will not have an id' do
+          expect(resource.id).to be_nil
+        end
+
+        it 'will not be persisted' do
+          expect(resource).not_to be_persisted
+        end
+
+        it 'will have changes' do
+          expect(resource).to be_changed
+        end
+      end
+
+      context 'with an id' do
+        let(:resource) { described_class.new(attributes.merge('id' => 1)) }
+
+        it 'will have an id' do
+          expect(resource.id).to eq(1)
+        end
+
+        it 'will be persisted' do
+          expect(resource).to be_persisted
+        end
+
+        it 'will have any changes' do
+          expect(resource).to be_changed
+        end
+      end
+    end
+  end
 end

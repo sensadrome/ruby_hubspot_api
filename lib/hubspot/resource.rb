@@ -464,7 +464,8 @@ module Hubspot
       @id = extract_id(data.delete(api_id_field))
       @properties = {}
       @metadata = {}
-      if @id
+
+      if @id && api_formed_reponse?(data)
         initialize_from_api(data)
       else
         initialize_new_object(data)
@@ -478,6 +479,7 @@ module Hubspot
     def changes?
       !@changes.empty?
     end
+    alias changed? changes?
 
     # Create or Update the resource.
     # If the resource was already persisted (e.g. it was retrieved from the API)
@@ -619,6 +621,10 @@ module Hubspot
     # Extract ID from data and convert to integer
     def extract_id(id)
       id&.to_i
+    end
+
+    def api_formed_reponse?(data)
+      data['properties'].is_a?(Hash)
     end
 
     def handle_properties(properties_data)
