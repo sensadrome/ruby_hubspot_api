@@ -647,7 +647,7 @@ module Hubspot
       # Define the setter method
       define_singleton_method("#{attribute}=") do |new_value|
         # Track changes only if the value has actually changed
-        if @properties[attribute] != new_value
+        if @properties.key?(attribute) && @properties[attribute] != new_value
           @changes[attribute] = new_value
         else
           @changes.delete(attribute) # Remove from changes if it reverts to the original value
