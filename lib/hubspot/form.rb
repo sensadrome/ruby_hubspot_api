@@ -30,7 +30,7 @@ module Hubspot
     end
 
     def metadata_fields
-      %w[createdAt updatedAt archived].freeze
+      %w[createdAt updatedAt archived]
     end
   end
 end
