@@ -98,7 +98,7 @@ RSpec.describe Hubspot do
         end
 
         it 'will default to INFO if an incorrect level name is provided' do
-          ENV['HUBSPOT_LOG_LEVEL'] = 'non-existent-level'
+          ENV['HUBSPOT_LOG_LEVEL'] = 'non_existent_level'
           Hubspot.configure { |config| }
           expect(Hubspot.config.log_level).to eq(Logger::INFO)
           Hubspot.config = nil
