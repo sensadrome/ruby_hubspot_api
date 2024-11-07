@@ -28,25 +28,19 @@ module Hubspot
     end
 
     # Map string values from environment variables to Logger constants
-    # rubocop:disable Metrics/MethodLength
     def determine_log_level
-      env_log_level = ENV['HUBSPOT_LOG_LEVEL'] || default_log_level
-      case env_log_level.to_s.upcase
-      when 'DEBUG'
-        Logger::DEBUG
-      when 'INFO'
-        Logger::INFO
-      when 'WARN'
-        Logger::WARN
-      when 'ERROR'
-        Logger::ERROR
-      when 'FATAL'
-        Logger::FATAL
+      level = env_log_level.upcase
+
+      if Logger.const_defined?(level)
+        Logger.const_get(level)
       else
         Logger::INFO # Default to INFO if unrecognized
       end
     end
-    # rubocop:enable Metrics/MethodLength
+
+    def env_log_level
+      ENV['HUBSPOT_LOG_LEVEL'] || default_log_level
+    end
 
     # Set the default log level based on environment
     def default_log_level
