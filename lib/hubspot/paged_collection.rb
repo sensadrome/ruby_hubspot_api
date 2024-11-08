@@ -7,6 +7,7 @@ require_relative './resource_filter'
 
 module Hubspot
   # Enumerable class for handling paged data from the API
+  # rubocop:disable Metrics/ClassLength
   class PagedCollection < ApiClient
     include Enumerable
     include ResourceFilter::FilterGroupMethods
@@ -35,8 +36,8 @@ module Hubspot
         mapped_results = process_results(response)
         yield mapped_results unless mapped_results.empty?
         sleep wait_between_pages
-        offset = response.dig('paging', 'next', 'after')
-        break unless offset
+        offset = response.dig('paging', 'next', 'after').to_i
+        break unless offset.positive?
       end
     end
 
@@ -165,4 +166,5 @@ module Hubspot
       results.map { |result| @resource_class.new(result) }
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
